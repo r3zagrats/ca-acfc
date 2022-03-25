@@ -1,0 +1,112 @@
+:root {
+  --primary-color: #90caf9;
+  --text-color: #424242;
+}
+
+textarea.form-input {
+  padding: 10px;
+  resize: vertical;
+}
+
+.ccb-form__wrapper {
+  background-color: var(--primary-color);
+  padding: 0 10px;
+  min-height: 100vh;
+}
+
+li {
+  border: 2px solid var(--text-color);
+  border-radius: 6px;
+  padding: 3px;
+  margin-bottom: 10px
+}
+
+#ccb-form {
+  width: 390px;
+  margin: 0 auto;
+}
+
+.ccb-form__Group {
+  display: flex;
+  flex-direction: column;
+}
+
+.ccb-form__header {
+  font-size: 18px;
+  color: var(--text-color);
+  text-align: center;
+  padding-top: 10px;
+}
+
+.ccb-form__Options {
+  font-size: 18px;
+  color: var(--text-color);
+  padding: 10px;
+  outline: none;
+  margin: 10px 0;
+  width: 100%;
+  border-radius: 6px;
+}
+
+.input-label {
+  font-size: 18px;
+  color: var(--text-color);
+}
+
+.form-input {
+  font-size: 18px;
+  outline: none;
+  margin: 10px 0;
+  padding: 10px;
+  white-space: pre-wrap;
+}
+
+.button {
+  font-size: 18px;
+  padding: 8px;
+  background-color: #388e3c;
+  color: #fff;
+  border-radius: 6px;
+  border-color: var(--text-color);
+  text-align: center;
+  width: 100%;
+}
+
+.addBtn.button {
+  width: 370px;
+  background-color: #1976d2
+}
+
+.removeBtn.button {
+  width: 360px;
+  background-color: #d32f2f
+}
+
+.button+.button {
+  margin: 10px 0;
+}
+
+.button:hover {
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+#elementList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.actionTypes {
+  display: flex;
+  flex-direction: column;
+}
+
+.element__header {
+  font-size: 18px;
+  color: var(--text-color);
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+}

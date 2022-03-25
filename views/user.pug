@@ -1,0 +1,100 @@
+doctype html
+head
+    title Manager
+    meta(charset='utf-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    link(rel='stylesheet' href='/styles/bootstrap.min.css')
+    link(rel='stylesheet' href='/styles/custom.css')
+    link(rel="icon" type="image/x-icon" href="/images/icon.png")
+    script(src="javascript/libs/jquery.min.js")
+    script(src="/javascript/libs/popper.min.js")
+    script(src="javascript/libs/bootstrap.min.js")
+    script(src="javascript/libs/jquery.validate.min.js")
+    script(src="javascript/user.js")
+    script(src="javascript/passwd.js")
+.container
+  // Modal
+  #myModal.modal.fade(role='dialog')
+    .modal-dialog
+      // Modal content
+      .modal-content
+        .modal-header
+          button.close(type='button' data-dismiss='modal') &times;
+        .modal-body
+          
+        .modal-footer
+          button.btn.btn-info.save(type='button') Save
+          button.btn.btn-default(type='button' data-dismiss='modal') Close
+
+    // Modal Pass
+  #modalPass.modal.fade(role='dialog')
+    .modal-dialog
+      // Modal content
+      .modal-content
+        .modal-header
+          button.close(type='button' data-dismiss='modal') &times;
+        .modal-body-pass
+          .card.card-outline-secondary
+            .card-header
+              h3.mb-0 Change Password
+            .card-body
+              form.form(role='form' autocomplete='off')
+                .form-group
+                  label(for='inputPasswordNew') New Password
+                  input#inputPasswordNew.form-control(type='password' required='')
+                .form-group
+                  label(for='inputPasswordNewVerify') Verify
+                  input#inputPasswordNewVerify.form-control(type='password' required='')
+                .form-group
+                  button.btn.btn-success.btn-lg.float-right#savePass(type='button') Save
+
+  .table-wrapper
+    .table-title
+      .row
+        .col-sm-10
+          h2
+            | Endpoint
+            b Details
+        .col-sm-2
+          .container(style='background-color:#f1f1f1')
+              a#changepass(href='#') Change password
+      table.table.table-bordered
+        thead
+          tr
+            th Name
+            th URI
+            th Auth URL
+            th Method
+            th Header
+            th Id
+            th App Id
+            th App Secret Key
+            th Code Verifier
+            th Code Challenge
+            th Access Token
+            th Expires Time
+            th Refresh Token
+            th Action
+        tbody
+          each ads in selectOpt
+            tr
+              td= ads.name
+              td= ads.uri
+              td= ads.authUrl
+              td= ads.method
+              td= ads.header
+              td= ads._id
+              td= ads.appId
+              td= ads.appSecretKey
+              td= ads.codeVerifier
+              td= ads.codeChallenge
+              td= ads.accessToken
+              td= ads.expiresTime
+              td= ads.refreshToken
+              td
+                button.edit(title='Edit' data-toggle='tooltip') Edit
+                button.delete(title='Delete' data-toggle='tooltip') Delete
+      
+      button.btn.btn-info.add-new(type='button')
+        i.fa.fa-plus
+        |  Add New

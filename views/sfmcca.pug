@@ -1,0 +1,56 @@
+extends layout
+
+block content
+  article.slds-card
+    .slds-card__header.slds-grid
+      header.slds-media.slds-media_center.slds-has-flexi-truncate
+        .slds-media__figure
+          span.slds-icon_container.slds-icon-standard-contact(title="OTT Custom Activity")
+            svg.slds-icon.slds-icon_small(aria-hidden="true")
+              use#iconDynamic(xlink:href="")
+            span.slds-assistive-text contact
+        .slds-media__body
+          h2.slds-card__header-title
+            p.slds-card__header-link.slds-truncate(href="javascript:void(0);" title="Card Header")
+              span#titleDynamic
+    .slds-card__body.slds-card__body_inner
+      form#step1.step.js-settings-form
+        .slds-form-element
+          .slds-form-element__control  
+            .slds-select_container
+              select#messType.slds-select.js-activity-setting(name='messTypes')
+                each messType in messTypes
+                  option(value=messType._id)= messType.name
+
+      form#step2.step.js-settings-form
+        .slds-form-element
+          .slds-form-element__control.js_de_lst        
+          br
+          label.slds-form-element__label(for="DEFields") Key Data Extention Field
+          div#DataExKey.js-activity-setting(name='DataExKey')
+          .slds-form-element__control
+            .slds-select_container
+              select#DEkeyField.slds-select.js-activity-setting(name='DEkeyField')
+          br
+          label.slds-form-element__label(for="DEFields") Data Extention Fields
+          div#DEFields(name='DEFields')
+
+      form#step3.step.js-settings-form
+        
+        .slds-form-element
+          .slds-form-element__control
+            .slds-select_container
+              select#ContentOption.slds-select.js-activity-setting(name='ContentOption')
+          br
+          div
+            label.slds-form-element__label.slds-p-top_medium(for='Text')
+              abbr.slds-required(title='required')
+              | Content |
+              span#errorText
+            button#buttonRefresh(type="button") Refresh
+          br
+          .slds-form-element__control
+            textarea#ContentBuilder.slds-input.js-activity-setting( rows = '20' required='', placeholder='', name='text', disabled)
+            #DisplayContent
+
+    footer.slds-card__footer
