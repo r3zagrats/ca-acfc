@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // const validateForm = function (cb) {
 //     $form = $('.js-settings-form');
@@ -16,20 +16,20 @@ let payload = {};
 let $form;
 $(window).ready(onRender);
 var tmpContent = [];
-var tmpIndexContent = null
-var ContentOption = "";
-var DEkeyField = "";
-var fieldSelected = "";
-var eventDefinitionKey = "";
+var tmpIndexContent = null;
+var ContentOption = '';
+var DEkeyField = '';
+var fieldSelected = '';
+var eventDefinitionKey = '';
 
-connection.on("initActivity", initialize);
-connection.on("requestedTokens", onGetTokens);
-connection.on("requestedEndpoints", onGetEndpoints);
-connection.on("requestedInteraction", requestedInteractionHandler);
-connection.on("clickedNext", next);
-connection.on("clickedBack", prev);
-connection.on("gotoStep", onGotoStep);
-connection.on("requestedSchema", function (data) {
+connection.on('initActivity', initialize);
+connection.on('requestedTokens', onGetTokens);
+connection.on('requestedEndpoints', onGetEndpoints);
+connection.on('requestedInteraction', requestedInteractionHandler);
+connection.on('clickedNext', next);
+connection.on('clickedBack', prev);
+connection.on('gotoStep', onGotoStep);
+connection.on('requestedSchema', function (data) {
   // save schema
   //console.log('*** Schema ***', JSON.stringify(data['schema']));
 });
@@ -37,72 +37,68 @@ connection.on("requestedSchema", function (data) {
 
 var steps = [
   // initialize to the same value as what's set in config.json for consistency
-  { label: "Message Type", key: "step1" },
-  { label: "Data", key: "step2" },
-  { label: "Content", key: "step3" },
+  { label: 'Message Type', key: 'step1' },
+  { label: 'Data', key: 'step2' },
+  { label: 'Content', key: 'step3' },
 ];
 var currentStep = steps[0].key;
 
 const buttonSettings = {
-  button: "next",
+  button: 'next',
   enabled: false,
 };
 
 function onRender() {
-  connection.trigger("ready");
-  connection.trigger("requestTokens");
-  connection.trigger("requestEndpoints");
-  connection.trigger("requestInteraction");
-  connection.trigger("requestSchema");
+  connection.trigger('ready');
+  connection.trigger('requestTokens');
+  connection.trigger('requestEndpoints');
+  connection.trigger('requestInteraction');
+  connection.trigger('requestSchema');
   //trigger change value
-  $("#ContentOption").change(function () {
-    $("#ContentBuilder").val("Loading...");
-    checkContent("process");
+  $('#ContentOption').change(function () {
+    $('#ContentBuilder').val('Loading...');
+    checkContent('process');
   });
 
-  $("#DEkeyField").change(function () {
+  $('#DEkeyField').change(function () {
     if (
-      $("#DEkeyField").val() != "" &&
-      $("#DEkeyField").val() != "None" &&
-      $("#DEkeyField").val() != null
+      $('#DEkeyField').val() != '' &&
+      $('#DEkeyField').val() != 'None' &&
+      $('#DEkeyField').val() != null
     ) {
       buttonSettings.enabled = true;
     } else {
       buttonSettings.enabled = false;
     }
-    connection.trigger("updateButton", buttonSettings);
-    $("#DataExKey").val(
-      '{{Event."' + eventDefinitionKey + '"."' + $("#DEkeyField").val() + '"}}'
-    );
+    connection.trigger('updateButton', buttonSettings);
+    $('#DataExKey').val('{{Event."' + eventDefinitionKey + '"."' + $('#DEkeyField').val() + '"}}');
   });
 
-  $("#buttonRefresh").on("click", function () {
+  $('#buttonRefresh').on('click', function () {
     // console.log(tmpContent.find(cont => cont.id == $("#ContentOption").val()));
-    $("#ContentBuilder").val("Loading...");
-    $("#ContentOption").empty();
-    $("#ContentOption").append('<option value="None">Loading ...</option>');
-    $("#DisplayContent").empty();
+    $('#ContentBuilder').val('Loading...');
+    $('#ContentOption').empty();
+    $('#ContentOption').append('<option value="None">Loading ...</option>');
+    $('#DisplayContent').empty();
     $.ajax({
       url: `/api/getcontent/`,
-      type: "GET",
+      type: 'GET',
       beforeSend: function (xhr) {
-        xhr.setRequestHeader("X-Test-Header", "SetHereYourValueForTheHeader");
+        xhr.setRequestHeader('X-Test-Header', 'SetHereYourValueForTheHeader');
       },
       success: function (data) {
         tmpContent = data.items;
-        $("#ContentOption").empty();
+        tmpIndexContent = null;
+        $('#ContentOption').empty();
         tmpContent.forEach((value) => {
-          if (
-            $("#ContentOption").find('option[value="' + value.id + '"]')
-              .length == 0
-          ) {
-            $("#ContentOption").append(
-              '<option value="' + value.id + '">' + value.name + "</option>"
+          if ($('#ContentOption').find('option[value="' + value.id + '"]').length == 0) {
+            $('#ContentOption').append(
+              '<option value="' + value.id + '">' + value.name + '</option>'
             );
           }
         });
-        $("#ContentOption").val(ContentOption);
-        checkContent("process");
+        $('#ContentOption').val(ContentOption);
+        checkContent('process');
       },
     });
   });
@@ -121,39 +117,37 @@ function onRender() {
  * @param data
  */
 function initialize(data) {
-  console.log("data: ", data);
+  console.log('data: ', data);
   if (data) {
     payload = data;
   }
   const hasInArguments = Boolean(
-    payload["arguments"] &&
-      payload["arguments"].execute &&
-      payload["arguments"].execute.inArguments &&
-      payload["arguments"].execute.inArguments.length > 0
+    payload['arguments'] &&
+      payload['arguments'].execute &&
+      payload['arguments'].execute.inArguments &&
+      payload['arguments'].execute.inArguments.length > 0
   );
-  console.log("hasInArguments: ", hasInArguments);
-  const inArguments = hasInArguments
-    ? payload["arguments"].execute.inArguments
-    : {};
-  if (hasInArguments) tmpIndexContent = payload["arguments"].execute.inArguments[0].tmpIndex
-  console.log("inArguments Before: ", inArguments);
+  console.log('hasInArguments: ', hasInArguments);
+  const inArguments = hasInArguments ? payload['arguments'].execute.inArguments : {};
+  if (hasInArguments) tmpIndexContent = payload['arguments'].execute.inArguments[0].tmpIndex;
+  console.log('inArguments Before: ', inArguments);
   $.each(inArguments, function (index, inArgument) {
     $.each(inArgument, function (key, value) {
-      const $el = $("#" + key);
-      if ($el.attr("type") === "checkbox") {
-        $el.prop("checked", value === "true");
+      const $el = $('#' + key);
+      if ($el.attr('type') === 'checkbox') {
+        $el.prop('checked', value === 'true');
       } else {
         $el.val(value);
       }
-      if (key === "ContentOption") {
+      if (key === 'ContentOption') {
         ContentOption = value;
       }
-      if (key === "DEkeyField") {
+      if (key === 'DEkeyField') {
         DEkeyField = value;
       }
     });
   });
-  console.log("inArguments After: ", inArguments);
+  console.log('inArguments After: ', inArguments);
 }
 
 /**
@@ -180,46 +174,46 @@ function onGetEndpoints(endpoints) {
  */
 function save() {
   //payload.name = 'trung test';
-  payload["metaData"].isConfigured = true;
-  console.dir("payload: ", payload);
-  payload["arguments"].execute.inArguments = [
+  payload['metaData'].isConfigured = true;
+  console.dir('payload: ', payload);
+  payload['arguments'].execute.inArguments = [
     {
-      contactKey: "{{Contact.Key}}",
-      tmpIndex: tmpIndexContent
+      contactKey: '{{Contact.Key}}',
+      tmpIndex: tmpIndexContent,
     },
   ];
   tmpIndexContent = null;
-  console.dir("payload: ", payload);
-  $(".js-activity-setting").each(function () {
+  console.dir('payload: ', payload);
+  $('.js-activity-setting').each(function () {
     const $el = $(this);
     const setting = {
-      id: $(this).attr("id"),
+      id: $(this).attr('id'),
       value: $(this).val(),
     };
-    $.each(payload["arguments"].execute.inArguments, function (index, value) {
-      if ($el.attr("type") === "checkbox") {
-        if ($el.is(":checked")) {
+    $.each(payload['arguments'].execute.inArguments, function (index, value) {
+      if ($el.attr('type') === 'checkbox') {
+        if ($el.is(':checked')) {
           value[setting.id] = setting.value;
         } else {
-          value[setting.id] = "false";
+          value[setting.id] = 'false';
         }
       } else {
         value[setting.id] = setting.value;
       }
     });
   });
-  console.dir("payload: ", payload);
-  connection.trigger("updateActivity", payload);
+  console.dir('payload: ', payload);
+  connection.trigger('updateActivity', payload);
 }
 
 /**
  * Next settings
  */
 function next() {
-  if (currentStep.key === "step3") {
+  if (currentStep.key === 'step3') {
     save();
   } else {
-    connection.trigger("nextStep");
+    connection.trigger('nextStep');
   }
 }
 
@@ -227,12 +221,12 @@ function next() {
  * Back settings
  */
 function prev() {
-  connection.trigger("prevStep");
+  connection.trigger('prevStep');
 }
 
 function onGotoStep(step) {
   showStep(step);
-  connection.trigger("ready");
+  connection.trigger('ready');
 }
 
 function showStep(step, stepIndex) {
@@ -240,87 +234,78 @@ function showStep(step, stepIndex) {
     step = steps[stepIndex - 1];
   }
   currentStep = step;
-  $(".step").hide();
+  $('.step').hide();
 
   switch (currentStep.key) {
-    case "step1":
-      $("#step1").show();
-      $("#titleDynamic").empty().append("Message Type");
-      $("#iconDynamic").attr(
-        "xlink:href",
-        "/icons/standard-sprite/svg/symbols.svg#contact_list"
-      );
-      connection.trigger("updateButton", {
-        button: "next",
+    case 'step1':
+      $('#step1').show();
+      $('#titleDynamic').empty().append('Message Type');
+      $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
+      connection.trigger('updateButton', {
+        button: 'next',
         visible: true,
       });
-      connection.trigger("updateButton", {
-        button: "back",
+      connection.trigger('updateButton', {
+        button: 'back',
         visible: false,
       });
       break;
-    case "step2":
-      $("#step2").show();
-      $("#titleDynamic").empty().append("Data Extention");
-      $("#iconDynamic").attr(
-        "xlink:href",
-        "/icons/standard-sprite/svg/symbols.svg#contact_list"
-      );
+    case 'step2':
+      $('#step2').show();
+      $('#titleDynamic').empty().append('Data Extention');
+      $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
       if (
-        $("#DEkeyField").val() != "" &&
-        $("#DEkeyField").val() != "None" &&
-        $("#DEkeyField").val() != null
+        $('#DEkeyField').val() != '' &&
+        $('#DEkeyField').val() != 'None' &&
+        $('#DEkeyField').val() != null
       ) {
         buttonSettings.enabled = true;
       } else {
         buttonSettings.enabled = false;
       }
-      connection.trigger("updateButton", buttonSettings);
-      connection.trigger("updateButton", {
-        button: "back",
+      connection.trigger('updateButton', buttonSettings);
+      connection.trigger('updateButton', {
+        button: 'back',
         visible: false,
       });
       break;
-    case "step3":
-      $("#step3").show();
-      $("#titleDynamic").empty().append("Content");
-      $("#iconDynamic").attr(
-        "xlink:href",
-        "/icons/standard-sprite/svg/symbols.svg#code_playground"
+    case 'step3':
+      $('#step3').show();
+      $('#titleDynamic').empty().append('Content');
+      $('#iconDynamic').attr(
+        'xlink:href',
+        '/icons/standard-sprite/svg/symbols.svg#code_playground'
       );
-      $("#ContentOption").append('<option value="None">Loading ...</option>');
-      connection.trigger("updateButton", {
-        button: "back",
+      $('#ContentOption').append('<option value="None">Loading ...</option>');
+      connection.trigger('updateButton', {
+        button: 'back',
         visible: true,
       });
-      connection.trigger("updateButton", {
-        button: "next",
-        text: "done",
+      connection.trigger('updateButton', {
+        button: 'next',
+        text: 'done',
         visible: true,
         enabled: false,
       });
       $.ajax({
         url: `/api/getcontent/`,
-        type: "GET",
+        type: 'GET',
         beforeSend: function (xhr) {
-          xhr.setRequestHeader("X-Test-Header", "SetHereYourValueForTheHeader");
+          xhr.setRequestHeader('X-Test-Header', 'SetHereYourValueForTheHeader');
         },
         success: function (data) {
           console.log(data);
           tmpContent = data.items;
-          $("#ContentOption").empty();
+          $('#ContentOption').empty();
           tmpContent.forEach((value) => {
-            if (
-              $("#ContentOption").find('option[value="' + value.id + '"]')
-                .length == 0
-            ) {
-              $("#ContentOption").append(
-                '<option value="' + value.id + '">' + value.name + "</option>"
+            if ($('#ContentOption').find('option[value="' + value.id + '"]').length == 0) {
+              $('#ContentOption').append(
+                '<option value="' + value.id + '">' + value.name + '</option>'
               );
             }
           });
-          $("#ContentOption").val(ContentOption);
-          checkContent("init");
+          $('#ContentOption').val(ContentOption);
+          checkContent('init');
         },
       });
       break;
@@ -328,63 +313,61 @@ function showStep(step, stepIndex) {
 }
 
 function checkContent(type) {
-  console.log("type: " + type);
+  console.log('type: ' + type);
   var alerts = false;
   //var dataRex = type == 'process' ? value.content : $("#ContentBuilder").val();
-  console.log($("#ContentBuilder").val());
+  console.log($('#ContentBuilder').val());
   console.log('tmpContent: ', tmpContent);
   console.log('tmpIndexContent: ' + tmpIndexContent);
-  if(tmpIndexContent !== null) {
-    $("#DisplayContent").empty();
-    $("#DisplayContent").append(tmpContent[tmpIndexContent].content);
+  if (tmpIndexContent !== null) {
+    $('#DisplayContent').empty();
+    $('#DisplayContent').append(tmpContent[tmpIndexContent].content);
   }
-  if ($("#ContentOption").val() != "" && $("#ContentOption").val() != "None") {
-    console.log('ContentOption khong rong~: ', $("#ContentOption").val())
-    console.log($("#ContentBuilder").val());
+  if ($('#ContentOption').val() != '' && $('#ContentOption').val() != 'None') {
+    console.log('ContentOption khong rong~: ', $('#ContentOption').val());
+    console.log($('#ContentBuilder').val());
     tmpContent.forEach((value) => {
-      if (value.id == $("#ContentOption").val()) {
+      if (value.id == $('#ContentOption').val()) {
         const regex = /%%([\s\S]*?)%%/gm;
         let m;
         while (
-          (m = regex.exec(
-            type == "process" ? value.content : $("#ContentBuilder").val()
-          )) !== null
+          (m = regex.exec(type == 'process' ? value.content : $('#ContentBuilder').val())) !== null
         ) {
           if (m.index === regex.lastIndex) {
             regex.lastIndex++;
           }
           if (!fieldSelected.includes(m[1])) {
-            connection.trigger("updateButton", {
-              button: "next",
+            connection.trigger('updateButton', {
+              button: 'next',
               enabled: false,
             });
             alerts = true;
           }
         }
-        if (type == "process") {
-          tmpIndexContent = tmpContent.indexOf(value)
-          console.log("value.content: ", value.content);
+        if (type == 'process') {
+          tmpIndexContent = tmpContent.indexOf(value);
+          console.log('value.content: ', value.content);
           const regex = /(?<=<!--Payload)[\s\S]*(?=Payload-->)/gm;
-          const payloadData = regex.exec(value.content)[0]
-          console.log("payloadData", payloadData);
-          $("#ContentBuilder").val(payloadData);
-          $("#DisplayContent").empty();
-          $("#DisplayContent").append(value.content);
+          const payloadData = regex.exec(value.content)[0];
+          console.log('payloadData', payloadData);
+          $('#ContentBuilder').val(payloadData);
+          $('#DisplayContent').empty();
+          $('#DisplayContent').append(value.content);
         }
       }
     });
     if (alerts == true) {
       //$("#errorText").val("Giá trị ( %%<Field DE>%%) trong Content không hợp lệ ! ");
-      alert("Tồn tại giá trị ( %%<Field DE>%%) trong Content không hợp lệ ! ");
+      alert('Tồn tại giá trị ( %%<Field DE>%%) trong Content không hợp lệ ! ');
     } else {
-      connection.trigger("updateButton", {
-        button: "next",
+      connection.trigger('updateButton', {
+        button: 'next',
         enabled: true,
       });
     }
   } else {
-    connection.trigger("updateButton", {
-      button: "next",
+    connection.trigger('updateButton', {
+      button: 'next',
       enabled: false,
     });
   }
@@ -397,60 +380,52 @@ function requestedInteractionHandler(settings) {
     eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
     //document.getElementById('select-entryevent-defkey').value = eventDefinitionKey;
     //console.log('eventDefinitionKey:' + JSON.stringify(settings));
-    $("#DEkeyField").append('<option value="None">Loading...</option>');
-    $("#DEFields").append('<p value="None" >Loading............</p>');
+    $('#DEkeyField').append('<option value="None">Loading...</option>');
+    $('#DEFields').append('<p value="None" >Loading............</p>');
     $.ajax({
       url: `/api/getevent/`,
       data: { key: eventDefinitionKey },
-      type: "GET",
+      type: 'GET',
       // beforeSend: function (xhr) { xhr.setRequestHeader('X-Test-Header', 'SetHereYourValueForTheHeader'); },
       success: function (data) {
         //$(".js_de_lst").append('<h2 value="' +CustomerKey + '">' + data.dataExtention.Name + '</option>');
-        $(".js_de_lst").append("<p>" + data.dataExtention.Name + "</p>");
+        $('.js_de_lst').append('<p>' + data.dataExtention.Name + '</p>');
         fieldSelected = data.deCol;
-        $("#DEFields").empty();
-        $("#DEkeyField").empty();
-        $("#DEkeyField").append('<option value=""></option>');
+        $('#DEFields').empty();
+        $('#DEkeyField').empty();
+        $('#DEkeyField').append('<option value=""></option>');
         // DEkeyField
         fieldSelected.forEach((value) => {
-          fieldSelected = value.Name + " " + fieldSelected;
-          if (
-            $("#DEkeyField").find('option[value="' + value.Name + '"]')
-              .length == 0
-          ) {
-            $("#DEkeyField").append(
-              '<option value="' + value.Name + '">' + value.Name + "</option>"
+          fieldSelected = value.Name + ' ' + fieldSelected;
+          if ($('#DEkeyField').find('option[value="' + value.Name + '"]').length == 0) {
+            $('#DEkeyField').append(
+              '<option value="' + value.Name + '">' + value.Name + '</option>'
             );
           }
-          if (
-            $("#DEFields").find('p[value="' + value.CustomerKey + '"]')
-              .length == 0
-          ) {
-            $("#DEFields").append(
+          if ($('#DEFields').find('p[value="' + value.CustomerKey + '"]').length == 0) {
+            $('#DEFields').append(
               '<p value="' +
                 value.CustomerKey +
                 '" id = "' +
                 value.Name +
                 '" class = "js-activity-setting">' +
                 value.Name +
-                "</p>"
+                '</p>'
             );
           }
-          $("#" + value.Name).val(
-            '{{Event."' + eventDefinitionKey + '"."' + value.Name + '"}}'
-          );
-          if (DEkeyField != "" && DEkeyField != "None" && DEkeyField != null) {
-            $("#DEkeyField").val(DEkeyField);
-            connection.trigger("updateButton", {
-              button: "next",
+          $('#' + value.Name).val('{{Event."' + eventDefinitionKey + '"."' + value.Name + '"}}');
+          if (DEkeyField != '' && DEkeyField != 'None' && DEkeyField != null) {
+            $('#DEkeyField').val(DEkeyField);
+            connection.trigger('updateButton', {
+              button: 'next',
               enabled: true,
             });
           }
         });
       },
       error: function (XMLHttpRequest, textStatus, errorThrown) {
-        alert("Please choose ENTRY EVENT and SAVE Journey before Continue");
-        connection.trigger("destroy");
+        alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
+        connection.trigger('destroy');
       },
     });
   } catch (err) {

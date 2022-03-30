@@ -1,11 +1,17 @@
 :root {
-  --primary-color: #90caf9;
-  --text-color: #424242;
+  --primary-color: #b0c4df;
+  --text-color: #080707;
 }
 
-textarea.form-input {
-  padding: 10px;
-  resize: vertical;
+.ccb-textarea {
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.ccb-input {
+  font-size: 0.9rem;
+  color: var(--text-color);
+  padding: 1px 10px;
 }
 
 .ccb-form__wrapper {
@@ -18,7 +24,7 @@ li {
   border: 2px solid var(--text-color);
   border-radius: 6px;
   padding: 3px;
-  margin-bottom: 10px
+  margin: 7px 0;
 }
 
 #ccb-form {
@@ -35,61 +41,49 @@ li {
   font-size: 18px;
   color: var(--text-color);
   text-align: center;
-  padding-top: 10px;
+  padding-top: 2px;
 }
 
-.ccb-form__Options {
-  font-size: 18px;
+.ccb-select {
+  font-size: 0.9rem;
   color: var(--text-color);
-  padding: 10px;
+  padding: 6px;
   outline: none;
-  margin: 10px 0;
-  width: 100%;
-  border-radius: 6px;
+  height: auto;
 }
 
-.input-label {
-  font-size: 18px;
+.ccb-label {
+  font-size: 1rem;
   color: var(--text-color);
 }
 
 .form-input {
   font-size: 18px;
   outline: none;
-  margin: 10px 0;
   padding: 10px;
   white-space: pre-wrap;
 }
 
 .button {
-  font-size: 18px;
-  padding: 8px;
-  background-color: #388e3c;
-  color: #fff;
-  border-radius: 6px;
-  border-color: var(--text-color);
-  text-align: center;
   width: 100%;
-}
-
-.addBtn.button {
-  width: 370px;
-  background-color: #1976d2
-}
-
-.removeBtn.button {
-  width: 360px;
-  background-color: #d32f2f
-}
-
-.button+.button {
-  margin: 10px 0;
+  font-size: 0.9rem;
+  padding: 4px 0;
 }
 
 .button:hover {
   cursor: pointer;
-  opacity: 0.8;
-  transition: opacity 0.3s ease;
+}
+
+.button + .button {
+  margin-left: 0;
+}
+
+.submitButton {
+  margin: 7px 0;
+}
+
+.removeButton {
+  margin-top: 7px;
 }
 
 #elementList {
@@ -98,7 +92,7 @@ li {
   list-style: none;
 }
 
-.actionTypes {
+.actionTypeContent {
   display: flex;
   flex-direction: column;
 }

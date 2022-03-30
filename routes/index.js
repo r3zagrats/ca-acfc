@@ -29,11 +29,11 @@ exports.sfmcca = async (req, res) => {
 };
 
 const znsOptions = [
-  { value: "Default", name: "--Please select one of the ZNS options--"},
+  { value: "Default", name: "--Select one of the following options--"},
   { value: "Text", name: "ZNS Text" },
   { value: "Image", name: "ZNS Image" },
-  { value: "List", name: "ZNS List" },
-  { value: "Buttons", name: "ZNS Button" },
+  { value: "NormalList", name: "ZNS Normal List" },
+  { value: "ButtonList", name: "ZNS Button List" },
 ];
 
 exports.ccb = async (req, res) => {
