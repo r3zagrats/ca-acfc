@@ -214,7 +214,7 @@ $('#ccb-form').on('submit', (e) => {
     case 'NormalList': {
       for (const [key, value] of Object.entries(formProps)) {
         $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
-        $(`#ccb-form-msgText-element-text-error`).remove();
+        $(`#ccb-form-${key}-element-text-error`).remove();
       }
       for (const [key, value] of Object.entries(formProps)) {
         if (value.length === 0) {
@@ -243,7 +243,7 @@ $('#ccb-form').on('submit', (e) => {
     case 'ButtonList': {
       for (const [key, value] of Object.entries(formProps)) {
         $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
-        $(`#ccb-form-msgText-element-text-error`).remove();
+        $(`#ccb-form-${key}-element-text-error`).remove();
       }
       for (const [key, value] of Object.entries(formProps)) {
         if (value.length === 0) {
