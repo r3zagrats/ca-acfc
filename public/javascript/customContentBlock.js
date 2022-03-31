@@ -1,3 +1,5 @@
+
+//Initiate a new session
 var sdk = new window.sfdc.BlockSDK(
   [
     'blocktester.herokuapp.com',
@@ -8,6 +10,8 @@ var sdk = new window.sfdc.BlockSDK(
   ],
   true
 );
+
+// Declare temp variables
 let normalList = [
   {
     id: 1,
@@ -31,8 +35,12 @@ let buttonList = [
     smsContent: '',
     phoneCode: '',
   },
-];
-const renderInitUI = () => {
+]
+
+/**
+ * Render Initial UI
+ */
+const renderInitialUI = () => {
   $('#ccb-form').append('<div class="ccb-form__znsContent-wrapper"></div>');
   $('#ccb-form').append(
     '<input id="addNormalList" class="button slds-button slds-button_brand" value="Add Element" />'
@@ -48,6 +56,9 @@ const renderInitUI = () => {
   $('#addButtonList').hide();
 };
 
+/**
+ * Restore
+ */
 const restoreData = () => {
   sdk.getData((data) => {
     console.log('data: ', data);
@@ -57,16 +68,16 @@ const restoreData = () => {
     }
     if (data.type === 'Text') {
       RenderZNSText();
-      $('#ccb-select').val(data.type);
+      $('#ccb-znsOptions-select').val(data.type);
       $('#msgText').val(data.text);
     } else if (data.type === 'Image') {
       RenderZNSImage();
-      $('#ccb-select').val(data.type);
+      $('#ccb-znsOptions-select').val(data.type);
       $('#msgText').val(data.text);
       $('#imageUrl').val(data.imageUrl);
     } else if (data.type === 'NormalList') {
       console.log('data: ', data);
-      $('#ccb-select').val(data.type);
+      $('#ccb-znsOptions-select').val(data.type);
       $('.ccb-form__znsContent-wrapper').append('<ul id="elementList"></ul>');
       $('#submitBtn').show();
       $('#addNormalList').show();
@@ -75,7 +86,7 @@ const restoreData = () => {
       normalList = data.elements;
       localStorage.setItem('LSNormalList', JSON.stringify(normalList));
     } else if (data.type === 'ButtonList') {
-      $('#ccb-select').val(data.type);
+      $('#ccb-znsOptions-select').val(data.type);
       $('.ccb-form__znsContent-wrapper').append(
         '<div id="ccb-form__Group-Button__header" class="ccb-form__Group"></div>'
       );
@@ -102,11 +113,17 @@ const restoreData = () => {
   });
 };
 
-renderInitUI();
+// App running
+renderInitialUI();
 
 restoreData();
 
-$('#ccb-select').on('change', (e) => {
+// DOM events listeners
+
+/** 
+ * Listening to ZNS Options changes
+ */
+$('#ccb-znsOptions-select').on('change', (e) => {
   switch (e.target.value) {
     case 'Default': {
       $('.ccb-form__znsContent-wrapper').empty();
@@ -158,10 +175,16 @@ $('#ccb-select').on('change', (e) => {
   }
 });
 
+/** 
+ * Listening to form keyup events
+ */
 $('#ccb-form').on('keyup', (e) => {
-  handleRender();
+  ReRenderUI();
 });
 
+/** 
+ * Listening to form submit events
+ */
 $('#ccb-form').on('submit', (e) => {
   let errorMsg = '';
   let hasError = false;
@@ -212,61 +235,11 @@ $('#ccb-form').on('submit', (e) => {
       break;
     }
     case 'NormalList': {
-      for (const [key, value] of Object.entries(formProps)) {
-        $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
-        $(`#ccb-form-${key}-element-text-error`).remove();
-      }
-      for (const [key, value] of Object.entries(formProps)) {
-        if (value.length === 0) {
-          hasError = true;
-          errorMsg = 'This field is required';
-          $(`#ccb-form-${key}-element`).addClass('slds-has-error');
-          $(`#ccb-form-${key}-element`).append(
-            `<div class="slds-form-element__help" id="ccb-form-${key}-element-text-error">${errorMsg}</div>`
-          );
-        }
-        if (key.includes('actionType')) {
-          $(`#${key}`).on('change', (e) => {
-            $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
-            $(`#ccb-form-${key}-element-text-error`).remove();
-          });
-        }
-        else {
-          $(`#${key}`).on('keydown', (e) => {
-            $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
-            $(`#ccb-form-${key}-element-text-error`).remove();
-          });
-        }
-      }
+      hasError = ValidateZNSList(formProps, hasError, errorMsg)
       break;
     }
     case 'ButtonList': {
-      for (const [key, value] of Object.entries(formProps)) {
-        $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
-        $(`#ccb-form-${key}-element-text-error`).remove();
-      }
-      for (const [key, value] of Object.entries(formProps)) {
-        if (value.length === 0) {
-          hasError = true;
-          errorMsg = 'This field is required';
-          $(`#ccb-form-${key}-element`).addClass('slds-has-error');
-          $(`#ccb-form-${key}-element`).append(
-            `<div class="slds-form-element__help" id="ccb-form-${key}-element-text-error">${errorMsg}</div>`
-          );
-        }
-        if (key.includes('actionType')) {
-          $(`#${key}`).on('change', (e) => {
-            $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
-            $(`#ccb-form-${key}-element-text-error`).remove();
-          });
-        }
-        else {
-          $(`#${key}`).on('keydown', (e) => {
-            $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
-            $(`#ccb-form-${key}-element-text-error`).remove();
-          });
-        }
-      }
+      hasError = ValidateZNSList(formProps, hasError, errorMsg)
       break;
     }
   }
@@ -275,6 +248,9 @@ $('#ccb-form').on('submit', (e) => {
   }
 });
 
+/**
+ * Listening to Add button click
+ */
 $('#addNormalList').click(() => {
   normalList = JSON.parse(localStorage.getItem('LSNormalList'));
   if (normalList.length === 5) {
@@ -286,6 +262,9 @@ $('#addNormalList').click(() => {
   RenderZNSList(normalList, false);
 });
 
+/**
+ * Listening to Add button click
+ */
 $('#addButtonList').click(() => {
   buttonList = JSON.parse(localStorage.getItem('LSButtonList'));
   if (buttonList.length === 5) {
@@ -297,6 +276,11 @@ $('#addButtonList').click(() => {
   RenderZNSList(buttonList, true);
 });
 
+// List processing
+/**
+ * Add Normal List Element
+ * @param {array} elementList 
+ */
 const AddNormalListElement = (elementList) => {
   const newElement = {
     id: elementList.length + 1,
@@ -311,6 +295,10 @@ const AddNormalListElement = (elementList) => {
   elementList.push(newElement);
 };
 
+/**
+ * Add Button List Element
+ * @param {array} elementList 
+ */
 const AddButtonListElement = (elementList) => {
   const newElement = {
     id: elementList.length + 1,
@@ -324,7 +312,13 @@ const AddButtonListElement = (elementList) => {
   elementList.push(newElement);
 };
 
-const RemoveElement = (elementList, id) => {
+/**
+ * Remove Normal/Button List Element
+ * @param {array} elementList 
+ * @param {number} id 
+ * @returns 
+ */
+const RemoveListElement = (elementList, id) => {
   elementList = elementList.filter((element) => {
     return element.id !== id;
   });
@@ -334,7 +328,53 @@ const RemoveElement = (elementList, id) => {
   return elementList;
 };
 
-const HandleListInput = (input) => {
+//Validate function
+
+/**
+ * Validate ZNS Normal/Button List
+ * @param {object} formProps 
+ * @param {boolean} hasError 
+ * @param {string} errorMsg 
+ * @returns {string}
+ */
+const ValidateZNSList = (formProps, hasError, errorMsg) => {
+  for (const [key, value] of Object.entries(formProps)) {
+    $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
+    $(`#ccb-form-${key}-element-text-error`).remove();
+  }
+  for (const [key, value] of Object.entries(formProps)) {
+    if (value.length === 0) {
+      hasError = true;
+      errorMsg = 'This field is required';
+      $(`#ccb-form-${key}-element`).addClass('slds-has-error');
+      $(`#ccb-form-${key}-element`).append(
+        `<div class="slds-form-element__help" id="ccb-form-${key}-element-text-error">${errorMsg}</div>`
+      );
+    }
+    if (key.includes('actionType')) {
+      $(`#${key}`).on('change', (e) => {
+        $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
+        $(`#ccb-form-${key}-element-text-error`).remove();
+      });
+    }
+    else {
+      $(`#${key}`).on('keydown', (e) => {
+        $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
+        $(`#ccb-form-${key}-element-text-error`).remove();
+      });
+    }
+  }
+  return hasError
+}
+
+// Handler fucntions
+
+/**
+ * Handle ZNS Normal List Input
+ * @param {object} input 
+ * @returns {array}
+ */
+const HandleNormalListInput = (input) => {
   const result = [];
   for (let i = 1; i < 6; i++) {
     const element = {};
@@ -448,6 +488,11 @@ const HandleListInput = (input) => {
   });
 };
 
+/**
+ * Handle ZNS Button List Input
+ * @param {object} input 
+ * @returns {array}
+ */
 const HandleButtonListInput = (input) => {
   const result = [];
   for (let i = 1; i < 6; i++) {
@@ -531,230 +576,10 @@ const HandleButtonListInput = (input) => {
   });
 };
 
-const RenderZNSText = () => {
-  $('.ccb-form__znsContent-wrapper').empty();
-  $('.ccb-form__znsContent-wrapper').append('<div class="ccb-form__Group"></div>');
-  $('.ccb-form__Group').append(`
-    <div class="slds-form-element" id="ccb-form-msgText-element">
-      <label class="slds-form-element__label ccb-label" for="msgText"><abbr class="slds-required" title="required">* </abbr>Message:</label>
-      <div class="slds-form-element__control">
-        <textarea class="slds-textarea ccb-textarea" type="text" id="msgText" name="msgText" maxlength="2000" placeholder="Enter your message. Maximum length: 2000"></textarea>
-      </div>
-    </div>
-  `);
-  $('#submitBtn').show();
-  $('#addNormalList').hide();
-  $('#addButtonList').hide();
-};
-
-const RenderZNSImage = () => {
-  $('.ccb-form__znsContent-wrapper').empty();
-  $('.ccb-form__znsContent-wrapper').append('<div class="ccb-form__Group"></div>');
-  $('.ccb-form__Group').append(`
-    <div class="slds-form-element" id="ccb-form-msgText-element">
-      <label class="slds-form-element__label ccb-label" for="msgText">Message:</label>
-      <div class="slds-form-element__control">
-        <textarea class="slds-textarea ccb-textarea" type="text" id="msgText" name="msgText" maxlength="2000" placeholder="Enter your message. Maximum length: 2000"></textarea>
-      </div>
-    </div>
-    <div class="slds-form-element" id="ccb-form-imageUrl-element">
-      <label class="slds-form-element__label ccb-label" for="imageUrl"><abbr class="slds-required" title="required">* </abbr>Image URL:</label>
-      <div class="slds-form-element__control">
-        <input class="slds-input ccb-input" type="text" id="imageUrl" name="imageUrl" placeholder="Enter your URL. Maximum size: 1MB, file: png, jpg"">
-      </div>
-    </div>
-  `);
-  $('#submitBtn').show();
-  $('#addNormalList').hide();
-  $('#addButtonList').hide();
-};
-
-const RenderZNSList = (elementList, isButtonList) => {
-  $('#elementList').empty();
-  elementList.forEach((el) => {
-    $('#elementList').append(
-      `<li id="element${el.id}"><p class="element__header">Element ${el.id}</p></li>`
-    );
-    $(`#element${el.id}`).append(
-      `<div id="ccb-form__Group${el.id}" class="ccb-form__Group"></div>`
-    );
-    if (el.id !== 1) {
-      $(`#element${el.id}`).append(
-        `<input id="removeBtn${el.id}" class="button removeButton slds-button slds-button_destructive" value="Remove"/>`
-      );
-    }
-    $(`#ccb-form__Group${el.id}`).append(`
-      <div class="slds-form-element" id="ccb-form-title${el.id}-element">
-        <label class="slds-form-element__label ccb-label" for="title${el.id}"><abbr class="slds-required" title="required">* </abbr>Title:</label>
-        <div class="slds-form-element__control">
-          <textarea class="slds-textarea ccb-textarea" type="text" id="title${el.id}" maxlength="100" name="title${el.id}" placeholder="Enter your title. Maximum length: 100"></textarea>
-        </div>
-      </div>
-    `);
-    $(`#title${el.id}`).val(el.title);
-    if (isButtonList === false) {
-      if (el.id === 1) {
-        $(`#ccb-form__Group${el.id}`).append(`
-          <div class="slds-form-element" id="ccb-form-subTitle${el.id}-element">
-            <label class="slds-form-element__label ccb-label" for="subTitle${el.id}"><abbr class="slds-required" title="required">* </abbr>Subtitle:</label>
-            <div class="slds-form-element__control">
-              <textarea class="slds-textarea ccb-textarea" type="text" id="subTitle${el.id}" maxlength="500" name="subTitle${el.id}" placeholder="Enter your subtitle. Maximum length: 500"></textarea>
-            </div>
-          </div>
-        `);
-        $(`#subTitle${el.id}`).val(el.subTitle);
-      }
-      $(`#ccb-form__Group${el.id}`).append(`
-        <div class="slds-form-element" id="ccb-form-imageUrl${el.id}-element">
-          <label class="slds-form-element__label ccb-label" for="imageUrl${el.id}"><abbr class="slds-required" title="required">* </abbr>Image URL:</label>
-          <div class="slds-form-element__control">
-            <input class="slds-input ccb-input" type="text" id="imageUrl${el.id}" name="imageUrl${el.id}" placeholder="Enter your URL. Maximum size: 1MB, file: png, jpg">
-          </div>
-        </div>
-      `);
-      $(`#imageUrl${el.id}`).val(el.imageUrl);
-    }
-    $(`#ccb-form__Group${el.id}`).append(`
-      <div class="slds-form-element" id="ccb-form-actionType${el.id}-element">
-        <label class="slds-form-element__label ccb-label" for="actionType${el.id}"><abbr class="slds-required" title="required">* </abbr>Action types:</label>
-        <div class="slds-form-element__control">
-          <select name="actionType${el.id}" id="actionType${el.id}" class="ccb-select slds-select"></select>
-        </div>
-      </div>
-    `);
-    const actionType = {
-      '--Select one of the following options--': '',
-      'Open URL': 'oa.open.url',
-      'Showing Message': 'oa.query.show',
-      'Hiding Message': 'oa.query.hide',
-      'Sms Text': 'oa.open.sms',
-      'Phone Call': 'oa.open.phone',
-    };
-    $.each(actionType, (key, value) => {
-      $(`#actionType${el.id}`).append(`<option value=${value}>${key}</option>`);
-    });
-    $(`#ccb-form__Group${el.id}`).append(
-      `<div id="actionTypeContent${el.id}" class="actionTypeContent"></div>`
-    );
-    $(`#actionType${el.id}`).val(el.actionType);
-    RenderActionType(el, el.actionType);
-    $(`#actionType${el.id}`).on('change', (e) => {
-      RenderActionType(el, e.target.value);
-    });
-
-    if (isButtonList === false) {
-      $(`#removeBtn${el.id}`).click(() => {
-        normalList = JSON.parse(localStorage.getItem('LSNormalList'));
-        normalList = RemoveElement(normalList, el.id);
-        localStorage.setItem('LSNormalList', JSON.stringify(normalList));
-        RenderZNSList(normalList, false);
-        handleRender();
-      });
-    } else {
-      $(`#removeBtn${el.id}`).click(() => {
-        buttonList = JSON.parse(localStorage.getItem('LSButtonList'));
-        buttonList = RemoveElement(buttonList, el.id);
-        localStorage.setItem('LSButtonList', JSON.stringify(buttonList));
-        RenderZNSList(buttonList);
-        handleRender();
-      });
-    }
-  });
-};
-
-const RenderActionType = (el, type) => {
-  switch (type) {
-    case '': {
-      $(`#actionTypeContent${el.id}`).empty();
-      break;
-    }
-    case `oa.open.url`: {
-      $(`#actionTypeContent${el.id}`).empty();
-      $(`#actionTypeContent${el.id}`).append(`
-        <div class="slds-form-element" id="ccb-form-openUrl${el.id}-element">
-          <label class="slds-form-element__label ccb-label" for="openUrl${el.id}"><abbr class="slds-required" title="required">* </abbr>URL:</label>
-          <div class="slds-form-element__control">
-            <input class="slds-input ccb-input" type="text" id="openUrl${el.id}" name="openUrl${el.id}" placeholder="Enter your URL">
-          </div>
-        </div>
-      `);
-      $(`#openUrl${el.id}`).val(el.openUrl);
-      break;
-    }
-    case `oa.query.show`: {
-      console.log('el.payload: ', el, el.payload);
-      $(`#actionTypeContent${el.id}`).empty();
-      $(`#actionTypeContent${el.id}`).append(`
-        <div class="slds-form-element" id="ccb-form-payload${el.id}-element">
-          <label class="slds-form-element__label ccb-label" for="payload${el.id}"><abbr class="slds-required" title="required">* </abbr>Payload:</label>
-          <div class="slds-form-element__control">
-            <textarea class="slds-input ccb-input" type="text" id="payload${el.id}" maxlength="1000" name="payload${el.id}" placeholder="Enter your payload. Maximum length: 1000"></textarea>
-          </div>
-        </div>
-      `);
-      if (typeof el.payload === 'object') {
-        $(`#payload${el.id}`).val('');
-      } else {
-        $(`#payload${el.id}`).val(el.payload);
-      }
-      break;
-    }
-    case `oa.query.hide`: {
-      $(`#actionTypeContent${el.id}`).empty();
-      $(`#actionTypeContent${el.id}`).append(`
-        <div class="slds-form-element" id="ccb-form-payload${el.id}-element">
-          <label class="slds-form-element__label ccb-label" for="payload${el.id}"><abbr class="slds-required" title="required">* </abbr>Payload:</label>
-          <div class="slds-form-element__control">
-            <textarea class="slds-input ccb-input" type="text" id="payload${el.id}" maxlength="1000" name="payload${el.id}" placeholder="Enter your payload. Maximum length: 1000"></textarea>
-          </div>
-        </div>
-      `);
-      if (typeof el.payload === 'object') {
-        $(`#payload${el.id}`).val('');
-      } else {
-        $(`#payload${el.id}`).val(el.payload);
-      }
-      break;
-    }
-    case `oa.open.sms`: {
-      $(`#actionTypeContent${el.id}`).empty();
-      $(`#actionTypeContent${el.id}`).append(`
-        <div class="slds-form-element" id="ccb-form-smsContent${el.id}-element">
-          <label class="slds-form-element__label ccb-label" for="smsContent${el.id}"><abbr class="slds-required" title="required">* </abbr>SMS message:</label>
-          <div class="slds-form-element__control">
-            <textarea class="slds-textarea ccb-textarea" type="text" id="smsContent${el.id}" maxlength="160" name="smsContent${el.id}" placeholder="Enter your message. Maximum length: 160"></textarea>
-          </div>
-        </div>
-      `);
-      $(`#smsContent${el.id}`).val(el.smsContent);
-      $(`#actionTypeContent${el.id}`).append(`
-        <div class="slds-form-element" id="ccb-form-phoneCode${el.id}-element">
-          <label class="slds-form-element__label ccb-label" for="phoneCode${el.id}"><abbr class="slds-required" title="required">* </abbr>Phone number:</label>
-          <div class="slds-form-element__control">
-            <input class="slds-input ccb-input" type="tel" id="phoneCode${el.id}" name="phoneCode${el.id}" placeholder="Enter your phone number">
-          </div>
-        </div>
-      `);
-      $(`#phoneCode${el.id}`).val(el.phoneCode);
-      break;
-    }
-    case `oa.open.phone`: {
-      $(`#actionTypeContent${el.id}`).empty();
-      $(`#actionTypeContent${el.id}`).append(`
-        <div class="slds-form-element" id="ccb-form-phoneCode${el.id}-element">
-          <label class="slds-form-element__label ccb-label" for="phoneCode${el.id}"><abbr class="slds-required" title="required">* </abbr>Phone number:</label>
-          <div class="slds-form-element__control">
-            <input class="slds-input ccb-input" type="tel" id="phoneCode${el.id}" name="phoneCode${el.id}" placeholder="Enter your phone number">
-          </div>
-        </div>
-      `);
-      $(`#phoneCode${el.id}`).val(el.phoneCode);
-      break;
-    }
-  }
-};
-
-const handleRender = () => {
+/**
+ * Rendering 
+ */
+const ReRenderUI = () => {
   const myForm = document.getElementById('ccb-form');
   const formData = new FormData(myForm);
   const formProps = Object.fromEntries(formData);
@@ -884,7 +709,7 @@ const handleRender = () => {
         break;
       }
       case 'NormalList': {
-        const result = HandleListInput(formProps);
+        const result = HandleNormalListInput(formProps);
         console.log('formProps', formProps);
         const { imageUrl1, title1, subTitle1 } = formProps;
         let htmlScript = `
@@ -1070,4 +895,244 @@ const handleRender = () => {
       }
     }
   });
+};
+
+// Render functions
+/**
+ * Render ZNS Text
+ */
+const RenderZNSText = () => {
+  $('.ccb-form__znsContent-wrapper').empty();
+  $('.ccb-form__znsContent-wrapper').append('<div class="ccb-form__Group"></div>');
+  $('.ccb-form__Group').append(`
+    <div class="slds-form-element" id="ccb-form-msgText-element">
+      <label class="slds-form-element__label ccb-label" for="msgText"><abbr class="slds-required" title="required">* </abbr>Message:</label>
+      <div class="slds-form-element__control">
+        <textarea class="slds-textarea ccb-textarea" type="text" id="msgText" name="msgText" maxlength="2000" placeholder="Enter your message. Maximum length: 2000"></textarea>
+      </div>
+    </div>
+  `);
+  $('#submitBtn').show();
+  $('#addNormalList').hide();
+  $('#addButtonList').hide();
+};
+
+/**
+ * Render ZNS Image
+ */
+const RenderZNSImage = () => {
+  $('.ccb-form__znsContent-wrapper').empty();
+  $('.ccb-form__znsContent-wrapper').append('<div class="ccb-form__Group"></div>');
+  $('.ccb-form__Group').append(`
+    <div class="slds-form-element" id="ccb-form-msgText-element">
+      <label class="slds-form-element__label ccb-label" for="msgText">Message:</label>
+      <div class="slds-form-element__control">
+        <textarea class="slds-textarea ccb-textarea" type="text" id="msgText" name="msgText" maxlength="2000" placeholder="Enter your message. Maximum length: 2000"></textarea>
+      </div>
+    </div>
+    <div class="slds-form-element" id="ccb-form-imageUrl-element">
+      <label class="slds-form-element__label ccb-label" for="imageUrl"><abbr class="slds-required" title="required">* </abbr>Image URL:</label>
+      <div class="slds-form-element__control">
+        <input class="slds-input ccb-input" type="text" id="imageUrl" name="imageUrl" placeholder="Enter your URL. Maximum size: 1MB, file: png, jpg"">
+      </div>
+    </div>
+  `);
+  $('#submitBtn').show();
+  $('#addNormalList').hide();
+  $('#addButtonList').hide();
+};
+
+/**
+ * Render ZNS Normal/Button List
+ * @param {array} elementList 
+ * @param {boolean} isButtonList 
+ */
+const RenderZNSList = (elementList, isButtonList) => {
+  $('#elementList').empty();
+  elementList.forEach((el) => {
+    $('#elementList').append(
+      `<li id="element${el.id}"><p class="element__header">Element ${el.id}</p></li>`
+    );
+    $(`#element${el.id}`).append(
+      `<div id="ccb-form__Group${el.id}" class="ccb-form__Group"></div>`
+    );
+    if (el.id !== 1) {
+      $(`#element${el.id}`).append(
+        `<input id="removeBtn${el.id}" class="button removeButton slds-button slds-button_destructive" value="Remove"/>`
+      );
+    }
+    $(`#ccb-form__Group${el.id}`).append(`
+      <div class="slds-form-element" id="ccb-form-title${el.id}-element">
+        <label class="slds-form-element__label ccb-label" for="title${el.id}"><abbr class="slds-required" title="required">* </abbr>Title:</label>
+        <div class="slds-form-element__control">
+          <textarea class="slds-textarea ccb-textarea" type="text" id="title${el.id}" maxlength="100" name="title${el.id}" placeholder="Enter your title. Maximum length: 100"></textarea>
+        </div>
+      </div>
+    `);
+    $(`#title${el.id}`).val(el.title);
+    if (isButtonList === false) {
+      if (el.id === 1) {
+        $(`#ccb-form__Group${el.id}`).append(`
+          <div class="slds-form-element" id="ccb-form-subTitle${el.id}-element">
+            <label class="slds-form-element__label ccb-label" for="subTitle${el.id}"><abbr class="slds-required" title="required">* </abbr>Subtitle:</label>
+            <div class="slds-form-element__control">
+              <textarea class="slds-textarea ccb-textarea" type="text" id="subTitle${el.id}" maxlength="500" name="subTitle${el.id}" placeholder="Enter your subtitle. Maximum length: 500"></textarea>
+            </div>
+          </div>
+        `);
+        $(`#subTitle${el.id}`).val(el.subTitle);
+      }
+      $(`#ccb-form__Group${el.id}`).append(`
+        <div class="slds-form-element" id="ccb-form-imageUrl${el.id}-element">
+          <label class="slds-form-element__label ccb-label" for="imageUrl${el.id}"><abbr class="slds-required" title="required">* </abbr>Image URL:</label>
+          <div class="slds-form-element__control">
+            <input class="slds-input ccb-input" type="text" id="imageUrl${el.id}" name="imageUrl${el.id}" placeholder="Enter your URL. Maximum size: 1MB, file: png, jpg">
+          </div>
+        </div>
+      `);
+      $(`#imageUrl${el.id}`).val(el.imageUrl);
+    }
+    $(`#ccb-form__Group${el.id}`).append(`
+      <div class="slds-form-element" id="ccb-form-actionType${el.id}-element">
+        <label class="slds-form-element__label ccb-label" for="actionType${el.id}"><abbr class="slds-required" title="required">* </abbr>Action types:</label>
+        <div class="slds-form-element__control">
+          <select name="actionType${el.id}" id="actionType${el.id}" class="ccb-select slds-select"></select>
+        </div>
+      </div>
+    `);
+    const actionType = {
+      '--Select one of the following options--': '',
+      'Open URL': 'oa.open.url',
+      'Showing Message': 'oa.query.show',
+      'Hiding Message': 'oa.query.hide',
+      'Sms Text': 'oa.open.sms',
+      'Phone Call': 'oa.open.phone',
+    };
+    $.each(actionType, (key, value) => {
+      $(`#actionType${el.id}`).append(`<option value=${value}>${key}</option>`);
+    });
+    $(`#ccb-form__Group${el.id}`).append(
+      `<div id="actionTypeContent${el.id}" class="actionTypeContent"></div>`
+    );
+    $(`#actionType${el.id}`).val(el.actionType);
+    RenderActionTypes(el, el.actionType);
+    $(`#actionType${el.id}`).on('change', (e) => {
+      RenderActionTypes(el, e.target.value);
+    });
+
+    if (isButtonList === false) {
+      $(`#removeBtn${el.id}`).click(() => {
+        normalList = JSON.parse(localStorage.getItem('LSNormalList'));
+        normalList = RemoveListElement(normalList, el.id);
+        localStorage.setItem('LSNormalList', JSON.stringify(normalList));
+        RenderZNSList(normalList, false);
+        ReRenderUI();
+      });
+    } else {
+      $(`#removeBtn${el.id}`).click(() => {
+        buttonList = JSON.parse(localStorage.getItem('LSButtonList'));
+        buttonList = RemoveListElement(buttonList, el.id);
+        localStorage.setItem('LSButtonList', JSON.stringify(buttonList));
+        RenderZNSList(buttonList);
+        ReRenderUI();
+      });
+    }
+  });
+};
+
+/**
+ * Render ZNS Action Types
+ * @param {object} el 
+ * @param {string} type 
+ */
+const RenderActionTypes = (el, type) => {
+  switch (type) {
+    case '': {
+      $(`#actionTypeContent${el.id}`).empty();
+      break;
+    }
+    case `oa.open.url`: {
+      $(`#actionTypeContent${el.id}`).empty();
+      $(`#actionTypeContent${el.id}`).append(`
+        <div class="slds-form-element" id="ccb-form-openUrl${el.id}-element">
+          <label class="slds-form-element__label ccb-label" for="openUrl${el.id}"><abbr class="slds-required" title="required">* </abbr>URL:</label>
+          <div class="slds-form-element__control">
+            <input class="slds-input ccb-input" type="text" id="openUrl${el.id}" name="openUrl${el.id}" placeholder="Enter your URL">
+          </div>
+        </div>
+      `);
+      $(`#openUrl${el.id}`).val(el.openUrl);
+      break;
+    }
+    case `oa.query.show`: {
+      console.log('el.payload: ', el, el.payload);
+      $(`#actionTypeContent${el.id}`).empty();
+      $(`#actionTypeContent${el.id}`).append(`
+        <div class="slds-form-element" id="ccb-form-payload${el.id}-element">
+          <label class="slds-form-element__label ccb-label" for="payload${el.id}"><abbr class="slds-required" title="required">* </abbr>Payload:</label>
+          <div class="slds-form-element__control">
+            <textarea class="slds-input ccb-input" type="text" id="payload${el.id}" maxlength="1000" name="payload${el.id}" placeholder="Enter your payload. Maximum length: 1000"></textarea>
+          </div>
+        </div>
+      `);
+      if (typeof el.payload === 'object') {
+        $(`#payload${el.id}`).val('');
+      } else {
+        $(`#payload${el.id}`).val(el.payload);
+      }
+      break;
+    }
+    case `oa.query.hide`: {
+      $(`#actionTypeContent${el.id}`).empty();
+      $(`#actionTypeContent${el.id}`).append(`
+        <div class="slds-form-element" id="ccb-form-payload${el.id}-element">
+          <label class="slds-form-element__label ccb-label" for="payload${el.id}"><abbr class="slds-required" title="required">* </abbr>Payload:</label>
+          <div class="slds-form-element__control">
+            <textarea class="slds-input ccb-input" type="text" id="payload${el.id}" maxlength="1000" name="payload${el.id}" placeholder="Enter your payload. Maximum length: 1000"></textarea>
+          </div>
+        </div>
+      `);
+      if (typeof el.payload === 'object') {
+        $(`#payload${el.id}`).val('');
+      } else {
+        $(`#payload${el.id}`).val(el.payload);
+      }
+      break;
+    }
+    case `oa.open.sms`: {
+      $(`#actionTypeContent${el.id}`).empty();
+      $(`#actionTypeContent${el.id}`).append(`
+        <div class="slds-form-element" id="ccb-form-smsContent${el.id}-element">
+          <label class="slds-form-element__label ccb-label" for="smsContent${el.id}"><abbr class="slds-required" title="required">* </abbr>SMS message:</label>
+          <div class="slds-form-element__control">
+            <textarea class="slds-textarea ccb-textarea" type="text" id="smsContent${el.id}" maxlength="160" name="smsContent${el.id}" placeholder="Enter your message. Maximum length: 160"></textarea>
+          </div>
+        </div>
+      `);
+      $(`#smsContent${el.id}`).val(el.smsContent);
+      $(`#actionTypeContent${el.id}`).append(`
+        <div class="slds-form-element" id="ccb-form-phoneCode${el.id}-element">
+          <label class="slds-form-element__label ccb-label" for="phoneCode${el.id}"><abbr class="slds-required" title="required">* </abbr>Phone number:</label>
+          <div class="slds-form-element__control">
+            <input class="slds-input ccb-input" type="tel" id="phoneCode${el.id}" name="phoneCode${el.id}" placeholder="Enter your phone number">
+          </div>
+        </div>
+      `);
+      $(`#phoneCode${el.id}`).val(el.phoneCode);
+      break;
+    }
+    case `oa.open.phone`: {
+      $(`#actionTypeContent${el.id}`).empty();
+      $(`#actionTypeContent${el.id}`).append(`
+        <div class="slds-form-element" id="ccb-form-phoneCode${el.id}-element">
+          <label class="slds-form-element__label ccb-label" for="phoneCode${el.id}"><abbr class="slds-required" title="required">* </abbr>Phone number:</label>
+          <div class="slds-form-element__control">
+            <input class="slds-input ccb-input" type="tel" id="phoneCode${el.id}" name="phoneCode${el.id}" placeholder="Enter your phone number">
+          </div>
+        </div>
+      `);
+      $(`#phoneCode${el.id}`).val(el.phoneCode);
+      break;
+    }
+  }
 };

@@ -15,7 +15,6 @@ const bucketName = 'crucial-zodiac-341510.appspot.com';
 const filePath = './log/ZNSsent.txt';
 const destFileName = 'ZNSsent.txt';
 const storage = new Storage();
-
 /**
  * The Journey Builder calls this method for each contact processed by the journey.
  * @param req
