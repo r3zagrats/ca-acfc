@@ -178,7 +178,8 @@ $('#ccb-znsOptions-select').on('change', (e) => {
 /** 
  * Listening to form keyup events
  */
-$('#ccb-form').on('keyup', (e) => {
+$('#ccb-form').on('keyup mousemove', (e) => {
+  console.log('processing')
   ReRenderUI();
 });
 
