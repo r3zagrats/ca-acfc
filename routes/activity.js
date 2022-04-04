@@ -91,21 +91,22 @@ exports.execute = async (req, res) => {
           Error: znsSentTracking.error,
           Message: znsSentTracking.message,
         };
-        const firstStep = RestClient.insertZaloSendLog(
+        const firstStep = await RestClient.insertZaloSendLog(
           JSON.stringify({
             items: [temp],
           })
         );
-        const secondStep = fsPromises.appendFile(
-          './public/ZNSsent.txt',
-          `, ${JSON.stringify(temp)} \n`
-        );
-        const thirdStep = storage.bucket(bucketName).upload(filePath, {
-          destination: destFileName,
-        });
-        const finalResult = await Promise.all([firstStep, secondStep, thirdStep]);
-        console.log('final result: ', finalResult)
-        console.log(`${filePath} uploaded to ${bucketName}`);
+        console.log('First step: ', firstStep)
+        // const secondStep = fsPromises.appendFile(
+        //   './public/ZNSsent.txt',
+        //   `, ${JSON.stringify(temp)} \n`
+        // );
+        // const thirdStep = storage.bucket(bucketName).upload(filePath, {
+        //   destination: destFileName,
+        // });
+        // const finalResult = await Promise.all([firstStep, secondStep, thirdStep]);
+        // console.log('final result: ', finalResult)
+        // console.log(`${filePath} uploaded to ${bucketName}`);
         if (znsSentTracking.error === 0) {
           res.status(200).send({ Status: 'Accept' });
         } else {
