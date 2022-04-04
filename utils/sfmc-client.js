@@ -1,5 +1,5 @@
-const ET_Client = require("sfmc-fuelsdk-node");
-const FuelRest = require("fuel-rest");
+const ET_Client = require('sfmc-fuelsdk-node');
+const FuelRest = require('fuel-rest');
 
 const options = {
   auth: {
@@ -31,7 +31,7 @@ const SDKClient = new ET_Client(
     authOptions: {
       authVersion: 2,
       accountId: process.env.SFMC_ACCOUNT_ID,
-      applicationType: "server",
+      applicationType: 'server',
     },
   }
 ); // stack is ignored
@@ -46,7 +46,7 @@ const getContent = async (data) =>
   RestClient.post({
     uri: `asset/v1/content/assets/query`,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: data,
   });
@@ -57,15 +57,14 @@ const getContent = async (data) =>
  * @param data
  * @returns {?Promise}
  */
- const upsertOAFollowers = async (data) =>
- RestClient.put({
-   uri: `data/v1/async/dataextensions/key:${process.env.DE_OA_FOLLOWERS}/rows`,
-   headers: {
-     "Content-Type": "application/json",
-   },
-   body: data,
- });
-
+const upsertOAFollowers = async (data) =>
+  RestClient.put({
+    uri: `data/v1/async/dataextensions/key:${process.env.DE_OA_FOLLOWERS}/rows`,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: data,
+  });
 
 /**
  * Insert DE
@@ -77,7 +76,7 @@ const insertZaloUserActionTracking = async (data) =>
   RestClient.post({
     uri: `data/v1/async/dataextensions/key:${process.env.DE_ZALO_USER_ACTION_TRACKING}/rows`,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: data,
   });
@@ -88,15 +87,23 @@ const insertZaloUserActionTracking = async (data) =>
  * @param data
  * @returns {?Promise}
  */
- const insertZaloSendLog = async (data) =>
- RestClient.post({
-   uri: `data/v1/async/dataextensions/key:${process.env.DE_ZALO_SEND_LOG}/rows`,
-   headers: {
-     "Content-Type": "application/json",
-   },
-   body: data,
- });
+const insertZaloSendLog = async (data) =>
+  RestClient.post({
+    uri: `data/v1/async/dataextensions/key:${process.env.DE_ZALO_SEND_LOG}/rows`,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: data,
+  });
 
+const insertTest = async (data) =>
+  RestClient.post({
+    uri: `data/v1/async/dataextensions/key:${process.env.DE_TEST}/rows`,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: data,
+  });
 
 /**
  * Upsert DE
@@ -108,7 +115,7 @@ const upsertDE = async (data) =>
   RestClient.put({
     uri: `data/v1/async/dataextensions/key:${process.env.DE_ZALO_USER_ACTION_TRACKING}/rows`,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: data,
   });
@@ -123,7 +130,7 @@ const getJourney = async (id, ver) =>
   RestClient.get({
     uri: `/interaction/v1/eventDefinitions/key:${id}`,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     json: true,
   });
@@ -132,7 +139,7 @@ const saveData = async (externalKey, data) =>
   RestClient.post({
     uri: `/hub/v1/dataevents/key:${externalKey}/rowset`,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     json: true,
     body: data,
@@ -147,5 +154,6 @@ module.exports = {
   upsertOAFollowers,
   insertZaloUserActionTracking,
   insertZaloSendLog,
+  insertTest,
   upsertDE,
 };

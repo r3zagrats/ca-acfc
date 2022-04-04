@@ -34,7 +34,7 @@ exports.execute = async (req, res) => {
     .set('Content-Type', 'application/json')
     .send({ id: data.inArguments[0].messType })
     msgTypes = JSON.parse(msgTypes.text)
-    console.log('msgTypes: ',msgTypes)
+    console.log('msgTypes: ',msgTypes[0])
     let Content = data.inArguments[0].ContentBuilder;
     for (const [key, value] of Object.entries(data.inArguments[0])) {
       Content = Content.replace(`%%${key}%%`, value);
