@@ -320,6 +320,7 @@ function checkContent(type) {
   console.log('tmpContent: ', tmpContent);
   console.log('tmpIndexContent: ' + tmpIndexContent);
   if (tmpIndexContent !== null) {
+    console.log('tempContentIndex: ', tmpContent[tmpIndexContent].content)
     $('#DisplayContent').empty();
     $('#DisplayContent').append(tmpContent[tmpIndexContent].content);
   }
