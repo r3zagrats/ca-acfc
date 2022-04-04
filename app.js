@@ -53,13 +53,14 @@ app.use('/journey/validate/', activityRouter.validate);
 app.use('/journey/stop/', activityRouter.stop);
 //neDB 
 app.get('/db/service/', neDbRouter.select);
+app.post('/db/selectone/', neDbRouter.selectone);
 app.post('/db/service/', neDbRouter.insert);
 app.put('/db/service/', neDbRouter.update);
 app.delete('/db/service/', neDbRouter.delete);
 app.get('/db/user/', neDbRouter.selectUser);
 app.put('/db/user/', neDbRouter.updateUser);
 // api
-app.use('/api/getde/', api.getDe);
+app.post('/api/getde/', api.getDe);
 app.use('/api/getdecol/', api.getDeColumn);
 app.use('/api/getderow/', api.getDeRow);
 app.use('/api/getcontent/', api.getContent);
@@ -71,10 +72,10 @@ app.use('/api/test/', api.test);
 app.post('/zalo/', zalo.zaloWebhook)
 
 // serve Custom Content Block
-app.use('/ccb', routes.ccb);
+app.use('/customContent', routes.customContent);
 
 // serve Custom Activity
-app.use('/', routes.sfmcca);
+app.use('/', routes.customActivity);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

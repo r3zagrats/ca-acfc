@@ -19,10 +19,10 @@ exports.config = (req, res) => {
  * @param req
  * @param res
  */
-exports.sfmcca = async (req, res) => {
+exports.customActivity = async (req, res) => {
   if ((req.headers["referer"] ?? "no end").includes("marketingcloudapps")) {
     var messTypes = await neDB.getDB();
-    res.render("sfmcca", { messTypes });
+    res.render("customActivity", { messTypes });
   } else {
     res.status(500).send({ Status: "Access is not allowed" });
   }
@@ -36,8 +36,8 @@ const znsOptions = [
   { value: "ButtonList", name: "ZNS Button List" },
 ];
 
-exports.ccb = async (req, res) => {
-  res.status(200).render("ccb", { znsOptions });
+exports.customContent = async (req, res) => {
+  res.status(200).render("customContent", { znsOptions });
 };
 
 /**
@@ -46,8 +46,5 @@ exports.ccb = async (req, res) => {
  * @param res
  */
 exports.login = async (req, res) => {
-  // console.log('Hello world')
-  // const zaloConfig = await neDB.getDB('fCy3OX3Nbeap3YRU');
-  // console.log(zaloConfig)
   res.render("login", { error: false });
 };

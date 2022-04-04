@@ -1003,10 +1003,10 @@ const RenderZNSList = (elementList, isButtonList) => {
     const actionType = {
       '--Select one of the following options--': '',
       'Open URL': 'oa.open.url',
-      'Showing Message': 'oa.query.show',
-      'Hiding Message': 'oa.query.hide',
-      'Sms Text': 'oa.open.sms',
-      'Phone Call': 'oa.open.phone',
+      'Send Displayed Message': 'oa.query.show',
+      'Send Hidden Message': 'oa.query.hide',
+      'Send Sms Message': 'oa.open.sms',
+      'Make Phone Call': 'oa.open.phone',
     };
     $.each(actionType, (key, value) => {
       $(`#actionType${el.id}`).append(`<option value=${value}>${key}</option>`);

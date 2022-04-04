@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { v1: Uuidv1 } = require('uuid');
 const JWT = require('../utils/jwtDecoder');
 const logger = require('../utils/logger');
@@ -25,19 +26,23 @@ exports.execute = async (req, res) => {
   try {
     const data = JWT(req.body);
     console.log('data.inArguments: ', data.inArguments[0]);
-    const msgTypes = await neDB.getDB(data.inArguments[0].messType);
+    // const msgTypes = await neDB.getDB(data.inArguments[0].messType);
+    let msgTypes
+    msgTypes = await superagent
+    .post(`${req.headers.host || req.headers.origin}/db/selectone/`)
+    .set('Authorization', `JWT ${process.env.JWT}`)
+    .set('Content-Type', 'application/json')
+    .send({ id: data.inArguments[0].messType })
+    msgTypes = JSON.parse(msgTypes.text)
+    console.log('msgTypes: ',msgTypes)
     let Content = data.inArguments[0].ContentBuilder;
     for (const [key, value] of Object.entries(data.inArguments[0])) {
-      Content = Content.replace(
-        new RegExp(`%%${key}%%`.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&'), 'g'),
-        value
-      );
+      Content = Content.replace(`%%${key}%%`, value);
     }
     switch (msgTypes[0].method) {
       case 'Zalo': {
         console.log('Gui tin nhan ZNS');
-        let tmpAccessToken = msgTypes[0].accessToken;
-        // if (data.inArguments[0].ZaloId !== '') {
+        let tmpAccessToken
         console.log('End Point: ', msgTypes[0]);
         if (checkIsExpiredAccessToken(Number(msgTypes[0].expiresTime))) {
           console.log(`Access Token cua  ${msgTypes[0].name} het han`);
@@ -49,7 +54,7 @@ exports.execute = async (req, res) => {
             .send('grant_type=refresh_token');
           response = JSON.parse(response.text);
           console.log(`AccessToken Response cua ${msgTypes[0].name}: "`, response);
-          if (response.access_token) {
+          if (response && response.access_token) {
             tmpAccessToken = response.access_token;
             let updateInfo = {
               ...msgTypes[0],
@@ -65,8 +70,8 @@ exports.execute = async (req, res) => {
               .send(JSON.stringify(updateInfo));
             console.log(`Cap nhat db thanh cong cho OA ${msgTypes[0].name}: `, result.text);
           }
-          console.log('Da cap nhat accessToken');
         } else {
+          tmpAccessToken = msgTypes[0].accessToken;
           console.log(`Access Token cua ${msgTypes[0].name} con han`);
         }
         console.log('Noi dung can gui: ', Content);
@@ -99,6 +104,7 @@ exports.execute = async (req, res) => {
           destination: destFileName,
         });
         const finalResult = await Promise.all([firstStep, secondStep, thirdStep]);
+        console.log('final result: ', finalResult)
         console.log(`${filePath} uploaded to ${bucketName}`);
         if (znsSentTracking.error === 0) {
           res.status(200).send({ Status: 'Accept' });
@@ -113,10 +119,7 @@ exports.execute = async (req, res) => {
         let FirebaseToken = data.inArguments[0].FirebaseToken;
         if (FirebaseToken !== '') {
           for (const [key, value] of Object.entries(data.inArguments[0])) {
-            Content = Content.replace(
-              new RegExp(`%%${key}%%`.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&'), 'g'),
-              value
-            );
+            Content = Content.replace(`%%${key}%%`, value);
           }
           var payload = {
             notification: JSON.parse(Content),
@@ -138,7 +141,7 @@ exports.execute = async (req, res) => {
       }
     }
   } catch (error) {
-    console.log(error);
+    console.log('error: ' + error);
     res.status(500).send({ Status: 'Error' });
   }
 };

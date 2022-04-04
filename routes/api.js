@@ -1,5 +1,7 @@
 const RestClient = require("../utils/sfmc-client");
-
+const superagent = require('superagent');
+const neDB = require('./neDB');
+require('dotenv').config();
 /**
  * @param req
  * @param res
@@ -319,23 +321,25 @@ function dynamicSort(property) {
 }
 
 exports.test = async (req, res) => {
+  const msgTypes = await neDB.getDB('N9pQPDHt4d5mZitN');
   try {
-    const data = await RestClient.upsertOAFollowers(
-      JSON.stringify({
-        items: [
-          {
-            Name: 'test',
-            ZaloId: '1087338',
-            Status: 'unfollow',
-            OAName: 'test'
-          },
-        ],
-      })
-    );
-    res.status(200).send(data.body);
+    const result = await superagent
+    .put(`${req.headers.host || req.headers.origin}/db/service/`)
+    .set('Authorization', `JWT ${process.env.JWT}`)
+    .set('Content-Type', 'application/json')
+    .send({
+      ...msgTypes[0],
+      uri: 'haha12'
+    })
+    console.log(JSON.parse(result.text))
+    res.status(200).send({
+      data: result,
+      status: 'ok'
+    })
   } catch (error) {
+    console.log(error.message)
     res.status(500).send({
-      status: error,
+      status: 'error',
     });
   }
 };
