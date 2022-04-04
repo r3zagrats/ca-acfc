@@ -43,7 +43,6 @@ exports.execute = async (req, res) => {
       case 'Zalo': {
         console.log('Gui tin nhan ZNS');
         let tmpAccessToken
-        console.log('End Point: ', msgTypes[0]);
         if (checkIsExpiredAccessToken(Number(msgTypes[0].expiresTime))) {
           console.log(`Access Token cua  ${msgTypes[0].name} het han`);
           let response = await superagent
@@ -96,7 +95,6 @@ exports.execute = async (req, res) => {
             items: [temp],
           })
         );
-        console.log('First step: ', firstStep)
         // const secondStep = fsPromises.appendFile(
         //   './public/ZNSsent.txt',
         //   `, ${JSON.stringify(temp)} \n`
