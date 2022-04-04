@@ -322,7 +322,7 @@ function checkContent(type) {
   if (tmpIndexContent !== null) {
     console.log('tempContentIndex: ', tmpContent[tmpIndexContent].content);
     const regex = /(?<=<!--Payload)[\s\S]*(?=Payload-->)/gm;
-    const payloadData = regex.exec(value.content)[0];
+    const payloadData = regex.exec(tmpContent[tmpIndexContent].content)[0];
     console.log('payloadData', payloadData);
     $('#ContentBuilder').val(payloadData);
     $('#DisplayContent').empty();
