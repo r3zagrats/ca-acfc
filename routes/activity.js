@@ -37,7 +37,7 @@ exports.execute = async (req, res) => {
     console.log('msgTypes: ',msgTypes[0])
     let Content = data.inArguments[0].ContentBuilder;
     for (const [key, value] of Object.entries(data.inArguments[0])) {
-      Content = Content.replace(`%%${key}%%`, value);
+      Content = Content.replaceAll(`%%${key}%%`, value);
     }
     switch (msgTypes[0].method) {
       case 'Zalo': {
@@ -118,7 +118,7 @@ exports.execute = async (req, res) => {
         let FirebaseToken = data.inArguments[0].FirebaseToken;
         if (FirebaseToken !== '') {
           for (const [key, value] of Object.entries(data.inArguments[0])) {
-            Content = Content.replace(`%%${key}%%`, value);
+            Content = Content.replaceAll(`%%${key}%%`, value);
           }
           var payload = {
             notification: JSON.parse(Content),

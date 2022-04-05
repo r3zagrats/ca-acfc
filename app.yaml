@@ -1,10 +1,17 @@
 runtime: nodejs
 env: flex
-
+beta_settings:
+  cloud_sql_instances: crucial-zodiac-341510:asia-southeast1:ws-intecom-dev-db
 # This sample incurs costs to run on the App Engine flexible environment.
 # The settings below are to reduce costs during testing and are not appropriate
 # for production use. For more information, see:
 # https://cloud.google.com/appengine/docs/flexible/nodejs/configuring-your-app-with-app-yaml
+manual_scaling:
+  instances: 1
+resources:
+  cpu: 1
+  memory_gb: 0.5
+  disk_size_gb: 10
 
 env_variables:
   JWT: 8cKsTUl-zmIDp3rAioR6rIe0mCgk8wb8ZwjhCIrKHOPb5MHN_ZTUSv0r7xtMK0Z97wltUr_saclH-sQC9GVJzb9DCQRuj7wqoYZGsFDgp6DaX9zeWxeC1RS5G7LHnXnJfmy7KTKEjIduC1F_CWeXzmRUOfxxyRYfRTUtlwvXrPZi5xLzYekdtPeRJKxr5hqwFLWdz4QSJ5r0TgxfCWdfb7tqv8V5guG2znoUBikfbxNWlpdpGZ75ZNQCcutByw2
