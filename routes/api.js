@@ -1,7 +1,8 @@
-const RestClient = require("../utils/sfmc-client");
+const RestClient = require('../utils/sfmc-client');
 const superagent = require('superagent');
 const neDB = require('./neDB');
 require('dotenv').config();
+const { Client } = require('pg');
 /**
  * @param req
  * @param res
@@ -10,21 +11,21 @@ require('dotenv').config();
 exports.getDe = async (req, res) => {
   try {
     var DEOptions = [];
-    const props = ["Name", "CustomerKey", "ObjectID"];
+    const props = ['Name', 'CustomerKey', 'ObjectID'];
     RestClient.SDKClient.dataExtension({
       props,
       filter: {
         //remove filter for all.
-        leftOperand: "ObjectID",
-        operator: "equals",
-        rightOperand: "9f991e28-a590-ec11-b834-48df37dc15d4",
+        leftOperand: 'ObjectID',
+        operator: 'equals',
+        rightOperand: '9f991e28-a590-ec11-b834-48df37dc15d4',
       },
     }).get((err, data) => {
       data.body.Results.forEach((opt) => {
-        if (opt.Name.charAt(0) != "_") {
+        if (opt.Name.charAt(0) != '_') {
           DEOptions.push({
             name: opt.Name,
-            CustomerKey: opt.CustomerKey + "||" + opt.Name,
+            CustomerKey: opt.CustomerKey + '||' + opt.Name,
             ID: opt.ObjectID,
           });
         }
@@ -33,7 +34,7 @@ exports.getDe = async (req, res) => {
     });
   } catch (e) {
     res.status(500).send({
-      status: "Fail",
+      status: 'Fail',
     });
   }
 };
@@ -47,38 +48,38 @@ exports.getDeColumn = async (req, res) => {
   try {
     var options = {
       props: [
-        "ObjectID",
-        "PartnerKey",
-        "Name",
-        "DefaultValue",
-        "MaxLength",
-        "IsRequired",
-        "Ordinal",
-        "IsPrimaryKey",
-        "FieldType",
-        "CreatedDate",
-        "ModifiedDate",
-        "Scale",
-        "Client.ID",
-        "CustomerKey",
+        'ObjectID',
+        'PartnerKey',
+        'Name',
+        'DefaultValue',
+        'MaxLength',
+        'IsRequired',
+        'Ordinal',
+        'IsPrimaryKey',
+        'FieldType',
+        'CreatedDate',
+        'ModifiedDate',
+        'Scale',
+        'Client.ID',
+        'CustomerKey',
       ], //required
       ///*
       filter: {
         //remove filter for all.
-        leftOperand: "DataExtension.CustomerKey",
-        operator: "equals",
-        rightOperand: "4B34E1DC-7751-4F28-A30E-0B8B1513D3C2",
+        leftOperand: 'DataExtension.CustomerKey',
+        operator: 'equals',
+        rightOperand: '4B34E1DC-7751-4F28-A30E-0B8B1513D3C2',
       },
       //*/
     };
     RestClient.SDKClient.dataExtensionColumn(options).get((err, data) => {
       const _data = data.body.Results;
-      _data.sort(dynamicSort("Name"));
+      _data.sort(dynamicSort('Name'));
       res.status(200).send(_data);
     });
   } catch (e) {
     res.status(500).send({
-      status: "Fail",
+      status: 'Fail',
     });
   }
 };
@@ -91,20 +92,20 @@ exports.getDeColumn = async (req, res) => {
 exports.getDeRow = async (req, res) => {
   try {
     var options = {
-      props: ["Id", "Name", "Email", "Phone", "FirebaseToken"], //required
+      props: ['Id', 'Name', 'Email', 'Phone', 'FirebaseToken'], //required
       ///*
-      Name: "Quan DE Test",
+      Name: 'Quan DE Test',
       filter: null,
       //*/
     };
     RestClient.SDKClient.dataExtensionRow(options).get((err, data) => {
       const _data = data.body.Results;
-      _data.sort(dynamicSort("Name"));
+      _data.sort(dynamicSort('Name'));
       res.status(200).send(_data);
     });
   } catch (e) {
     res.status(500).send({
-      status: "Fail",
+      status: 'Fail',
     });
   }
 };
@@ -125,15 +126,15 @@ exports.getContent = async (req, res) => {
 
         query: {
           leftOperand: {
-            property: "assetType.displayName",
-            simpleOperator: "contains",
-            value: "Custom",
+            property: 'assetType.displayName',
+            simpleOperator: 'contains',
+            value: 'Custom',
           },
-          logicalOperator: "OR",
+          logicalOperator: 'OR',
           rightOperand: {
-            property: "assetType.name",
-            simpleOperator: "equal",
-            value: "customblock",
+            property: 'assetType.name',
+            simpleOperator: 'equal',
+            value: 'customblock',
           },
 
           // leftOperand: {
@@ -149,15 +150,15 @@ exports.getContent = async (req, res) => {
           // },
         },
 
-        sort: [{ property: "name", direction: "ASC" }],
+        sort: [{ property: 'name', direction: 'ASC' }],
 
         fields: [
-          "enterpriseId",
-          "memberId",
-          "thumbnail",
-          "category",
-          "content",
-          "data",
+          'enterpriseId',
+          'memberId',
+          'thumbnail',
+          'category',
+          'content',
+          'data',
           // "fileProperties"
         ],
       })
@@ -182,8 +183,8 @@ exports.insertDE = async (req, res) => {
       JSON.stringify({
         items: [
           {
-            Id: "5",
-            Name: "Tuyen",
+            Id: '5',
+            Name: 'Tuyen',
             FirebaseToken: userFBToken,
           },
         ],
@@ -204,11 +205,11 @@ exports.upsertDE = async (req, res) => {
       JSON.stringify({
         items: [
           {
-            userId: "1",
-            appId: "test",
-            oaId: "test",
-            msgId: "test",
-            timestamp: "testtest",
+            userId: '1',
+            appId: 'test',
+            oaId: 'test',
+            msgId: 'test',
+            timestamp: 'testtest',
           },
         ],
       })
@@ -228,17 +229,17 @@ exports.upsertDE = async (req, res) => {
  */
 exports.getAttEvent = async (req, res) => {
   try {
-    if (req.query.key != "" || req.query.key != null) {
+    if (req.query.key != '' || req.query.key != null) {
       const data = await RestClient.getJourney(req.query.key);
       //res.status(200).send(data.body.dataExtensionId);
 
-      const props = ["Name", "CustomerKey", "ObjectID"];
+      const props = ['Name', 'CustomerKey', 'ObjectID'];
       RestClient.SDKClient.dataExtension({
         props,
         filter: {
           //remove filter for all.
-          leftOperand: "ObjectID",
-          operator: "equals",
+          leftOperand: 'ObjectID',
+          operator: 'equals',
           rightOperand: data.body.dataExtensionId,
         },
       }).get((err, dataDE) => {
@@ -246,46 +247,44 @@ exports.getAttEvent = async (req, res) => {
         if (dataDE.body.Results.length > 0) {
           var options = {
             props: [
-              "ObjectID",
-              "PartnerKey",
-              "Name",
-              "DefaultValue",
-              "MaxLength",
-              "IsRequired",
-              "Ordinal",
-              "IsPrimaryKey",
-              "FieldType",
-              "CreatedDate",
-              "ModifiedDate",
-              "Scale",
-              "Client.ID",
-              "CustomerKey",
+              'ObjectID',
+              'PartnerKey',
+              'Name',
+              'DefaultValue',
+              'MaxLength',
+              'IsRequired',
+              'Ordinal',
+              'IsPrimaryKey',
+              'FieldType',
+              'CreatedDate',
+              'ModifiedDate',
+              'Scale',
+              'Client.ID',
+              'CustomerKey',
             ], //required
             ///*
             filter: {
               //remove filter for all.
-              leftOperand: "DataExtension.CustomerKey",
-              operator: "equals",
+              leftOperand: 'DataExtension.CustomerKey',
+              operator: 'equals',
               rightOperand: dataDE.body.Results[0].CustomerKey,
             },
             //*/
           };
-          RestClient.SDKClient.dataExtensionColumn(options).get(
-            (err, dataCol) => {
-              const _data = dataCol.body.Results;
-              _data.sort(dynamicSort("Name"));
-              res.status(200).send({
-                deCol: _data,
-                dataExtention: dataDE.body.Results[0],
-              });
-            }
-          );
-        } else res.status(500).send({ Status: "No Data Extension Found" });
+          RestClient.SDKClient.dataExtensionColumn(options).get((err, dataCol) => {
+            const _data = dataCol.body.Results;
+            _data.sort(dynamicSort('Name'));
+            res.status(200).send({
+              deCol: _data,
+              dataExtention: dataDE.body.Results[0],
+            });
+          });
+        } else res.status(500).send({ Status: 'No Data Extension Found' });
       });
-    } else res.status(500).send({ Status: "Key Required" });
+    } else res.status(500).send({ Status: 'Key Required' });
   } catch (error) {
     res.status(500).send({
-      Status: "Journey Invalid",
+      Status: 'Journey Invalid',
     });
   }
 };
@@ -296,9 +295,9 @@ exports.zaloAuth = async (req, res) => {
 
 function checkJwt(auth) {
   if (
-    auth == "JWT " + process.env.JWT ||
-    auth == "jwt " + process.env.JWT ||
-    auth == "Jwt " + process.env.JWT
+    auth == 'JWT ' + process.env.JWT ||
+    auth == 'jwt ' + process.env.JWT ||
+    auth == 'Jwt ' + process.env.JWT
   ) {
     return true;
   } else return false;
@@ -306,7 +305,7 @@ function checkJwt(auth) {
 
 function dynamicSort(property) {
   var sortOrder = 1;
-  if (property[0] === "-") {
+  if (property[0] === '-') {
     sortOrder = -1;
     property = property.substr(1);
   }
@@ -314,32 +313,31 @@ function dynamicSort(property) {
     /* next line works with strings and numbers,
      * and you may want to customize it to your needs
      */
-    var result =
-      a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0;
+    var result = a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0;
     return result * sortOrder;
   };
 }
 
 exports.test = async (req, res) => {
-  const msgTypes = await neDB.getDB('N9pQPDHt4d5mZitN');
   try {
-    const result = await superagent
-    .put(`${req.headers.host || req.headers.origin}/db/service/`)
-    .set('Authorization', `JWT ${process.env.JWT}`)
-    .set('Content-Type', 'application/json')
-    .send({
-      ...msgTypes[0],
-      uri: 'haha12'
-    })
-    console.log(JSON.parse(result.text))
-    res.status(200).send({
-      data: result,
-      status: 'ok'
-    })
-  } catch (error) {
-    console.log(error.message)
-    res.status(500).send({
-      status: 'error',
+    const client = new Client({
+      user: 'postgres',
+      password: 'postgres',
+      port: 5432,
+      host: `/cloudsql/crucial-zodiac-341510:asia-southeast1:ws-intecom-dev-db`,
+      database: 'mydb',
     });
+    console.log(client);
+    client.connect()
+    let data
+    client.query('SELECT * FROM "myTable"', (err, res) => {
+      console.log(err, res);
+      data = res;
+      client.end()
+    });
+    res.status(200).send({ status: 'OK', data });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ status: 'error' });
   }
 };

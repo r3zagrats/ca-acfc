@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "crucial-zodiac-341510",
+  "private_key_id": "2621cc04bfdcdc587789033fd98172a77c3372e4",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC0TDYfx5IyjUc8\nz+J9B2qIf+snnj5PSisAIjqm+orThYiVwk6MS7BF2vbg+0HggSJhaHmG57IJXU1i\n17o2A/0ZodyYT2B2AVClsGAQZWxkEp4eayThqeiiZYf/0qZAJo0uYhWG66E2oENm\nMtx0qMdXrDJni0k/d2ZNrhEOBlFuvzbLKqnb7yBEx2lNRAFA/sBpB3wF2hjrFvVY\nH0VGMkNBty/k4ijLN3rCV7GnBcDi63PI6jFTOWXJhD5NFtH8UmQZAyncTGleNWnY\n7ha0mOe7N6BCaP1QNn9jeiMTdM+XZoplTm1gtWmhnS6/jvil4i6wrO/m0/AYxAvq\nZEkASiJDAgMBAAECggEABn4YFNzi7t8XiaESzt3NgEza8vpH1CMfmUmiQxESnrtY\nR8xPd83h8yIHceKaZLNBwbA5cBo31w59Euoh0oAiRSIHB5UULCuv88d+Lhj45kGl\nYAMLuPSdY/u0Agpb4kOBIgJ2M/2YOJdc1flO5wSM6SNSTVg+swJhtLpn8tFXbV11\n6aXsZAlJsgG9UAoft6N6VaBpG4eWhG9/9Nhpl/ENDMw4v4uap93AkzhXHh17nIqC\nVHxfB2Puj75WUG+8x76DkFjSHSd9MTNQhm9D1S8lZRAjL5ZGfbajm0CwC6KkyGmT\nB4je+j2Q7KD8bfrfb3JVUUFQWJfDUY24bvXOJSaMgQKBgQDbfVx2HT6uAUhOHWJS\nRFqWzIDXldXy4fxvxHxiXY1ie4YIfEdyglw8rP6nlHxZJiy+1IY1lYB4WSMOcTP1\nRzajUDhH23p2E7qzwB1T77Jzv5Ar+cE0Osi6nCvv/gtcuw6MUYXoX6KZmRvVK/BF\nPRzE5Z0t94JHuTv/xvec+IZO+wKBgQDSSesNWWiqUCQPtnN/70cYIryVQfKSEt1M\nstZBdc7bzP8Wgwiu9z1Bcvh12MNcPIPRs3JaymsMR+37Dm4C8l1YxbaoFJsGTsNr\nRtTalbdP8mBElbsV4opDRYm4QWC5sEOo6bS4vAZR9vEuTIlJSVavsgs+sNNnJUa/\nQ7laIwZ3WQKBgBwmLraDN6evSGukPxjX5VpTre54K/EzZGGdLGqdHuXTe7QY5Dze\nVR/++8XYOD5is/hhXzj+DHTi0akngYdic7JsNluY3VLJYvdsmxZJtnQ7zCynokyl\ngVrVbpkf1qs03j/GsMrFgR/7z+L9+JmYpdjmrcrYZF/4dKZwCQ+bm/YDAoGANqqq\npTzB/cx5o3AN1ItSkw6ssayEL78hsoenNTs3/GHtSl/kCQAS94m414HzP24n4oLg\nzoNikr28OxDEPpXc+G/ljQpWRqyBFslCGlTjY7AhoJLAIO9UfCp+o9yzFXKiFC41\nIfUXO4WTqzKQWfHrzB7f13tGacECBETJ0Ynba3kCgYEAhH/z/1Mo3HVCIEKtEV4H\nCeAVMX7LgIUieBuWSW0N/3WGFOW9wJSK4E19bGvkf2V7eI7SljeZ1OryADmDSxIt\nmtpMrQW9EE7tU2RkvP6cBGs2e0/iEHdlZEnZaW+lF/ncBpP+VDPI7a7tM28d2kbG\nkn2fOz4D8sN4eMtUoYCjaIk=\n-----END PRIVATE KEY-----\n",
+  "client_email": "haquanwhitespace@crucial-zodiac-341510.iam.gserviceaccount.com",
+  "client_id": "101776817028530521720",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/haquanwhitespace%40crucial-zodiac-341510.iam.gserviceaccount.com"
+}

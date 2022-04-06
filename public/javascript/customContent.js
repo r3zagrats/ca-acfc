@@ -986,7 +986,7 @@ const RenderZNSList = (elementList, isButtonList) => {
         <div class="slds-form-element" id="ccb-form-imageUrl${el.id}-element">
           <label class="slds-form-element__label ccb-label" for="imageUrl${el.id}"><abbr class="slds-required" title="required">* </abbr>Image URL:</label>
           <div class="slds-form-element__control">
-            <input class="slds-input ccb-input" type="text" id="imageUrl${el.id}" name="imageUrl${el.id}" placeholder="Enter your URL. Maximum size: 1MB, file: png, jpg">
+            <input class="slds-input ccb-input" type="text" id="imageUrl${el.id}" name="imageUrl${el.id}" placeholder="Enter your URL, file: png, jpg">
           </div>
         </div>
       `);

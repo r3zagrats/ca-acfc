@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 const routes = require('./routes/index');
 const activityRouter = require('./routes/activity');
 const neDbRouter = require('./routes/neDB');
+const pgDBRouter = require('./routes/pgDB')
 const api = require('./routes/api');
 const zalo = require('./routes/zalowh');
 // const cors = require('cors')
@@ -59,6 +60,12 @@ app.put('/db/service/', neDbRouter.update);
 app.delete('/db/service/', neDbRouter.delete);
 app.get('/db/user/', neDbRouter.selectUser);
 app.put('/db/user/', neDbRouter.updateUser);
+//pgDB
+app.get('/db/zalooa/', pgDBRouter.GetAllOA)
+app.post('/db/zalooa/', pgDBRouter.Create)
+app.patch('/db/zalooa/:id', pgDBRouter.Update)
+app.get('/db/zalooa/:id', pgDBRouter.GetOAById)
+app.delete('/db/zalooa/:id', pgDBRouter.Delete);
 // api
 app.post('/api/getde/', api.getDe);
 app.use('/api/getdecol/', api.getDeColumn);

@@ -1,17 +1,19 @@
-const { Pool } = require('pg');
-const pool = new Pool({
-  user: 'postgres',
-  password: 'postgres',
-  port: 5432,
-  host: `/cloudsql/crucial-zodiac-341510:asia-southeast1:ws-intecom-dev-db`,
-  database: 'mydb',
-});
-console.log(pool);
-(async () => {
-  await pool
-    .query(`select *`)
-    .catch((error) => console.error(`error in pool.query: ${error}`));
-})();
+require('dotenv').config();
+
+const data = {
+  Name: 'Quan',
+  Age: '18'
+};
+let valueList = [];
+  for (const [key, value] of Object.entries(data)) {
+    valueList.push(`"${key}": '${value}'`);
+  }
+  const query = {
+    text: `UPDATE "${process.env.PSQL_ZALOOA}" SET ${valueList} WHERE "OAId" = '1'`,
+  };
+
+console.log(query)
+
 // require('dotenv').config();
 // const superagent = require('superagent');
 // const RestClient = require('./utils/sfmc-client');
