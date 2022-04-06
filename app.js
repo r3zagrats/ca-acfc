@@ -61,11 +61,13 @@ app.delete('/db/service/', neDbRouter.delete);
 app.get('/db/user/', neDbRouter.selectUser);
 app.put('/db/user/', neDbRouter.updateUser);
 //pgDB
-app.get('/db/zalooa/', pgDBRouter.GetAllOA)
-app.post('/db/zalooa/', pgDBRouter.Create)
-app.patch('/db/zalooa/:id', pgDBRouter.Update)
-app.get('/db/zalooa/:id', pgDBRouter.GetOAById)
-app.delete('/db/zalooa/:id', pgDBRouter.Delete);
+app.get('/pgdb/zalooa/', pgDBRouter.getAllOA)
+app.post('/pgdb/zalooa/', pgDBRouter.createOA)
+app.patch('/pgdb/zalooa/:id', pgDBRouter.updateOA)
+app.get('/pgdb/zalooa/:id', pgDBRouter.getOAById)
+app.delete('/pgdb/zalooa/:id', pgDBRouter.deleteOA);
+app.get('/pgdb/user/', pgDBRouter.getAllUser);
+app.post('/pgdb/user/', pgDBRouter.updateUser);
 // api
 app.post('/api/getde/', api.getDe);
 app.use('/api/getdecol/', api.getDeColumn);

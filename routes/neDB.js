@@ -115,68 +115,6 @@ exports.delete = async (req, res) => {
   }
 };
 
-// exports.authen = async (req, res) => {
-//   var user = await getPwUser("Admin");
-//   try {
-//     if (req.body.uname === "Admin" && req.body.psw === user[0].pass) {
-//       db.endPoint.find({}, function (err, docs) {
-//         docs.forEach((element) => {
-//           element.header =
-//             element.header == "" ? "" : JSON.stringify(element.header);
-//           element.expiresTime = Number(element.expiresTime);
-//         });
-//         const OAlist = docs.filter((element) => {
-//           return element.method === "Zalo";
-//         });
-//         // Loop through all Zalo OA
-//         for (let i = 0; i < OAlist.length; i++) {
-//           console.log(`Thong tin OA ${OAlist[i].name}: `, OAlist[i]);
-//           // Check if the token expired
-//           // If True => Refresh Token
-//           if (checkIsExpiredAccessToken(OAlist[i].expiresTime) === false) {
-//             console.log(`Access Token cua OA ${OAlist[i].name} het han`);
-//             (async () => {
-//               let response = await superagent
-//                 .post(`${OAlist[i].authUrl}`)
-//                 .set("secret_key", OAlist[i].appSecretKey)
-//                 .send(`refresh_token=${OAlist[i].refreshToken}`)
-//                 .send(`app_id=${OAlist[i].appId}`)
-//                 .send("grant_type=refresh_token");
-//               response = JSON.parse(response.text);
-//               console.log(`AccessToken Response cua OA ${OAlist[i].name}: "`, response);
-//               if (response.access_token) {
-//                 let updateInfo = {
-//                   ...OAlist[i],
-//                   header: JSON.parse(OAlist[i].header),
-//                   expiresTime: Date.now() + response.expires_in * 1000,
-//                   accessToken: response.access_token,
-//                   refreshToken: response.refresh_token,
-//                 };
-//                 console.log(`updateInfo cua OA ${OAlist[i].name}: `, updateInfo);
-//                 const result = await superagent
-//                   .put(`${req.headers.host || req.headers.origin}/db/service/`)
-//                   .set("Authorization", `JWT ${process.env.JWT}`)
-//                   .set("Content-Type", "application/json")
-//                   .send(JSON.stringify(updateInfo));
-//                 console.log(`Cap nhat db thanh cong cho OA ${OAlist[i].name}: `, result.text);
-//               }
-//             })();
-//           } else {
-//             console.log(`Access Token cua OA ${OAlist[i].name} con han`);
-//           }
-//         }
-//         res.render("user", { error: false, selectOpt: docs });
-//       });
-//     } else {
-//       res.render("login", {
-//         error: true,
-//       });
-//     }
-//   } catch (e) {
-//     res.render("login", { error: true });
-//   }
-// };
-
 exports.authen = async (req, res) => {
   var user = await getPwUser('Admin');
   try {

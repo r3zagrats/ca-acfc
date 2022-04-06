@@ -2,17 +2,19 @@ require('dotenv').config();
 
 const data = {
   Name: 'Quan',
-  Age: '18'
+  Age: '18',
 };
+let columnList = [];
 let valueList = [];
-  for (const [key, value] of Object.entries(data)) {
-    valueList.push(`"${key}": '${value}'`);
-  }
-  const query = {
-    text: `UPDATE "${process.env.PSQL_ZALOOA}" SET ${valueList} WHERE "OAId" = '1'`,
-  };
-
-console.log(query)
+for (const [key, value] of Object.entries(data)) {
+  columnList.push(`"${key}"`);
+  valueList.push(value);
+}
+const query = {
+  text: `INSERT INTO "${process.env.PSQL_ZALOOA}"(${columnList}) VALUES($1, $2)`,
+  values: valueList,
+};
+console.log(query);
 
 // require('dotenv').config();
 // const superagent = require('superagent');
