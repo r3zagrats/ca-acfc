@@ -1,14 +1,14 @@
 require('dotenv').config();
 const { Pool } = require('pg')
-
+ 
 const connectionConfig = {
   user: process.env.PSQL_USERNAME,
-  // password: process.env.PSQL_PASSWORD,
-  password: 'dinoxd1998',
   port: process.env.PSQL_PORT,
+  // password: process.env.PSQL_PASSWORD,
   // host: `/cloudsql/${process.env.PSQL_INSTANCE_CONNECTION_NAME}`,
-  host: 'localhost',
   // database: process.env.PSQL_DATABASE,
+  password: 'dinoxd1998',
+  host: 'localhost',
   database: 'ws-intecom-devlocal'
 };
 

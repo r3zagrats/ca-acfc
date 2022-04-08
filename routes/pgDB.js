@@ -208,11 +208,11 @@ const checkJwt = (auth) => {
 
 exports.authen = async (req, res) => {
   var result = await getUserPassword('Admin');
-
+  console.log(result)
   const { username, password } = req.body;
   try {
     if (username === 'Admin' && password === result[0].Password) {
-      const result = await superagent.get(`${req.headers.host || req.headers.origin}/pgdb/zalooa`);
+      const result = await superagent.get('/pgdb/zalooa');
       const selectOpt = JSON.parse(result.text).data;
       res.status(200).render('user', { error: false, selectOpt });
     } else
