@@ -1,5 +1,6 @@
 require('dotenv').config();
 const db = require('../db');
+const superagent = require('superagent');
 
 // Zalo OA Table methods
 
@@ -49,9 +50,10 @@ exports.getOAById = async (req, res) => {
  * @param {*} res
  */
 exports.deleteOA = async (req, res) => {
+  console.log('req id: ', req.body.id);
   try {
     const { rows } = await db.query(
-      `DELETE FROM "${process.env.PSQL_ZALOOA}" WHERE "OAId" = '${req.params.id}'`
+      `DELETE FROM "${process.env.PSQL_ZALOOA}" WHERE "OAId" = '${req.body.id}'`
     );
     console.log(rows);
     res.status(200).send({
@@ -71,18 +73,22 @@ exports.deleteOA = async (req, res) => {
  * @returns
  */
 exports.createOA = async (req, res) => {
-  if (!req.body) return res.status(500).send({ status: 'error' });
+  const data = JSON.parse(req.body.data);
+  console.log(data);
+  if (!data) return res.status(500).send({ status: 'error' });
 
   let columnList = [];
   let valueList = [];
-  for (const [key, value] of Object.entries(req.body)) {
+  for (const [key, value] of Object.entries(data)) {
+    if (value === '') continue;
     columnList.push(`"${key}"`);
-    valueList.push(value);
+    valueList.push(`'${value}'`);
   }
+
   const query = {
-    text: `INSERT INTO "${process.env.PSQL_ZALOOA}"(${columnList}) VALUES($1, $2)`,
-    values: valueList,
+    text: `INSERT INTO "${process.env.PSQL_ZALOOA}"(${columnList}) VALUES(${valueList})`,
   };
+  console.log(query);
   try {
     const { rows } = await db.query(query);
     console.log(rows);
@@ -90,9 +96,8 @@ exports.createOA = async (req, res) => {
       status: 'OK',
       data: rows,
     });
-  } catch (err) {
-    console.log(err.stack);
-    res.status(500).send({ error: err });
+  } catch (error) {
+    res.status(500).send({ error: error.stack });
   }
 };
 
@@ -103,15 +108,18 @@ exports.createOA = async (req, res) => {
  * @returns
  */
 exports.updateOA = async (req, res) => {
-  if (!req.body) return res.status(500).send({ status: 'error' });
+  const data = JSON.parse(req.body.data);
+  console.log(data);
+  if (!data) return res.status(500).send({ status: 'error' });
 
   let valueList = [];
-  for (const [key, value] of Object.entries(req.body)) {
+  for (const [key, value] of Object.entries(data)) {
     valueList.push(`"${key}" = '${value}'`);
   }
   const query = {
-    text: `UPDATE "${process.env.PSQL_ZALOOA}" SET ${valueList} WHERE "OAId" = '${req.params.id}'`,
+    text: `UPDATE "${process.env.PSQL_ZALOOA}" SET ${valueList} WHERE "OAId" = '${data.OAId}'`,
   };
+  console.log(query);
   try {
     const { rows } = await db.query(query);
     console.log(rows);
@@ -119,9 +127,8 @@ exports.updateOA = async (req, res) => {
       status: 'OK',
       data: rows,
     });
-  } catch (err) {
-    console.log(err.stack);
-    res.status(500).send({ error: err });
+  } catch (error) {
+    res.status(200).send({ error: error.stack });
   }
 };
 
@@ -129,13 +136,13 @@ exports.updateOA = async (req, res) => {
 
 /**
  * Get User's Password
- * @param {*} username 
- * @returns 
+ * @param {*} username
+ * @returns
  */
 const getUserPassword = async (username) => {
   try {
     const { rows } = await db.query(
-      `SELECT "password" FROM "${process.env.PSQL_User}" WHERE "Username" = '${username}'`
+      `SELECT "Password" FROM "${process.env.PSQL_User}" WHERE "Username" = '${username}'`
     );
     return rows;
   } catch (err) {
@@ -145,9 +152,9 @@ const getUserPassword = async (username) => {
 
 /**
  * Update User's Password
- * @param {*} req 
- * @param {*} res 
- * @returns 
+ * @param {*} req
+ * @param {*} res
+ * @returns
  */
 exports.updateUser = async (req, res) => {
   if (!req.body) return res.status(500).send({ status: 'error' });
@@ -172,8 +179,8 @@ exports.updateUser = async (req, res) => {
 
 /**
  * Get All User Info
- * @param {*} req 
- * @param {*} res 
+ * @param {*} req
+ * @param {*} res
  */
 exports.getAllUser = async (req, res) => {
   try {
@@ -197,4 +204,23 @@ const checkJwt = (auth) => {
   ) {
     return true;
   } else return false;
-}
+};
+
+exports.authen = async (req, res) => {
+  var result = await getUserPassword('Admin');
+
+  const { username, password } = req.body;
+  try {
+    if (username === 'Admin' && password === result[0].Password) {
+      const result = await superagent.get(`${req.headers.host || req.headers.origin}/pgdb/zalooa`);
+      const selectOpt = JSON.parse(result.text).data;
+      res.status(200).render('user', { error: false, selectOpt });
+    } else
+      res.status(500).render('login', {
+        error: true,
+      });
+  } catch (e) {
+    console.log('error: ', e);
+    res.status(500).render('login', { error: true });
+  }
+};

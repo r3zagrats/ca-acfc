@@ -44,7 +44,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // serve config
 app.use('/config.json', routes.config);
 app.get('/login', routes.login);
-app.post('/login', neDbRouter.authen);
+app.post('/login', pgDBRouter.authen);
 app.get('/favicon.ico', (req, res) => res.status(204));
 // custom activity routes
 app.use('/journey/execute/', activityRouter.execute);
@@ -63,9 +63,9 @@ app.put('/db/user/', neDbRouter.updateUser);
 //pgDB
 app.get('/pgdb/zalooa/', pgDBRouter.getAllOA)
 app.post('/pgdb/zalooa/', pgDBRouter.createOA)
-app.patch('/pgdb/zalooa/:id', pgDBRouter.updateOA)
+app.patch('/pgdb/zalooa/', pgDBRouter.updateOA)
 app.get('/pgdb/zalooa/:id', pgDBRouter.getOAById)
-app.delete('/pgdb/zalooa/:id', pgDBRouter.deleteOA);
+app.delete('/pgdb/zalooa/', pgDBRouter.deleteOA);
 app.get('/pgdb/user/', pgDBRouter.getAllUser);
 app.post('/pgdb/user/', pgDBRouter.updateUser);
 // api

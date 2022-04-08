@@ -763,6 +763,7 @@ const ReRenderUI = () => {
             <div
               style="
                 display: flex;
+                align-items: center;
                 padding: 4px;
                 background-color: white;
                 border-top: 1px solid #ccc;
@@ -855,7 +856,7 @@ const ReRenderUI = () => {
                   margin: 2px 0;
                   border: none;
                 "
-                ><pre style="font-family: inherit; margin: 0; white-space: break-spaces;">${el.title}</pre></div>
+                ><pre style="font-family: inherit; margin: 0; white-space: break-spaces; word-wrap: break-word;">${el.title}</pre></div>
             `;
         });
         console.log('buttonList: ', buttonList);

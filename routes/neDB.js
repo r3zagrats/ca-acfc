@@ -118,7 +118,7 @@ exports.delete = async (req, res) => {
 exports.authen = async (req, res) => {
   var user = await getPwUser('Admin');
   try {
-    if (req.body.uname === 'Admin' && req.body.psw === user[0].pass) {
+    if (req.body.username === 'Admin' && req.body.password === user[0].pass) {
       db.endPoint.find({}, function (err, docs) {
         docs.forEach((element) => {
           element.header = element.header == '' ? '' : JSON.stringify(element.header);

@@ -1,67 +1,11 @@
 $(window).ready(onRender);
 function onRender() {
-  //table
-  // $('[data-toggle="tooltip"]').tooltip();
-  // var actions = $("table td:last-child").html();
-  $('.add-new').on('click', function () {
-    $('.modal-body').empty();
-    $('.modal-body').append('<label for="fname">Id:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="_id"  value="None" disabled ><br>'
-    );
-    $('.modal-body').append('<label for="fname">Name:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="name" value="" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">Method:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="method" value="" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">URI:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="uri" value="" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">Auth URL:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="authUrl" value="" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">App Id:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="appId" value="" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">App Secret Key:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="appSecretKey" value="" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">codeVerifier:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="codeVerifier" value="" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">codeChallenge:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="codeChallenge" value="" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">accessToken:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="accessToken" value="" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">expiresTime:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="expiresTime" value="" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">refreshToken:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="refreshToken" value="" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">Header:</label><br>');
-    $('.modal-body').append(
-      '<textarea class="form-control" id="header" rows="10" required placeholder="" name="text"></textarea><br>'
-    );
-    $('#myModal').modal('show');
+  $('.add-new').on('click', () => {
+    formRender();
   });
 
   // Edit row on edit button click
-  $(document).on('click', '.edit', function () {
+  $(document).on('click', '.edit', function() {
     var rowdata = [];
     $(this)
       .parents('tr')
@@ -70,210 +14,158 @@ function onRender() {
         rowdata.push($(this).text());
       });
     var data = {
-      name: rowdata[0],
-      uri: rowdata[1],
-      authUrl: rowdata[2],
-      method: rowdata[3],
-      header: rowdata[4],
-      _id: rowdata[5],
-      appId: rowdata[6],
-      appSecretKey: rowdata[7],
-      codeVerifier: rowdata[8],
-      codeChallenge: rowdata[9],
-      accessToken: rowdata[10],
-      expiresTime: rowdata[11],
-      refreshToken: rowdata[12],
+      OAName: rowdata[0],
+      OAId: rowdata[1],
+      AccessToken: rowdata[2],
+      RefreshToken: rowdata[3],
+      Timestamp: rowdata[4],
+      ExpiryDate: rowdata[5],
     };
-    console.log(data);
-    $('.modal-body').empty();
-    $('.modal-body').append('<label for="fname">Id:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="_id"  value="' + data._id + '" disabled ><br>'
-    );
-    $('.modal-body').append('<label for="fname">Name:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="name" value="' + data.name + '" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">Method:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="method" value="' +
-        data.method +
-        '" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">URI:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="uri" value="' + data.uri + '" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">Auth URL:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="authUrl" value="' +
-        data.authUrl +
-        '" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">App Id:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="appId" value="' + data.appId + '" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">App Secret Key:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="appSecretKey" value="' +
-        data.appSecretKey +
-        '" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">codeVerifier:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="codeVerifier" value="' +
-        data.codeVerifier +
-        '" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">codeChallenge:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="codeChallenge" value="' +
-        data.codeChallenge +
-        '" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">accessToken:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="accessToken" value="' +
-        data.accessToken +
-        '" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">expiresTime:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="expiresTime" value="' +
-        data.expiresTime +
-        '" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">refreshToken:</label><br>');
-    $('.modal-body').append(
-      '<input type="text" class="form-control" id="refreshToken" value="' +
-        data.refreshToken +
-        '" required><br>'
-    );
-    $('.modal-body').append('<label for="fname">Header:</label><br>');
-    $('.modal-body').append(
-      '<textarea class="form-control" id="header" rows="10" required placeholder="" name="text"></textarea><br>'
-    );
-    $('#header').val(data.header);
-    $('#myModal').modal('show');
-    //$(".add-new").attr("disabled", "disabled");
+    formRender(data);
   });
+
   // Delete row on delete button click
-  $(document).on('click', '.delete', function () {
-    var rowdata = [];
-    $(this)
-      .parents('tr')
-      .find('td:not(:last-child)')
-      .each(function () {
-        rowdata.push($(this).text());
-      });
-    var data = {
-      name: rowdata[0],
-      uri: rowdata[1],
-      authUrl: rowdata[2],
-      method: rowdata[3],
-      header: rowdata[4],
-      _id: rowdata[5],
-      appId: rowdata[6],
-      appSecretKey: rowdata[7],
-      codeVerifier: rowdata[8],
-      codeChallenge: rowdata[9],
-      accessToken: rowdata[10],
-      expiresTime: rowdata[11],
-      refreshToken: rowdata[12],
-    };
-    deleRow(data);
+  $(document).on('click', '.delete', function() {
+    const thisId = $(this).parents('tr').find('td:nth-child(2)')[0].innerText;
+    deleteData(thisId);
     $(this).parents('tr').remove();
   });
+
   //Save Row
-  $(document).on('click', '.save', function () {
-    let payload = {};
-    let err = '';
+  $(document).on('click', '.save', async () => {
+    let data = {};
     $('.form-control').each(function () {
-      const $el = $(this);
-      if ($(this).attr('id') == 'header') {
-        try {
-          payload[$(this).attr('id')] =
-            $(this).val() == '' ? $(this).val() : JSON.parse($(this).val());
-        } catch (e) {
-          err = 'Header is not of type json';
-        }
-      } else payload[$(this).attr('id')] = $(this).val();
+      data[$(this).attr('id')] = $(this).val();
     });
-    console.log(payload);
-    if (err == '') {
-      upSert(payload);
-    } else alert(err);
+    // Update OA
+    if ($('#hasData').length === 1) upsertData(data, true);
+    // Create new OA
+    else {
+      const thisId = $('#OAId').val();
+      let result = await isValidId(thisId);
+      if (thisId === '') {
+        alert('OAId is required');
+      } else if (result === false) {
+        alert('Id này đã tồn tại');
+      } else {
+        insertData(data);
+      }
+    }
   });
 }
 
-function upSert(payload) {
-  console.log(payload);
-  if (payload._id != 'None') {
-    $.ajax({
-      url: `/db/service/`,
-      type: 'PUT',
-      beforeSend: function (xhr) {
-        xhr.setRequestHeader(
-          'Authorization',
-          `JWT 8cKsTUl-zmIDp3rAioR6rIe0mCgk8wb8ZwjhCIrKHOPb5MHN_ZTUSv0r7xtMK0Z97wltUr_saclH-sQC9GVJzb9DCQRuj7wqoYZGsFDgp6DaX9zeWxeC1RS5G7LHnXnJfmy7KTKEjIduC1F_CWeXzmRUOfxxyRYfRTUtlwvXrPZi5xLzYekdtPeRJKxr5hqwFLWdz4QSJ5r0TgxfCWdfb7tqv8V5guG2znoUBikfbxNWlpdpGZ75ZNQCcutByw2`
-        );
-      },
-      data: JSON.stringify(payload),
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
-      success: function (data) {
-        $('#myModal').modal('hide');
-        location.reload();
-      },
-      error: function (data) {
-        alert('Error Update: ', data);
-      },
-    });
-  } else {
-    delete payload['_id'];
-    $.ajax({
-      url: `/db/service/`,
-      type: 'POST',
-      beforeSend: function (xhr) {
-        xhr.setRequestHeader(
-          'Authorization',
-          `JWT 8cKsTUl-zmIDp3rAioR6rIe0mCgk8wb8ZwjhCIrKHOPb5MHN_ZTUSv0r7xtMK0Z97wltUr_saclH-sQC9GVJzb9DCQRuj7wqoYZGsFDgp6DaX9zeWxeC1RS5G7LHnXnJfmy7KTKEjIduC1F_CWeXzmRUOfxxyRYfRTUtlwvXrPZi5xLzYekdtPeRJKxr5hqwFLWdz4QSJ5r0TgxfCWdfb7tqv8V5guG2znoUBikfbxNWlpdpGZ75ZNQCcutByw2`
-        );
-      },
-      data: JSON.stringify(payload),
-      contentType: 'application/json; charset=utf-8',
-      dataType: 'json',
-      success: function (data) {
-        $('#myModal').modal('hide');
-        location.reload();
-      },
-      error: function (data) {
-        alert('Error Insert: ', data);
-      },
-    });
+/**
+ * Upsert data
+ * @param {object} data
+ * @param {boolean} hasData
+ */
+const upsertData = async (data, hasData) => {
+  console.log(data);
+  try {
+    const result = await superagent
+      .patch('/pgdb/zalooa')
+      .set('Accept', 'application/json')
+      .send({ data: JSON.stringify(data) });
+    location.reload();
+  } catch (error) {
+    alert('Error on delete: ', error);
   }
-}
+};
 
-function deleRow(payload) {
-  $.ajax({
-    url: `/db/service/`,
-    type: 'DELETE',
-    beforeSend: function (xhr) {
-      xhr.setRequestHeader(
-        'Authorization',
-        `JWT 8cKsTUl-zmIDp3rAioR6rIe0mCgk8wb8ZwjhCIrKHOPb5MHN_ZTUSv0r7xtMK0Z97wltUr_saclH-sQC9GVJzb9DCQRuj7wqoYZGsFDgp6DaX9zeWxeC1RS5G7LHnXnJfmy7KTKEjIduC1F_CWeXzmRUOfxxyRYfRTUtlwvXrPZi5xLzYekdtPeRJKxr5hqwFLWdz4QSJ5r0TgxfCWdfb7tqv8V5guG2znoUBikfbxNWlpdpGZ75ZNQCcutByw2`
-      );
-    },
-    data: JSON.stringify(payload),
-    contentType: 'application/json; charset=utf-8',
-    dataType: 'json',
-    success: function (data) {
-      $('#myModal').modal('hide');
-      location.reload();
-    },
-    error: function (data) {
-      alert('Error: ', data);
-    },
-  });
-}
+/**
+ * Insert data
+ * @param {object} data
+ * @param {boolean} hasData
+ */
+const insertData = async (data, hasData) => {
+  console.log(data);
+  try {
+    let result = await superagent
+      .post('/pgdb/zalooa')
+      .set('Accept', 'application/json')
+      .send({ data: JSON.stringify(data) });
+    location.reload()
+  } catch (error) {
+    alert('Error on delete: ', error);
+  }
+};
+
+/**
+ *  Delete data
+ * @param {string} id
+ */
+const deleteData = async (id) => {
+  try {
+    const result = await superagent.delete('/pgdb/zalooa').send({
+      id,
+    });
+    location.reload();
+  } catch (error) {
+    alert(`Error on delete: ${error}`);
+  }
+};
+
+/**
+ * Check is valid Id
+ * @param {string} id
+ */
+const isValidId = async (id) => {
+  try {
+    let result = await superagent.get(`/pgdb/zalooa/${id}`);
+    result = JSON.parse(result.text);
+    const resultId = result.data[0].OAId;
+    if (id === resultId) return false;
+    else return true;
+  } catch (error) {
+    alert('Error on delete: ', error);
+  }
+};
+
+/**
+ * Render form
+ * @param {object} data 
+ */
+const formRender = (data) => {
+  $('.modal-body').empty();
+  $('.modal-body').append('<label for="OAId">OA Id:</label><br>');
+  $('.modal-body').append(
+    '<input type="text" class="form-control" id="OAId" value="' +
+      (data ? data.OAId : '') +
+      '" required><br>'
+  );
+  $('.modal-body').append('<label for="OAName">OA Name:</label><br>');
+  $('.modal-body').append(
+    '<input type="text" class="form-control" id="OAName" value="' +
+      (data ? data.OAName : '') +
+      '" required><br>'
+  );
+  $('.modal-body').append('<label for="accessToken">Access Token:</label><br>');
+  $('.modal-body').append(
+    '<input type="text" class="form-control" id="AccessToken" value="' +
+      (data ? data.AccessToken : '') +
+      '" required><br>'
+  );
+  $('.modal-body').append('<label for="refreshToken">Refresh Token:</label><br>');
+  $('.modal-body').append(
+    '<input type="text" class="form-control" id="RefreshToken" value="' +
+      (data ? data.RefreshToken : '') +
+      '" required><br>'
+  );
+  $('.modal-body').append('<label for="timestamp">Timestamp:</label><br>');
+  $('.modal-body').append(
+    '<input type="text" class="form-control" id="Timestamp" value="' +
+      (data ? data.Timestamp : '') +
+      '" required><br>'
+  );
+  $('.modal-body').append('<label for="expiryDate">Expiry Date:</label><br>');
+  $('.modal-body').append(
+    '<input type="text" class="form-control" id="ExpiryDate" value="' +
+      (data ? data.ExpiryDate : '') +
+      '" required><br>'
+  );
+  if (data) {
+    $('#OAId').attr('disabled', true);
+    $('.modal-body').append('<div id="hasData"></div>');
+  }
+  $('#myModal').modal('show');
+};
