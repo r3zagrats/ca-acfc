@@ -3,50 +3,85 @@
   --text-color: #080707;
 }
 
+html {
+  /* font-family: none; */
+  line-height: normal;
+  font-size: 62.5%;
+}
+
 .ccb-textarea {
-  font-size: 0.9rem;
+  font-size: 1.8rem;
+  font-family: none;
   color: var(--text-color);
   padding: 10px;
+  max-width: 380px;
 }
 
 .ccb-input {
-  font-size: 0.9rem;
+  font-size: 1.8rem;
+  font-family: none;
   color: var(--text-color);
-  padding: 1px 10px;
+  padding: 10px;
 }
 
 .ccb-form__wrapper {
   background-color: var(--primary-color);
   padding: 0 10px;
   min-height: 100vh;
+  position: relative;
+}
+
+.ccb-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: none;
+}
+
+.ccb-modal__container {
+  position: absolute;
+  width: 200px;
+  top: 50%;
+  left: 50%;
+  transform:translate(-50%,-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ccb-modal__text {
+  font-size: 2rem;
+  color: white;
 }
 
 li {
   border: 2px solid var(--text-color);
-  border-radius: 6px;
+  border-radius: 3px;
   padding: 3px;
-  margin: 7px 0;
+  margin: 7px -5px;
 }
 
 #ccb-form {
-  width: 390px;
+  width: 380px;
   margin: 0 auto;
 }
 
-.ccb-form__Group {
+#ccb-form__Group {
   display: flex;
   flex-direction: column;
 }
 
 .ccb-form__header {
-  font-size: 18px;
+  font-size: 1.8rem;
   color: var(--text-color);
   text-align: center;
-  padding-top: 2px;
 }
 
 .ccb-select {
-  font-size: 0.9rem;
+  font-size: 1.6rem;
   color: var(--text-color);
   padding: 6px;
   outline: none;
@@ -54,12 +89,12 @@ li {
 }
 
 .ccb-label {
-  font-size: 1rem;
+  font-size: 1.6rem;
   color: var(--text-color);
 }
 
 .form-input {
-  font-size: 18px;
+  font-size: 1.8rem;
   outline: none;
   padding: 10px;
   white-space: pre-wrap;
@@ -67,8 +102,8 @@ li {
 
 .button {
   width: 100%;
-  font-size: 0.9rem;
-  padding: 1px 0;
+  font-size: 1.6rem;
+  padding: 10px;
 }
 
 .button:hover {
@@ -99,9 +134,49 @@ li {
 }
 
 .element__header {
-  font-size: 18px;
+  font-size: 1.8rem;
   color: var(--text-color);
   margin: 0;
   text-align: center;
   text-transform: uppercase;
+}
+
+.ccb-form__error {
+  font-size: 1.6rem;
+}
+
+.spinner {
+  animation: rotate 2s linear infinite;
+  z-index: 2;
+  /* margin: -25px 0 0 -25px; */
+  width: 50px;
+  height: 50px;
+}
+.spinner .path {
+  /* stroke: hsl(210, 70, 75); */
+  stroke: white;
+  stroke-linecap: round;
+  animation: dash 1.5s ease-in-out infinite;
+  z-index: 1;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
 }

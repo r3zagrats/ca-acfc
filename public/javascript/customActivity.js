@@ -81,7 +81,7 @@ function onRender() {
     $('#ContentOption').append('<option value="None">Loading ...</option>');
     $('#DisplayContent').empty();
     $.ajax({
-      url: `/api/getcontent/`,
+      url: `/api/getcustomcontent/`,
       type: 'GET',
       beforeSend: function (xhr) {
         xhr.setRequestHeader('X-Test-Header', 'SetHereYourValueForTheHeader');
@@ -288,7 +288,7 @@ function showStep(step, stepIndex) {
         enabled: false,
       });
       $.ajax({
-        url: `/api/getcontent/`,
+        url: `/api/getcustomcontent/`,
         type: 'GET',
         beforeSend: function (xhr) {
           xhr.setRequestHeader('X-Test-Header', 'SetHereYourValueForTheHeader');
@@ -320,11 +320,9 @@ function checkContent(type) {
   console.log('tmpContent: ', tmpContent);
   console.log('tmpIndexContent: ' + tmpIndexContent);
   if (tmpIndexContent !== null) {
-    console.log('tempContentIndex: ', tmpContent[tmpIndexContent].content);
-    const regex = /(?<=<!--Payload)[\s\S]*(?=Payload-->)/gm;
-    const payloadData = regex.exec(tmpContent[tmpIndexContent].content)[0];
+    const payloadData = tmpContent[tmpIndexContent].meta.options.customBlockData;
     console.log('payloadData', payloadData);
-    $('#ContentBuilder').val(payloadData);
+    $('#ContentBuilder').val(JSON.stringify(payloadData));
     $('#DisplayContent').empty();
     $('#DisplayContent').append(tmpContent[tmpIndexContent].content);
   }
@@ -351,11 +349,9 @@ function checkContent(type) {
         }
         if (type == 'process') {
           tmpIndexContent = tmpContent.indexOf(value);
-          console.log('value.content: ', value.content);
-          const regex = /(?<=<!--Payload)[\s\S]*(?=Payload-->)/gm;
-          const payloadData = regex.exec(value.content)[0];
+          const payloadData = value.meta.options.customBlockData;
           console.log('payloadData', payloadData);
-          $('#ContentBuilder').val(payloadData);
+          $('#ContentBuilder').val(JSON.stringify(payloadData));
           $('#DisplayContent').empty();
           $('#DisplayContent').append(value.content);
         }

@@ -20,7 +20,7 @@ block content
             .slds-select_container
               select#messType.slds-select.js-activity-setting(name='messTypes')
                 each messType in messTypes
-                  option(value=messType._id)= messType.name
+                  option(value=messType.OAId)= messType.OAName
 
       form#step2.step.js-settings-form
         .slds-form-element

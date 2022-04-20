@@ -1,6 +1,5 @@
 const RestClient = require('../utils/sfmc-client');
 const superagent = require('superagent');
-const neDB = require('./neDB');
 require('dotenv').config();
 const { Client } = require('pg');
 /**
@@ -115,15 +114,14 @@ exports.getDeRow = async (req, res) => {
  * @param res
  *  @returns {Promise<void>}
  */
-exports.getContent = async (req, res) => {
+exports.getCustomContent = async (req, res) => {
   try {
     const data = await RestClient.getContent(
       JSON.stringify({
         page: {
           page: 1,
-          pageSize: 50,
+          pageSize: 100,
         },
-
         query: {
           leftOperand: {
             property: 'assetType.displayName',
@@ -136,31 +134,72 @@ exports.getContent = async (req, res) => {
             simpleOperator: 'equal',
             value: 'customblock',
           },
-
-          // leftOperand: {
-          //   property: "assetType.displayName",
-          //   simpleOperator: "contains",
-          //   value: "Snippet",
-          // },
-          // logicalOperator: "OR",
-          // rightOperand: {
-          //   property: "assetType.name",
-          //   simpleOperator: "equal",
-          //   value: "codesnippetblock",
-          // },
         },
-
         sort: [{ property: 'name', direction: 'ASC' }],
+      })
+    );
+    res.status(200).send(data.body);
+  } catch (error) {
+    res.status(500).send({
+      status: error,
+    });
+  }
+};
 
-        fields: [
-          'enterpriseId',
-          'memberId',
-          'thumbnail',
-          'category',
-          'content',
-          'data',
-          // "fileProperties"
-        ],
+exports.getImageContent = async (req, res) => {
+  try {
+    const data = await RestClient.getContent(
+      JSON.stringify({
+        page: {
+          page: 1,
+          pageSize: 100,
+        },
+        query: {
+          leftOperand: {
+            property: 'assetType.name',
+            simpleOperator: 'equal',
+            value: 'png',
+          },
+          logicalOperator: 'OR',
+          rightOperand: {
+            property: 'assetType.name',
+            simpleOperator: 'equal',
+            value: 'jpg',
+          },
+        },
+        sort: [{ property: 'name', direction: 'ASC' }],
+      })
+    );
+    res.status(200).send(data.body);
+  } catch (error) {
+    res.status(500).send({
+      status: error,
+    });
+  }
+};
+
+exports.getMetaDataContent = async (req, res) => {
+  try {
+    const data = await RestClient.getContent(
+      JSON.stringify({
+        page: {
+          page: 1,
+          pageSize: 100,
+        },
+        query: {
+          leftOperand: {
+            property: 'assetType.name',
+            simpleOperator: 'contains',
+            value: 'gif',
+          },
+          logicalOperator: 'OR',
+          rightOperand: {
+            property: 'assetType.displayName',
+            simpleOperator: 'contains',
+            value: 'Document',
+          },
+        },
+        sort: [{ property: 'name', direction: 'ASC' }],
       })
     );
     res.status(200).send(data.body);
@@ -328,12 +367,12 @@ exports.test = async (req, res) => {
       database: 'mydb',
     });
     console.log(client);
-    client.connect()
-    let data
+    client.connect();
+    let data;
     client.query('SELECT * FROM "myTable"', (err, res) => {
       console.log(err, res);
       data = res;
-      client.end()
+      client.end();
     });
     res.status(200).send({ status: 'OK', data });
   } catch (error) {

@@ -5,7 +5,7 @@ function onRender() {
   });
 
   // Edit row on edit button click
-  $(document).on('click', '.edit', function() {
+  $(document).on('click', '.edit', function () {
     var rowdata = [];
     $(this)
       .parents('tr')
@@ -25,7 +25,7 @@ function onRender() {
   });
 
   // Delete row on delete button click
-  $(document).on('click', '.delete', function() {
+  $(document).on('click', '.delete', function () {
     const thisId = $(this).parents('tr').find('td:nth-child(2)')[0].innerText;
     deleteData(thisId);
     $(this).parents('tr').remove();
@@ -62,13 +62,15 @@ function onRender() {
 const upsertData = async (data, hasData) => {
   console.log(data);
   try {
-    const result = await superagent
+    let result = await superagent
       .patch('/pgdb/zalooa')
       .set('Accept', 'application/json')
       .send({ data: JSON.stringify(data) });
+    result = JSON.parse(result.text);
+    alert(`Success: ${result.msg}`);
     location.reload();
   } catch (error) {
-    alert('Error on delete: ', error);
+    alert(`Error on upsert: ${error}`);
   }
 };
 
@@ -84,9 +86,11 @@ const insertData = async (data, hasData) => {
       .post('/pgdb/zalooa')
       .set('Accept', 'application/json')
       .send({ data: JSON.stringify(data) });
-    location.reload()
+    result = JSON.parse(result.text);
+    alert(`Success: ${result.msg}`);
+    location.reload();
   } catch (error) {
-    alert('Error on delete: ', error);
+    alert(`Error on upsert: ${error}`);
   }
 };
 
@@ -96,9 +100,11 @@ const insertData = async (data, hasData) => {
  */
 const deleteData = async (id) => {
   try {
-    const result = await superagent.delete('/pgdb/zalooa').send({
+    let result = await superagent.delete('/pgdb/zalooa').send({
       id,
     });
+    result = JSON.parse(result.text);
+    alert(`Success: ${result.msg}`);
     location.reload();
   } catch (error) {
     alert(`Error on delete: ${error}`);
@@ -113,17 +119,16 @@ const isValidId = async (id) => {
   try {
     let result = await superagent.get(`/pgdb/zalooa/${id}`);
     result = JSON.parse(result.text);
-    const resultId = result.data[0].OAId;
-    if (id === resultId) return false;
-    else return true;
+    if (result.data.length === 0) return true;
+    else return false;
   } catch (error) {
-    alert('Error on delete: ', error);
+    alert(`Error on checkvalidID: ${error}`);
   }
 };
 
 /**
  * Render form
- * @param {object} data 
+ * @param {object} data
  */
 const formRender = (data) => {
   $('.modal-body').empty();

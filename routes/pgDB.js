@@ -11,8 +11,7 @@ const superagent = require('superagent');
  */
 exports.getAllOA = async (req, res) => {
   try {
-    const { rows } = await db.query(`SELECT * FROM "${process.env.PSQL_ZALOOA}"`);
-    console.log(rows);
+    const { rows } = await db.query(`SELECT * FROM "${process.env.PSQL_ZALOOA}" ORDER BY "OAId"`);
     res.status(200).send({
       status: 'OK',
       data: rows,
@@ -31,7 +30,7 @@ exports.getAllOA = async (req, res) => {
 exports.getOAById = async (req, res) => {
   try {
     const { rows } = await db.query(
-      `SELECT * FROM "${process.env.PSQL_ZALOOA}" WHERE "OAId" = '${req.params.id}'`
+      `SELECT * FROM "${process.env.PSQL_ZALOOA}" WHERE "OAId" = '${req.params.id}' ORDER BY "OAId"`
     );
     console.log(rows);
     res.status(200).send({
@@ -50,15 +49,13 @@ exports.getOAById = async (req, res) => {
  * @param {*} res
  */
 exports.deleteOA = async (req, res) => {
-  console.log('req id: ', req.body.id);
   try {
-    const { rows } = await db.query(
+    const result = await db.query(
       `DELETE FROM "${process.env.PSQL_ZALOOA}" WHERE "OAId" = '${req.body.id}'`
     );
-    console.log(rows);
     res.status(200).send({
       status: 'OK',
-      data: rows,
+      msg: `Delete successfully OAID: ${req.body.id}`,
     });
   } catch (err) {
     console.log(err.stack);
@@ -73,8 +70,8 @@ exports.deleteOA = async (req, res) => {
  * @returns
  */
 exports.createOA = async (req, res) => {
+  console.log(req.body);
   const data = JSON.parse(req.body.data);
-  console.log(data);
   if (!data) return res.status(500).send({ status: 'error' });
 
   let columnList = [];
@@ -84,17 +81,13 @@ exports.createOA = async (req, res) => {
     columnList.push(`"${key}"`);
     valueList.push(`'${value}'`);
   }
-
-  const query = {
-    text: `INSERT INTO "${process.env.PSQL_ZALOOA}"(${columnList}) VALUES(${valueList})`,
-  };
-  console.log(query);
   try {
-    const { rows } = await db.query(query);
-    console.log(rows);
+    const result = await db.query(
+      `INSERT INTO "${process.env.PSQL_ZALOOA}"(${columnList}) VALUES(${valueList})`
+    );
     res.status(200).send({
       status: 'OK',
-      data: rows,
+      msg: 'Created successfully'
     });
   } catch (error) {
     res.status(500).send({ error: error.stack });
@@ -108,26 +101,25 @@ exports.createOA = async (req, res) => {
  * @returns
  */
 exports.updateOA = async (req, res) => {
-  const data = JSON.parse(req.body.data);
-  console.log(data);
-  if (!data) return res.status(500).send({ status: 'error' });
+  let data = JSON.parse(req.body.data);
+  console.log('data', data);
+  if (!data) return res.status(500).send({ error: 'Invalid data' });
 
   let valueList = [];
   for (const [key, value] of Object.entries(data)) {
     valueList.push(`"${key}" = '${value}'`);
   }
-  const query = {
-    text: `UPDATE "${process.env.PSQL_ZALOOA}" SET ${valueList} WHERE "OAId" = '${data.OAId}'`,
-  };
-  console.log(query);
+  console.log(valueList)
   try {
-    const { rows } = await db.query(query);
-    console.log(rows);
+    const result = await db.query(
+      `UPDATE "${process.env.PSQL_ZALOOA}" SET ${valueList} WHERE "OAId" = '${data.OAId}'`
+    );
     res.status(200).send({
       status: 'OK',
-      data: rows,
+      msg: `Update successfully OAId: ${data.OAId}`,
     });
   } catch (error) {
+    console.log('error: ', error);
     res.status(200).send({ error: error.stack });
   }
 };
@@ -142,7 +134,7 @@ exports.updateOA = async (req, res) => {
 const getUserPassword = async (username) => {
   try {
     const { rows } = await db.query(
-      `SELECT "Password" FROM "${process.env.PSQL_User}" WHERE "Username" = '${username}'`
+      `SELECT "Password" FROM "${process.env.PSQL_USER}" WHERE "Username" = '${username}' ORDER BY "Id"`
     );
     return rows;
   } catch (err) {
@@ -161,15 +153,12 @@ exports.updateUser = async (req, res) => {
 
   const { username, password } = req.body;
 
-  const query = {
-    text: `UPDATE "${process.env.PSQL_USER}" SET "Password" = '${password}'  WHERE "Username" = '${username}'`,
-  };
   try {
-    const { rows } = await db.query(query);
-    console.log(rows);
+    const result = await db.query(
+      `UPDATE "${process.env.PSQL_USER}" SET "Password" = '${password}'  WHERE "Username" = '${username}'`
+    );
     res.status(200).send({
       status: 'OK',
-      data: rows,
     });
   } catch (err) {
     console.log(err.stack);
@@ -184,8 +173,7 @@ exports.updateUser = async (req, res) => {
  */
 exports.getAllUser = async (req, res) => {
   try {
-    const { rows } = await db.query(`SELECT * FROM "${process.env.PSQL_User}"`);
-    console.log(rows);
+    const { rows } = await db.query(`SELECT * FROM "${process.env.PSQL_User}" ORDER BY "Id"`);
     res.status(200).send({
       status: 'OK',
       data: rows,
@@ -208,13 +196,11 @@ const checkJwt = (auth) => {
 
 exports.authen = async (req, res) => {
   var result = await getUserPassword('Admin');
-  console.log(result)
   const { username, password } = req.body;
   try {
     if (username === 'Admin' && password === result[0].Password) {
-      const result = await superagent.get('/pgdb/zalooa');
-      const selectOpt = JSON.parse(result.text).data;
-      res.status(200).render('user', { error: false, selectOpt });
+      const { rows } = await db.query(`SELECT * FROM "${process.env.PSQL_ZALOOA}" ORDER BY "OAId"`);
+      res.status(200).render('user', { error: false, selectOpt: rows });
     } else
       res.status(500).render('login', {
         error: true,

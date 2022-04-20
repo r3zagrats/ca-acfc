@@ -1,4 +1,4 @@
-
+$(window).ready(onRender);
 //Initiate a new session
 var sdk = new window.sfdc.BlockSDK(
   [
@@ -10,6 +10,7 @@ var sdk = new window.sfdc.BlockSDK(
   ],
   true
 );
+sdk.setBlockEditorWidth('500px');
 
 // Declare temp variables
 let normalList = [
@@ -18,6 +19,7 @@ let normalList = [
     title: '',
     subTitle: '',
     imageUrl: '',
+    imageOption: '',
     actionType: '',
     openUrl: '',
     payload: '',
@@ -35,7 +37,273 @@ let buttonList = [
     smsContent: '',
     phoneCode: '',
   },
-]
+];
+let contentBuilderImages = [];
+let contentBuilderMetaData = [];
+
+async function onRender() {
+  // App running
+  $('.ccb-modal').show();
+  try {
+    const result = await fetchData();
+  } catch (error) {
+    console.log('error:', error);
+  }
+  renderInitialUI();
+  restoreData();
+  $('.ccb-modal').hide();
+  // DOM events listeners
+  /**
+   * Listening to ZNS Options changes
+   */
+  $('#ccb-znsOptions-select').on('change', (e) => {
+    $('.ccb-form__znsContent-wrapper').empty();
+    switch (e.target.value) {
+      case 'Default': {
+        $('#submitBtn').hide();
+        $('#addNormalList').hide();
+        $('#addButtonList').hide();
+        break;
+      }
+      case 'Text': {
+        renderZNSText();
+        break;
+      }
+      case 'Image': {
+        renderZNSImage();
+        break;
+      }
+      case 'NormalList': {
+        $('.ccb-form__znsContent-wrapper').append('<ul id="elementList"></ul>');
+        $('#submitBtn').show();
+        $('#addNormalList').show();
+        $('#addButtonList').hide();
+        renderZNSList(normalList, false);
+        break;
+      }
+      case 'ButtonList': {
+        $('.ccb-form__znsContent-wrapper').append(
+          '<div id="ccb-form__Group-Button__header" class="ccb-form__Group"></div>'
+        );
+        $('#ccb-form__Group-Button__header').append(`
+          <div class="slds-form-element" id="ccb-form-msgText-element">
+            <label class="slds-form-element__label ccb-label" for="msgText"><abbr class="slds-required" title="required">* </abbr>Message:</label>
+            <div class="slds-form-element__control">
+            <textarea class="slds-textarea ccb-textarea" type="text" id="msgText" name="msgText" maxlength="2000" placeholder="Enter your message. Maximum length: 2000 "></textarea>
+            </div>
+          </div>
+        `);
+        $('.ccb-form__znsContent-wrapper').append(
+          '<div id="ccb-form__Group-Button__body" class="ccb-form__Group"></div>'
+        );
+        $('#ccb-form__Group-Button__body').append('<ul id="elementList"></ul>');
+        $('#submitBtn').show();
+        $('#addNormalList').hide();
+        $('#addButtonList').show();
+        renderZNSList(buttonList, true);
+        break;
+      }
+      case 'AttachedFile': {
+        renderZNSAttachedFile();
+      }
+    }
+  });
+
+  /**
+   * Listening to form keyup events
+   */
+  $('#ccb-form').on('keyup change submit', (e) => {
+    reRenderUI();
+  });
+
+  /**
+   * Listening to form submit events
+   */
+  $('#ccb-form').on('submit', (e) => {
+    let errorMsg = '';
+    let hasError = false;
+    e.preventDefault();
+    const myForm = document.getElementById('ccb-form');
+    const formData = new FormData(myForm);
+    const formProps = Object.fromEntries(formData);
+    console.log('formProps: ', formProps);
+    let { znsOptions, msgText, imageUrl, imageOption, attachedFile } = formProps;
+    switch (znsOptions) {
+      case 'Text': {
+        $('#ccb-form-msgText-element').removeClass('slds-has-error');
+        $('#ccb-form-msgText-element-text-error').remove();
+        if (msgText === '') {
+          errorMsg = 'This field is required';
+          hasError = true;
+        }
+        if (hasError) {
+          $('#ccb-form-msgText-element').addClass('slds-has-error');
+          $('#ccb-form-msgText-element').append(
+            `<div class="slds-form-element__help ccb-form__error" id="ccb-form-msgText-element-text-error">${errorMsg}</div>`
+          );
+          $('#msgText').on('keydown', (e) => {
+            $('#ccb-form-msgText-element').removeClass('slds-has-error');
+            $('#ccb-form-msgText-element-text-error').remove();
+          });
+        }
+        break;
+      }
+      case 'Image': {
+        $('#ccb-form-imageOption-element').removeClass('slds-has-error');
+        $('#ccb-form-imageOption-element-text-error').remove();
+        $('#ccb-form-imageUrl-element').removeClass('slds-has-error');
+        $('#ccb-form-imageUrl-element-text-error').remove();
+        if (imageUrl === '') {
+          hasError = true;
+          errorMsh = 'This field is required';
+          $('#ccb-form-imageUrl-element').addClass('slds-has-error');
+          $('#ccb-form-imageUrl-element').append(
+            `<div class="slds-form-element__help ccb-form__error" id="ccb-form-imageUrl-element-text-error">${errorMsg}</div>`
+          );
+          $('#imageUrl').on('keydown change', (e) => {
+            $('#ccb-form-imageUrl-element').removeClass('slds-has-error');
+            $('#ccb-form-imageUrl-element-text-error').remove();
+          });
+        } else if (imageOption === '') {
+          hasError = true;
+          errorMsh = 'This field is required';
+          $('#ccb-form-imageOption-element').addClass('slds-has-error');
+          $('#ccb-form-imageOption-element').append(
+            `<div class="slds-form-element__help ccb-form__error" id="ccb-form-imageOption-element-text-error">${errorMsg}</div>`
+          );
+          $('#imageOption').on('change', (e) => {
+            $('#ccb-form-imageOption-element').removeClass('slds-has-error');
+            $('#ccb-form-imageOption-element-text-error').remove();
+          });
+        } else {
+          let tmpSize;
+          $.each(contentBuilderImages, (i, item) => {
+            if (item.fileProperties.publishedURL === imageUrl) {
+              tmpSize = item.fileProperties.fileSize;
+            }
+          });
+          if (tmpSize > 1048576) {
+            errorMsg = 'File size must be less than 1MB';
+            hasError = true;
+            $('#ccb-form-imageUrl-element').addClass('slds-has-error');
+            $('#ccb-form-imageUrl-element').append(
+              `<div class="slds-form-element__help ccb-form__error" id="ccb-form-imageUrl-element-text-error">${errorMsg}</div>`
+            );
+            $('#imageUrl').on('change', (e) => {
+              $('#ccb-form-imageUrl-element').removeClass('slds-has-error');
+              $('#ccb-form-imageUrl-element-text-error').remove();
+            });
+          }
+        }
+        break;
+      }
+      case 'NormalList': {
+        hasError = validateZNSList(formProps, hasError, errorMsg);
+        break;
+      }
+      case 'ButtonList': {
+        hasError = validateZNSList(formProps, hasError, errorMsg);
+        break;
+      }
+      case 'AttachedFile': {
+        $('#ccb-form-attachedFile-element').removeClass('slds-has-error');
+        $('#ccb-form-attachedFile-element-text-error').remove();
+        if (attachedFile === '') {
+          errorMsg = 'This field is required';
+          hasError = true;
+        } else {
+          attachedFile = JSON.parse(attachedFile);
+          switch (attachedFile.extension) {
+            case 'gif':
+            case 'docx':
+            case 'pdf': {
+              console.log(attachedFile.extension);
+              if (attachedFile.size > 5242880) {
+                errorMsg = 'File size must be less than 5MB';
+                hasError = true;
+              }
+              break;
+            }
+            default: {
+              errorMsg = 'This file type is not supported';
+              hasError = true;
+              break;
+            }
+          }
+        }
+
+        if (hasError) {
+          $('#ccb-form-attachedFile-element').addClass('slds-has-error');
+          $('#ccb-form-attachedFile-element').append(
+            `<div class="slds-form-element__help ccb-form__error" id="ccb-form-attachedFile-element-text-error">${errorMsg}</div>`
+          );
+          $('#attachedFile').on('change', (e) => {
+            $('#ccb-form-attachedFile-element').removeClass('slds-has-error');
+            $('#ccb-form-attachedFile-element-text-error').remove();
+          });
+        }
+        break;
+      }
+    }
+    if (!hasError) {
+      alert('Submit successfully');
+    }
+  });
+
+  $(document).on('change', '#imageOption', (e) => {
+    $('#ccb-form-imageUrl-wrapper').empty();
+    switch (e.target.value) {
+      case 'imageFile': {
+        renderImageFiles();
+        break;
+      }
+      case 'imageURL': {
+        renderImageUrlInput();
+        break;
+      }
+    }
+  });
+
+  /**
+   * Listening to Add button click
+   */
+  $('#addNormalList').click(() => {
+    normalList = JSON.parse(localStorage.getItem('LSNormalList'));
+    if (normalList.length === 5) {
+      alert('Một danh sách chỉ có tối đa 5 phần tử');
+      return;
+    }
+    addNormalListElement(normalList);
+    localStorage.setItem('LSNormalList', JSON.stringify(normalList));
+    renderZNSList(normalList, false);
+  });
+
+  /**
+   * Listening to Add button click
+   */
+  $('#addButtonList').click(() => {
+    buttonList = JSON.parse(localStorage.getItem('LSButtonList'));
+    if (buttonList.length === 5) {
+      alert('Một danh sách chỉ có tối đa 5 phần tử');
+      return;
+    }
+    addButtonListElement(buttonList);
+    localStorage.setItem('LSButtonList', JSON.stringify(buttonList));
+    renderZNSList(buttonList, true);
+  });
+}
+
+const fetchData = async () => {
+  try {
+    const imageContent = getImageContent();
+    const metaDataContent = getMetaDataContent();
+    const [imageList, metaDataList] = await Promise.all([imageContent, metaDataContent]);
+    contentBuilderImages = imageList.items;
+    contentBuilderMetaData = metaDataList.items;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 /**
  * Render Initial UI
@@ -55,42 +323,53 @@ const renderInitialUI = () => {
   $('#addNormalList').hide();
   $('#addButtonList').hide();
 };
-
 /**
  * Restore
  */
 const restoreData = () => {
   sdk.getData((data) => {
     console.log('data: ', data);
-    if(jQuery.isEmptyObject(data)){
+    if (jQuery.isEmptyObject(data)) {
       localStorage.setItem('LSNormalList', JSON.stringify(normalList));
       localStorage.setItem('LSButtonList', JSON.stringify(buttonList));
     }
-    if (data.type === 'Text') {
-      RenderZNSText();
-      $('#ccb-znsOptions-select').val(data.type);
-      $('#msgText').val(data.text);
-    } else if (data.type === 'Image') {
-      RenderZNSImage();
-      $('#ccb-znsOptions-select').val(data.type);
-      $('#msgText').val(data.text);
-      $('#imageUrl').val(data.imageUrl);
-    } else if (data.type === 'NormalList') {
-      console.log('data: ', data);
-      $('#ccb-znsOptions-select').val(data.type);
-      $('.ccb-form__znsContent-wrapper').append('<ul id="elementList"></ul>');
-      $('#submitBtn').show();
-      $('#addNormalList').show();
-      $('#addButtonList').hide();
-      RenderZNSList(data.elements, false);
-      normalList = data.elements;
-      localStorage.setItem('LSNormalList', JSON.stringify(normalList));
-    } else if (data.type === 'ButtonList') {
-      $('#ccb-znsOptions-select').val(data.type);
-      $('.ccb-form__znsContent-wrapper').append(
-        '<div id="ccb-form__Group-Button__header" class="ccb-form__Group"></div>'
-      );
-      $('#ccb-form__Group-Button__header').append(`
+    switch (data.type) {
+      case 'Text': {
+        renderZNSText();
+        $('#ccb-znsOptions-select').val(data.type);
+        $('#msgText').val(data.msgText);
+        break;
+      }
+      case 'Image': {
+        renderZNSImage();
+        $('#ccb-znsOptions-select').val(data.type);
+        $('#msgText').val(data.msgText);
+        $('#imageOption').val(data.imageOption);
+        if (data.imageOption === 'imageFile') {
+          renderImageFiles();
+        } else {
+          renderImageUrlInput();
+        }
+        $('#imageUrl').val(data.imageUrl);
+        break;
+      }
+      case 'NormalList': {
+        $('#ccb-znsOptions-select').val(data.type);
+        $('.ccb-form__znsContent-wrapper').append('<ul id="elementList"></ul>');
+        $('#submitBtn').show();
+        $('#addNormalList').show();
+        $('#addButtonList').hide();
+        renderZNSList(data.elements, false);
+        normalList = data.elements;
+        localStorage.setItem('LSNormalList', JSON.stringify(normalList));
+        break;
+      }
+      case 'ButtonList': {
+        $('#ccb-znsOptions-select').val(data.type);
+        $('.ccb-form__znsContent-wrapper').append(
+          '<div id="ccb-form__Group-Button__header" class="ccb-form__Group"></div>'
+        );
+        $('#ccb-form__Group-Button__header').append(`
         <div class="slds-form-element" id="ccb-form-msgText-element">
           <label class="slds-form-element__label ccb-label" for="msgText"><abbr class="slds-required" title="required">* </abbr>Message:</label>
           <div class="slds-form-element__control">
@@ -98,195 +377,40 @@ const restoreData = () => {
           </div>
         </div>
       `);
-      $('.ccb-form__znsContent-wrapper').append(
-        '<div id="ccb-form__Group-Button__body" class="ccb-form__Group"></div>'
-      );
-      $('#ccb-form__Group-Button__body').append('<ul id="elementList"></ul>');
-      $('#submitBtn').show();
-      $('#addNormalList').hide();
-      $('#addButtonList').show();
-      RenderZNSList(data.elements, true);
-      $('#msgText').val(data.text);
-      buttonList = data.elements;
-      localStorage.setItem('LSButtonList', JSON.stringify(buttonList));
+        $('.ccb-form__znsContent-wrapper').append(
+          '<div id="ccb-form__Group-Button__body" class="ccb-form__Group"></div>'
+        );
+        $('#ccb-form__Group-Button__body').append('<ul id="elementList"></ul>');
+        $('#submitBtn').show();
+        $('#addNormalList').hide();
+        $('#addButtonList').show();
+        renderZNSList(data.elements, true);
+        $('#msgText').val(data.msgText);
+        buttonList = data.elements;
+        localStorage.setItem('LSButtonList', JSON.stringify(buttonList));
+        break;
+      }
+      case 'AttachedFile': {
+        $('#ccb-znsOptions-select').val(data.type);
+        renderZNSAttachedFile();
+        $('#attachedFile').val(JSON.stringify(data.value));
+      }
     }
   });
 };
 
-// App running
-renderInitialUI();
-
-restoreData();
-
-// DOM events listeners
-
-/** 
- * Listening to ZNS Options changes
- */
-$('#ccb-znsOptions-select').on('change', (e) => {
-  switch (e.target.value) {
-    case 'Default': {
-      $('.ccb-form__znsContent-wrapper').empty();
-      $('#submitBtn').hide();
-      $('#addNormalList').hide();
-      $('#addButtonList').hide();
-      break;
-    }
-    case 'Text': {
-      RenderZNSText();
-      break;
-    }
-    case 'Image': {
-      RenderZNSImage();
-      break;
-    }
-    case 'NormalList': {
-      $('.ccb-form__znsContent-wrapper').empty();
-      $('.ccb-form__znsContent-wrapper').append('<ul id="elementList"></ul>');
-      $('#submitBtn').show();
-      $('#addNormalList').show();
-      $('#addButtonList').hide();
-      RenderZNSList(normalList, false);
-      break;
-    }
-    case 'ButtonList': {
-      $('.ccb-form__znsContent-wrapper').empty();
-      $('.ccb-form__znsContent-wrapper').append(
-        '<div id="ccb-form__Group-Button__header" class="ccb-form__Group"></div>'
-      );
-      $('#ccb-form__Group-Button__header').append(`
-        <div class="slds-form-element" id="ccb-form-msgText-element">
-          <label class="slds-form-element__label ccb-label" for="msgText"><abbr class="slds-required" title="required">* </abbr>Message:</label>
-          <div class="slds-form-element__control">
-          <textarea class="slds-textarea ccb-textarea" type="text" id="msgText" name="msgText" maxlength="2000" placeholder="Enter your message. Maximum length: 2000 "></textarea>
-          </div>
-        </div>
-      `);
-      $('.ccb-form__znsContent-wrapper').append(
-        '<div id="ccb-form__Group-Button__body" class="ccb-form__Group"></div>'
-      );
-      $('#ccb-form__Group-Button__body').append('<ul id="elementList"></ul>');
-      $('#submitBtn').show();
-      $('#addNormalList').hide();
-      $('#addButtonList').show();
-      RenderZNSList(buttonList, true);
-      break;
-    }
-  }
-});
-
-/** 
- * Listening to form keyup events
- */
-$('#ccb-form').on('keyup submit', (e) => {
-  ReRenderUI();
-});
-
-/** 
- * Listening to form submit events
- */
-$('#ccb-form').on('submit', (e) => {
-  let errorMsg = '';
-  let hasError = false;
-  e.preventDefault();
-  const myForm = document.getElementById('ccb-form');
-  const formData = new FormData(myForm);
-  const formProps = Object.fromEntries(formData);
-  console.log('formProps: ', formProps);
-  const { znsOptions, msgText, imageUrl } = formProps;
-  switch (znsOptions) {
-    case 'Text': {
-      $('#ccb-form-msgText-element').removeClass('slds-has-error');
-      $('#ccb-form-msgText-element-text-error').remove();
-      if (msgText.length === 0) {
-        errorMsg = 'This field is required';
-        hasError = true;
-      }
-      if (hasError) {
-        $('#ccb-form-msgText-element').addClass('slds-has-error');
-        $('#ccb-form-msgText-element').append(
-          `<div class="slds-form-element__help" id="ccb-form-msgText-element-text-error">${errorMsg}</div>`
-        );
-        $('#msgText').on('keydown', (e) => {
-          $('#ccb-form-msgText-element').removeClass('slds-has-error');
-          $('#ccb-form-msgText-element-text-error').remove();
-        });
-      }
-      break;
-    }
-    case 'Image': {
-      $('#ccb-form-imageUrl-element').removeClass('slds-has-error');
-      $('#ccb-form-imageUrl-element-text-error').remove();
-      console.log(imageUrl.length);
-      if (imageUrl.length === 0) {
-        errorMsg = 'This field is required';
-        hasError = true;
-      }
-      if (hasError) {
-        $('#ccb-form-imageUrl-element').addClass('slds-has-error');
-        $('#ccb-form-imageUrl-element').append(
-          `<div class="slds-form-element__help" id="ccb-form-imageUrl-element-text-error">${errorMsg}</div>`
-        );
-        $('#imageUrl').on('keydown', (e) => {
-          $('#ccb-form-imageUrl-element').removeClass('slds-has-error');
-          $('#ccb-form-imageUrl-element-text-error').remove();
-        });
-      }
-      break;
-    }
-    case 'NormalList': {
-      hasError = ValidateZNSList(formProps, hasError, errorMsg)
-      break;
-    }
-    case 'ButtonList': {
-      hasError = ValidateZNSList(formProps, hasError, errorMsg)
-      break;
-    }
-  }
-  if (!hasError) {
-    alert('Submit successfully');
-  }
-});
-
-/**
- * Listening to Add button click
- */
-$('#addNormalList').click(() => {
-  normalList = JSON.parse(localStorage.getItem('LSNormalList'));
-  if (normalList.length === 5) {
-    alert('Một danh sách chỉ có tối đa 5 phần tử');
-    return;
-  }
-  AddNormalListElement(normalList);
-  localStorage.setItem('LSNormalList', JSON.stringify(normalList));
-  RenderZNSList(normalList, false);
-});
-
-/**
- * Listening to Add button click
- */
-$('#addButtonList').click(() => {
-  buttonList = JSON.parse(localStorage.getItem('LSButtonList'));
-  if (buttonList.length === 5) {
-    alert('Một danh sách chỉ có tối đa 5 phần tử');
-    return;
-  }
-  AddButtonListElement(buttonList);
-  localStorage.setItem('LSButtonList', JSON.stringify(buttonList));
-  RenderZNSList(buttonList, true);
-});
-
 // List processing
 /**
  * Add Normal List Element
- * @param {array} elementList 
+ * @param {array} elementList
  */
-const AddNormalListElement = (elementList) => {
+const addNormalListElement = (elementList) => {
   const newElement = {
     id: elementList.length + 1,
     title: '',
     imageUrl: '',
     actionType: '',
+    imageOption: '',
     url: '',
     payload: '',
     smsContent: '',
@@ -297,9 +421,9 @@ const AddNormalListElement = (elementList) => {
 
 /**
  * Add Button List Element
- * @param {array} elementList 
+ * @param {array} elementList
  */
-const AddButtonListElement = (elementList) => {
+const addButtonListElement = (elementList) => {
   const newElement = {
     id: elementList.length + 1,
     title: '',
@@ -314,11 +438,11 @@ const AddButtonListElement = (elementList) => {
 
 /**
  * Remove Normal/Button List Element
- * @param {array} elementList 
- * @param {number} id 
- * @returns 
+ * @param {array} elementList
+ * @param {number} id
+ * @returns
  */
-const RemoveListElement = (elementList, id) => {
+const removeListElement = (elementList, id) => {
   elementList = elementList.filter((element) => {
     return element.id !== id;
   });
@@ -332,23 +456,23 @@ const RemoveListElement = (elementList, id) => {
 
 /**
  * Validate ZNS Normal/Button List
- * @param {object} formProps 
- * @param {boolean} hasError 
- * @param {string} errorMsg 
+ * @param {object} formProps
+ * @param {boolean} hasError
+ * @param {string} errorMsg
  * @returns {string}
  */
-const ValidateZNSList = (formProps, hasError, errorMsg) => {
+const validateZNSList = (formProps, hasError, errorMsg) => {
   for (const [key, value] of Object.entries(formProps)) {
     $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
     $(`#ccb-form-${key}-element-text-error`).remove();
   }
   for (const [key, value] of Object.entries(formProps)) {
-    if (value.length === 0) {
+    if (value === '') {
       hasError = true;
       errorMsg = 'This field is required';
       $(`#ccb-form-${key}-element`).addClass('slds-has-error');
       $(`#ccb-form-${key}-element`).append(
-        `<div class="slds-form-element__help" id="ccb-form-${key}-element-text-error">${errorMsg}</div>`
+        `<div class="slds-form-element__help ccb-form__error" id="ccb-form-${key}-element-text-error">${errorMsg}</div>`
       );
     }
     if (key.includes('actionType')) {
@@ -356,236 +480,112 @@ const ValidateZNSList = (formProps, hasError, errorMsg) => {
         $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
         $(`#ccb-form-${key}-element-text-error`).remove();
       });
-    }
-    else {
+    } else {
       $(`#${key}`).on('keydown', (e) => {
         $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
         $(`#ccb-form-${key}-element-text-error`).remove();
       });
     }
   }
-  return hasError
-}
+  return hasError;
+};
 
 // Handler fucntions
-
-/**
- * Handle ZNS Normal List Input
- * @param {object} input 
- * @returns {array}
- */
-const HandleNormalListInput = (input) => {
-  const result = [];
+const handleNormalListInput = (input) => {
+  let result = [];
   for (let i = 1; i < 6; i++) {
-    const element = {};
-    for (let [key, value] of Object.entries(input)) {
-      const regex = new RegExp(`.*${i}`);
-      if (regex.test(key)) {
-        if (key.includes('actionType')) key = 'actionType';
-        else if (key.includes('image')) {
-          key = 'image_url';
-        } else if (key.includes('title')) key = 'title';
-        else if (key.includes('subTitle')) key = 'subtitle';
-        element[key] = value;
-      }
-    }
-    result.push(element);
-  }
-  for (let el of result) {
-    switch (el.actionType) {
+    const tempPayload = {
+      title: input[`title${i}`],
+      image_url: input[`imageUrl${i}`],
+      imageOption: input[`imageOption${i}`],
+      default_action: {
+        type: input[`actionType${i}`],
+      },
+    };
+    if (i === 1) tempPayload.subtitle = input.subTitle1;
+    switch (input[`actionType${i}`]) {
       case 'oa.open.url': {
-        for (let [key, value] of Object.entries(el)) {
-          if (key.includes('open')) {
-            const temp = value;
-            el['url'] = temp;
-            delete el[key];
-          }
-        }
-        el['default_action'] = {
-          type: el['actionType'],
-          url: el['url'],
-        };
-        delete el['actionType'];
-        delete el['url'];
+        tempPayload.default_action.url = input[`openUrl${i}`];
         break;
       }
       case 'oa.query.show': {
-        for (let [key, value] of Object.entries(el)) {
-          if (key.includes('payload')) {
-            const temp = value;
-            el['payload'] = temp;
-            delete el[key];
-          }
-        }
-        el['default_action'] = {
-          type: el['actionType'],
-          payload: el['payload'],
-        };
-        delete el['actionType'];
-        delete el['payload'];
+        tempPayload.default_action.payload = input[`payload${i}`];
         break;
       }
       case 'oa.query.hide': {
-        for (let [key, value] of Object.entries(el)) {
-          if (key.includes('payload')) {
-            const temp = value;
-            el['payload'] = temp;
-            delete el[key];
-          }
-        }
-        el['default_action'] = {
-          type: el['actionType'],
-          payload: el['payload'],
-        };
-        delete el['actionType'];
-        delete el['payload'];
+        tempPayload.default_action.payload = input[`payload${i}`];
         break;
       }
       case 'oa.open.sms': {
-        for (let [key, value] of Object.entries(el)) {
-          if (key.includes('sms')) {
-            const temp = { content: value };
-            el['payload'] = temp;
-            delete el[key];
-          }
-          if (key.includes('phone')) {
-            const temp = value;
-            el['payload'] = {
-              ...el['payload'],
-              phone_code: temp,
-            };
-            delete el[key];
-          }
-        }
-        el['default_action'] = {
-          type: el['actionType'],
-          payload: el['payload'],
-        };
-        delete el['actionType'];
-        delete el['payload'];
+        tempPayload.default_action.payload = {};
+        tempPayload.default_action.payload.content = input[`smsContent${i}`];
+        tempPayload.default_action.payload.phone_code = input[`phoneCode${i}`];
         break;
       }
       case 'oa.open.phone': {
-        for (let [key, value] of Object.entries(el)) {
-          if (key.includes('phone')) {
-            const temp = { phone_code: value };
-            el['payload'] = temp;
-            delete el[key];
-          }
-        }
-        el['default_action'] = {
-          type: el['actionType'],
-          payload: el['payload'],
-        };
-        delete el['actionType'];
-        delete el['payload'];
+        tempPayload.default_action.payload = {};
+        tempPayload.default_action.payload.phone_code = input[`phoneCode${i}`];
         break;
       }
     }
+    result.push(tempPayload);
   }
-  return result.filter((el) => {
+  result = result.filter((el) => {
     return el.title;
   });
+  return result;
 };
 
-/**
- * Handle ZNS Button List Input
- * @param {object} input 
- * @returns {array}
- */
-const HandleButtonListInput = (input) => {
-  const result = [];
+const handleButtonListInput = (input) => {
+  let result = [];
   for (let i = 1; i < 6; i++) {
-    const element = {};
-    for (let [key, value] of Object.entries(input)) {
-      const regex = new RegExp(`.*${i}`);
-      if (regex.test(key)) {
-        if (key.includes('actionType')) key = 'type';
-        else if (key.includes('title')) key = 'title';
-        element[key] = value;
-      }
-    }
-    result.push(element);
-  }
-  console.log('result between:', result);
-  for (let el of result) {
-    switch (el.type) {
+    const tempPayload = {
+      title: input[`title${i}`],
+      type: input[`actionType${i}`],
+    };
+    switch (input[`actionType${i}`]) {
       case 'oa.open.url': {
-        for (let [key, value] of Object.entries(el)) {
-          if (key.includes('open')) {
-            const temp = { url: value };
-            el['payload'] = temp;
-            delete el[key];
-          }
-        }
+        tempPayload.payload = {};
+        tempPayload.payload.url = input[`openUrl${i}`];
         break;
       }
       case 'oa.query.show': {
-        for (let [key, value] of Object.entries(el)) {
-          if (key.includes('payload')) {
-            const temp = value;
-            el['payload'] = temp;
-            delete el[key];
-          }
-        }
+        tempPayload.payload = input[`payload${i}`];
         break;
       }
       case 'oa.query.hide': {
-        for (let [key, value] of Object.entries(el)) {
-          if (key.includes('payload')) {
-            const temp = value;
-            el['payload'] = temp;
-            delete el[key];
-          }
-        }
+        tempPayload.payload = input[`payload${i}`];
         break;
       }
       case 'oa.open.sms': {
-        for (let [key, value] of Object.entries(el)) {
-          if (key.includes('sms')) {
-            const temp = { content: value };
-            el['payload'] = temp;
-            delete el[key];
-          }
-          if (key.includes('phone')) {
-            const temp = value;
-            el['payload'] = {
-              ...el['payload'],
-              phone_code: temp,
-            };
-            delete el[key];
-          }
-        }
+        tempPayload.payload = {};
+        tempPayload.payload.content = input[`smsContent${i}`];
+        tempPayload.payload.phone_code = input[`phoneCode${i}`];
         break;
       }
       case 'oa.open.phone': {
-        for (let [key, value] of Object.entries(el)) {
-          if (key.includes('phone')) {
-            const temp = { phone_code: value };
-            el['payload'] = temp;
-            delete el[key];
-          }
-        }
+        tempPayload.payload = {};
+        tempPayload.payload.phone_code = input[`phoneCode${i}`];
         break;
       }
     }
+    result.push(tempPayload);
   }
-  console.log('result: ', result);
-  return result.filter((el) => {
+  result = result.filter((el) => {
     return el.title;
   });
+  return result;
 };
-
 /**
- * Rendering 
+ * Rendering
  */
-const ReRenderUI = () => {
+const reRenderUI = () => {
   const myForm = document.getElementById('ccb-form');
   const formData = new FormData(myForm);
   const formProps = Object.fromEntries(formData);
   sdk.getContent((content) => {
     content = formProps;
-    const { znsOptions, msgText, imageUrl } = content;
+    const { znsOptions, msgText, imageUrl, imageOption, attachedFile } = content;
     switch (znsOptions) {
       case 'Text': {
         const payloadData = {
@@ -598,25 +598,24 @@ const ReRenderUI = () => {
         };
         const htmlScript = `
           <div style="background-color: #b0c4df; min-height: 96vh; display: flex; padding: 10px; margin: -11px 0 ">
-            <div id="msgBlock" style="width: 390px; margin: auto">
+            <div id="msgBlock" style="width: 380px; margin: auto">
               <pre
                 style="
                 padding: 10px;
                 background-color: white;
                 border-radius: 5px;
-                font-size: 18px;
+                font-size: 18.2px;
                 margin: auto;
                 word-wrap: break-word;
-                font-family: inherit;
+                font-family: none;
                 white-space: break-spaces;
                 "
               >${msgText}</pre>
             </div>
           </div>
-          <!--Payload ${JSON.stringify(payloadData)} Payload-->
         `;
         sdk.setContent(htmlScript);
-        sdk.setData({ type: 'Text', text: msgText });
+        sdk.setData({ type: 'Text', msgText, payloadData });
         break;
       }
       case 'Image': {
@@ -645,7 +644,7 @@ const ReRenderUI = () => {
           htmlScript = `
           <div style="background-color: #b0c4df; min-height: 96vh; display: flex; padding: 10px; margin: -11px 0 ">
             <div id="msgBlock" style="
-              width: 390px;
+              width: 380px;
               margin: auto;
               border-radius: 5px;
               border-top-right-radius: 5px;
@@ -669,22 +668,21 @@ const ReRenderUI = () => {
                   background-color: white;
                   border-bottom-right-radius: 5px;
                   border-bottom-left-radius: 5px;
-                  font-size: 18px;
+                  font-size: 18.2px;
                   margin-top: -4px;
                   word-wrap: break-word;
-                  font-family: inherit;
+                  font-family: none;
                   white-space: break-spaces;
                 "
               >${msgText}</pre>
             </div>
           </div>
-          <!--Payload ${JSON.stringify(payloadData)} Payload-->
         `;
         } else {
           htmlScript = `
           <div style="background-color: #b0c4df; min-height: 96vh; display: flex; padding: 10px; margin: -11px 0 ">
             <div id="msgBlock" style="
-              width: 390px;
+              width: 380px;
               margin: auto;
               border-radius: 5px;
               border-top-right-radius: 5px;
@@ -701,15 +699,15 @@ const ReRenderUI = () => {
               />
             </div>
           </div>
-          <!--Payload ${JSON.stringify(payloadData)} Payload-->
         `;
         }
         sdk.setContent(htmlScript);
-        sdk.setData({ type: 'Image', text: msgText, imageUrl: imageUrl });
+        sdk.setData({ type: 'Image', msgText, imageUrl, imageOption, payloadData });
         break;
       }
       case 'NormalList': {
-        const result = HandleNormalListInput(formProps);
+        const result = handleNormalListInput(formProps);
+        console.log('result', result);
         console.log('formProps', formProps);
         const { imageUrl1, title1, subTitle1 } = formProps;
         let htmlScript = `
@@ -717,10 +715,9 @@ const ReRenderUI = () => {
             <div
               id="msgBlock"
               style="
-                width: 390px;
+                width: 380px;
                 margin: auto;
                 border-radius: 5px;
-                zoom: 80%;
                 overflow: hidden
               "
             >
@@ -734,25 +731,26 @@ const ReRenderUI = () => {
                 <div>
                 <pre
                   style="
-                    padding: 4px;
+                    padding: 10px;
                     margin: 0;
                     background-color: white;
-                    font-size: 18px;
+                    font-size: 18.2px;
                     margin-top: -4px;
                     word-wrap: break-word;
-                    font-family: inherit;
+                    font-family: none;
                     white-space: break-spaces;
                   "
                 >${title1}</pre>
                 <pre
                   style="
-                    padding: 4px;
+                    padding: 0 10px 10px;
+                    font-size: 18.2px;
                     margin: 0;
                     background-color: white;
                     color: #666;
                     margin-top: -4px;
                     word-wrap: break-word;
-                    font-family: inherit;
+                    font-family: none;
                     white-space: break-spaces;
                   "
                 >${subTitle1}</pre>
@@ -764,7 +762,7 @@ const ReRenderUI = () => {
               style="
                 display: flex;
                 align-items: center;
-                padding: 4px;
+                padding: 10px;
                 background-color: white;
                 border-top: 1px solid #ccc;
               "
@@ -773,7 +771,22 @@ const ReRenderUI = () => {
               src=${result[i].image_url}
               style="width: 45px; height: 45px"
             />
-            <pre style="flex: 1; padding: 4px; word-wrap: break-word; margin: 0; white-space: break-spaces;">${result[i].title}</pre>
+            <pre 
+              style="
+                flex: 1;
+                font-size:16px;
+                font-family: none;
+                padding-left: 10px;
+                word-wrap: break-word;
+                margin: 0;
+                white-space: break-spaces;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                line-clamp: 2; 
+                -webkit-box-orient: vertical;
+              ">${result[i].title}</pre>
             </div>
           `;
         }
@@ -782,6 +795,7 @@ const ReRenderUI = () => {
           normalList[i].title = result[i].title ?? '';
           if (i === 0) normalList[i].subTitle = result[i].subtitle ?? '';
           normalList[i].imageUrl = result[i].image_url ?? '';
+          normalList[i].imageOption = result[i].imageOption;
           normalList[i].actionType = result[i].default_action ? result[i].default_action.type : '';
           normalList[i].openUrl = result[i].default_action ? result[i].default_action.url : '';
           normalList[i].payload =
@@ -817,29 +831,28 @@ const ReRenderUI = () => {
               </div>
             </div>
           </div>
-          <!--Payload ${JSON.stringify(payloadData)} Payload-->
         `;
         sdk.setContent(htmlScript);
-        sdk.setData({ type: 'NormalList', elements: normalList });
+        sdk.setData({ type: 'NormalList', elements: normalList, payloadData });
         break;
       }
       case 'ButtonList': {
         console.log('formProps', formProps);
-        const result = HandleButtonListInput(formProps);
+        const result = handleButtonListInput(formProps);
         console.log(result);
         let htmlScript = `
           <div style="background-color: #b0c4df; min-height: 96vh; display: flex; padding: 10px; margin: -11px 0 ">
-            <div id="msgBlock" style="width: 390px; margin: auto">          
+            <div id="msgBlock" style="width: 380px; margin: auto">          
               <pre
                 style="
                   padding: 10px;
                   margin: 0;
                   margin-bottom: 2px;
                   background-color: white;
-                  font-size: 18px;
+                  font-size: 18.2px;
                   border-radius: 5px;
                   word-wrap: break-word;
-                  font-family: inherit;
+                  font-family: none;
                   white-space: break-spaces;
                 "
               >${msgText}</pre>
@@ -856,7 +869,14 @@ const ReRenderUI = () => {
                   margin: 2px 0;
                   border: none;
                 "
-                ><pre style="font-family: inherit; margin: 0; white-space: break-spaces; word-wrap: break-word;">${el.title}</pre></div>
+                ><pre 
+                  style="
+                    font-family: none;
+                    margin: 0; white-space:
+                    break-spaces;
+                    word-wrap:break-word;
+                ">${el.title}</pre>
+              </div>
             `;
         });
         console.log('buttonList: ', buttonList);
@@ -888,10 +908,129 @@ const ReRenderUI = () => {
         htmlScript += `
             </div>
           </div>
-        <!--Payload ${JSON.stringify(payloadData)} Payload-->  
         `;
         sdk.setContent(htmlScript);
-        sdk.setData({ type: 'ButtonList', text: msgText, elements: buttonList });
+        sdk.setData({ type: 'ButtonList', msgText, elements: buttonList, payloadData });
+        break;
+      }
+      case 'AttachedFile': {
+        console.log('AttachedFile: ', attachedFile);
+        let htmlScript = `
+          <div style="background-color: #b0c4df; min-height: 96vh; display: flex; padding: 10px; margin: -11px 0 ">
+            <div id="msgBlock" style="width: 380px; margin: auto">
+        `;
+        if (!attachedFile) {
+          htmlScript = `
+            <div style="background-color: #b0c4df; min-height: 96vh; display: flex; padding: 10px; margin: -11px 0 ">
+            </div>
+          `;
+          sdk.setContent(htmlScript);
+          break;
+        }
+        let data = JSON.parse(attachedFile);
+        let payloadData = {};
+        switch (data.extension) {
+          case 'gif': {
+            htmlScript += `
+                <img
+                  src=${data.url}
+                  alt="msgImage"
+                  style="
+                    width:100%; 
+                    height: 232px;
+                    border-radius: 5px;
+                  "
+                />
+                </div>
+              </div>
+            `;
+            payloadData = {
+              recipient: {
+                user_id: '%%ZaloId%%',
+              },
+              message: {
+                attachment: {
+                  type: 'template',
+                  payload: {
+                    template_type: 'media',
+                    elements: [
+                      {
+                        media_type: 'gif',
+                        attachment_id: '',
+                      },
+                    ],
+                  },
+                },
+              },
+            };
+            break;
+          }
+          case 'docx': {
+            htmlScript += `
+                <img
+                  src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2056%2064%22%3E%3Cpath%20d%3D%22m5.1%200c-2.8%200-5.1%202.2-5.1%205v53.9c0%202.8%202.3%205.1%205.1%205.1h45.8c2.8%200%205.1-2.3%205.1-5.1v-38.6l-18.9-20.3h-32z%22%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20fill%3D%22%2314A9DA%22%3E%3C/path%3E%3Cg%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%3E%3Cpath%20d%3D%22m56%2020.4v1h-12.8s-6.3-1.3-6.2-6.8c0%200%200.3%205.8%206.1%205.8h12.9z%22%20fill%3D%22%230F93D0%22%3E%3C/path%3E%3Cpath%20d%3D%22m37.1%200v14.6c0%201.6%201.1%205.8%206.1%205.8h12.8l-18.9-20.4z%22%20opacity%3D%22.5%22%20fill%3D%22%23fff%22%3E%3C/path%3E%3C/g%3E%3Cpath%20d%3D%22m14.2%2053.9h-3c-0.6%200-1.1-0.5-1.1-1.1v-9.9c0-0.6%200.5-1%201.1-1h3c3.8%200%206.2%202.6%206.2%206%200%203.4-2.4%206-6.2%206z%20m0-10.7h-2.6v9.3h2.6c3%200%204.7-2.1%204.7-4.6%200-2.6-1.7-4.7-4.7-4.7z%20m14.5%2010.9c-3.6%200-6-2.7-6-6.2s2.4-6.2%206-6.2c3.5%200%205.9%202.6%205.9%206.2%200%203.5-2.4%206.2-5.9%206.2z%20m0-11.1c-2.7%200-4.4%202.1-4.4%204.9%200%202.8%201.7%204.8%204.4%204.8%202.6%200%204.4-2%204.4-4.8%200-2.8-1.8-4.9-4.4-4.9z%20m18.4%200.4c0.1%200.1%200.2%200.3%200.2%200.5%200%200.4-0.3%200.7-0.7%200.7-0.2%200-0.4-0.1-0.5-0.2-0.7-0.9-1.9-1.4-3-1.4-2.6%200-4.6%202-4.6%204.9%200%202.8%202%204.8%204.6%204.8%201.1%200%202.2-0.4%203-1.3%200.1-0.2%200.3-0.3%200.5-0.3%200.4%200%200.7%200.4%200.7%200.8%200%200.2-0.1%200.3-0.2%200.5-0.9%201-2.2%201.7-4%201.7-3.5%200-6.2-2.5-6.2-6.2s2.7-6.2%206.2-6.2c1.8%200%203.1%200.7%204%201.7z%22%20fill%3D%22%23fff%22%3E%3C/path%3E%3C/svg%3E"
+                  alt="msgImage"
+                  style="
+                    width:100%; 
+                    height: 100px;
+                    border-radius: 5px;
+                  "
+                />
+                <p style="text-align:center">${data.name}</p>
+                </div>
+              </div>
+            `;
+            payloadData = {
+              recipient: {
+                user_id: '%%ZaloId%%',
+              },
+              message: {
+                attachment: {
+                  type: 'file',
+                  payload: {
+                    token: '',
+                  },
+                },
+              },
+            };
+            break;
+          }
+          case 'pdf': {
+            htmlScript += `
+                <img
+                  src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2056%2064%22%3E%3Cpath%20fill%3D%22%238C181A%22%20d%3D%22m5.1%200c-2.8%200-5.1%202.3-5.1%205.1v53.8c0%202.8%202.3%205.1%205.1%205.1h45.8c2.8%200%205.1-2.3%205.1-5.1v-38.6l-18.9-20.3h-32z%22%3E%3C/path%3E%3Cpath%20fill%3D%22%236B0D12%22%20d%3D%22m56%2020.4v1h-12.8s-6.3-1.3-6.1-6.7c0%200%200.2%205.7%206%205.7h12.9z%22%3E%3C/path%3E%3Cpath%20opacity%3D%22.5%22%20fill%3D%22%23fff%22%20enable-background%3D%22new%22%20d%3D%22m37.1%200v14.6c0%201.7%201.1%205.8%206.1%205.8h12.8l-18.9-20.4z%22%3E%3C/path%3E%3Cpath%20fill%3D%22%23fff%22%20d%3D%22m14.9%2049h-3.3v4.1c0%200.4-0.3%200.7-0.8%200.7-0.4%200-0.7-0.3-0.7-0.7v-10.2c0-0.6%200.5-1.1%201.1-1.1h3.7c2.4%200%203.8%201.7%203.8%203.6%200%202-1.4%203.6-3.8%203.6z%20m-0.1-5.9h-3.2v4.6h3.2c1.4%200%202.4-0.9%202.4-2.3s-1-2.3-2.4-2.3z%20m10.4%2010.7h-3c-0.6%200-1.1-0.5-1.1-1.1v-9.8c0-0.6%200.5-1.1%201.1-1.1h3c3.7%200%206.2%202.6%206.2%206s-2.4%206-6.2%206z%20m0-10.7h-2.6v9.3h2.6c2.9%200%204.6-2.1%204.6-4.7%200.1-2.5-1.6-4.6-4.6-4.6z%20m16.3%200h-5.8v3.9h5.7c0.4%200%200.6%200.3%200.6%200.7s-0.3%200.6-0.6%200.6h-5.7v4.8c0%200.4-0.3%200.7-0.8%200.7-0.4%200-0.7-0.3-0.7-0.7v-10.2c0-0.6%200.5-1.1%201.1-1.1h6.2c0.4%200%200.6%200.3%200.6%200.7%200.1%200.3-0.2%200.6-0.6%200.6z%22%3E%3C/path%3E%3C/svg%3E"
+                  alt="msgImage"
+                  style="
+                    width:100%; 
+                    height: 100px;
+                    border-radius: 5px;
+                  "
+                />
+                <p style="text-align:center">${data.name}</p>
+                </div>
+              </div>
+            `;
+            payloadData = {
+              recipient: {
+                user_id: '%%ZaloId%%',
+              },
+              message: {
+                attachment: {
+                  type: 'file',
+                  payload: {
+                    token: '',
+                  },
+                },
+              },
+            };
+            break;
+          }
+          default: {
+            alert('This type is not supported');
+          }
+        }
+        sdk.setContent(htmlScript);
+        sdk.setData({ type: 'AttachedFile', value: data, payloadData });
         break;
       }
     }
@@ -902,10 +1041,11 @@ const ReRenderUI = () => {
 /**
  * Render ZNS Text
  */
-const RenderZNSText = () => {
-  $('.ccb-form__znsContent-wrapper').empty();
-  $('.ccb-form__znsContent-wrapper').append('<div class="ccb-form__Group"></div>');
-  $('.ccb-form__Group').append(`
+const renderZNSText = () => {
+  $('.ccb-form__znsContent-wrapper').append(
+    '<div id="ccb-form__Group" class="ccb-form__Group"></div>'
+  );
+  $('#ccb-form__Group').append(`
     <div class="slds-form-element" id="ccb-form-msgText-element">
       <label class="slds-form-element__label ccb-label" for="msgText"><abbr class="slds-required" title="required">* </abbr>Message:</label>
       <div class="slds-form-element__control">
@@ -918,37 +1058,75 @@ const RenderZNSText = () => {
   $('#addButtonList').hide();
 };
 
+const renderImageUrlInput = (el) => {
+  $(`#ccb-form-imageUrl${el ? el.id : ''}-wrapper`).append(`
+    <div class="slds-form-element" id="ccb-form-imageUrl${el ? el.id : ''}-element">
+      <label class="slds-form-element__label ccb-label" for="imageUrl${
+        el ? el.id : ''
+      }"><abbr class="slds-required" title="required">* </abbr>Image URL:</label>
+      <div class="slds-form-element__control">
+        <input class="slds-input ccb-input" type="text" id="imageUrl${
+          el ? el.id : ''
+        }" name="imageUrl${
+    el ? el.id : ''
+  }" placeholder="Enter your Image URL. Support type: png, jpg"">
+      </div>
+    </div>
+  `);
+  if (el) {
+    $(`#imageUrl${el.id}`).val(el.imageUrl);
+  }
+};
+
 /**
  * Render ZNS Image
  */
-const RenderZNSImage = () => {
-  $('.ccb-form__znsContent-wrapper').empty();
-  $('.ccb-form__znsContent-wrapper').append('<div class="ccb-form__Group"></div>');
-  $('.ccb-form__Group').append(`
+const renderZNSImage = async () => {
+  $('.ccb-form__znsContent-wrapper').append(
+    '<div id="ccb-form__Group" class="ccb-form__Group"></div>'
+  );
+  $('#ccb-form__Group').append(`
     <div class="slds-form-element" id="ccb-form-msgText-element">
       <label class="slds-form-element__label ccb-label" for="msgText">Message:</label>
       <div class="slds-form-element__control">
         <textarea class="slds-textarea ccb-textarea" type="text" id="msgText" name="msgText" maxlength="2000" placeholder="Enter your message. Maximum length: 2000"></textarea>
       </div>
     </div>
-    <div class="slds-form-element" id="ccb-form-imageUrl-element">
-      <label class="slds-form-element__label ccb-label" for="imageUrl"><abbr class="slds-required" title="required">* </abbr>Image URL:</label>
-      <div class="slds-form-element__control">
-        <input class="slds-input ccb-input" type="text" id="imageUrl" name="imageUrl" placeholder="Enter your URL. Maximum size: 1MB, file: png, jpg"">
-      </div>
-    </div>
+  `);
+  renderImageOptions();
+  $('#ccb-form__Group').append(`
+    <div id="ccb-form-imageUrl-wrapper"></div>
   `);
   $('#submitBtn').show();
   $('#addNormalList').hide();
   $('#addButtonList').hide();
 };
 
+const renderImageOptions = (el) => {
+  $(`#ccb-form__Group${el ? el.id : ''}`).append(`
+    <div class="slds-form-element" id="ccb-form-imageOption${el ? el.id : ''}-element">
+      <label class="slds-form-element__label ccb-label" for="imageOption${
+        el ? el.id : ''
+      }"><abbr class="slds-required" title="required">* </abbr>Image Option:</label>
+      <div class="slds-form-element__control">
+        <select class="slds-select ccb-select" id="imageOption${
+          el ? el.id : ''
+        }" name="imageOption${el ? el.id : ''}">
+          <option value="">--Select one of the following options--</option>
+          <option value="imageFile">Image File, Maximum size: 1MB</option>
+          <option value="imageURL">Image URL, Maximum size: 1MB</option>
+        </select>
+      </div>
+    </div>
+  `);
+};
+
 /**
  * Render ZNS Normal/Button List
- * @param {array} elementList 
- * @param {boolean} isButtonList 
+ * @param {array} elementList
+ * @param {boolean} isButtonList
  */
-const RenderZNSList = (elementList, isButtonList) => {
+const renderZNSList = (elementList, isButtonList) => {
   $('#elementList').empty();
   elementList.forEach((el) => {
     $('#elementList').append(
@@ -983,15 +1161,38 @@ const RenderZNSList = (elementList, isButtonList) => {
         `);
         $(`#subTitle${el.id}`).val(el.subTitle);
       }
+      renderImageOptions(el);
+      $(`#imageOption${el.id}`).val(el.imageOption);
       $(`#ccb-form__Group${el.id}`).append(`
-        <div class="slds-form-element" id="ccb-form-imageUrl${el.id}-element">
-          <label class="slds-form-element__label ccb-label" for="imageUrl${el.id}"><abbr class="slds-required" title="required">* </abbr>Image URL:</label>
-          <div class="slds-form-element__control">
-            <input class="slds-input ccb-input" type="text" id="imageUrl${el.id}" name="imageUrl${el.id}" placeholder="Enter your URL, file: png, jpg">
-          </div>
-        </div>
+        <div id="ccb-form-imageUrl${el.id}-wrapper"></div>
       `);
+      $(`#ccb-form-imageUrl${el.id}-wrapper`).empty();
+      switch ($(`#imageOption${el.id}`).val()) {
+        case 'imageFile': {
+          renderImageFiles(el);
+          break;
+        }
+        case 'imageURL': {
+          renderImageUrlInput(el);
+          break;
+        }
+      }
       $(`#imageUrl${el.id}`).val(el.imageUrl);
+      $(document).on('change', `#imageOption${el.id}`, (e) => {
+        $(`#ccb-form-imageUrl${el.id}-wrapper`).empty();
+        switch (e.target.value) {
+          case 'imageFile': {
+            renderImageFiles(el);
+            $(`#imageUrl${el.id}`).val('');
+            break;
+          }
+          case 'imageURL': {
+            renderImageUrlInput(el);
+            $(`#imageUrl${el.id}`).val('');
+            break;
+          }
+        }
+      });
     }
     $(`#ccb-form__Group${el.id}`).append(`
       <div class="slds-form-element" id="ccb-form-actionType${el.id}-element">
@@ -1016,26 +1217,26 @@ const RenderZNSList = (elementList, isButtonList) => {
       `<div id="actionTypeContent${el.id}" class="actionTypeContent"></div>`
     );
     $(`#actionType${el.id}`).val(el.actionType);
-    RenderActionTypes(el, el.actionType);
+    renderActionTypes(el, el.actionType);
     $(`#actionType${el.id}`).on('change', (e) => {
-      RenderActionTypes(el, e.target.value);
+      renderActionTypes(el, e.target.value);
     });
 
     if (isButtonList === false) {
       $(`#removeBtn${el.id}`).click(() => {
         normalList = JSON.parse(localStorage.getItem('LSNormalList'));
-        normalList = RemoveListElement(normalList, el.id);
+        normalList = removeListElement(normalList, el.id);
         localStorage.setItem('LSNormalList', JSON.stringify(normalList));
-        RenderZNSList(normalList, false);
-        ReRenderUI();
+        renderZNSList(normalList, false);
+        reRenderUI();
       });
     } else {
       $(`#removeBtn${el.id}`).click(() => {
         buttonList = JSON.parse(localStorage.getItem('LSButtonList'));
-        buttonList = RemoveListElement(buttonList, el.id);
+        buttonList = removeListElement(buttonList, el.id);
         localStorage.setItem('LSButtonList', JSON.stringify(buttonList));
-        RenderZNSList(buttonList);
-        ReRenderUI();
+        renderZNSList(buttonList);
+        reRenderUI();
       });
     }
   });
@@ -1043,22 +1244,18 @@ const RenderZNSList = (elementList, isButtonList) => {
 
 /**
  * Render ZNS Action Types
- * @param {object} el 
- * @param {string} type 
+ * @param {object} el
+ * @param {string} type
  */
-const RenderActionTypes = (el, type) => {
+const renderActionTypes = (el, type) => {
+  $(`#actionTypeContent${el.id}`).empty();
   switch (type) {
-    case '': {
-      $(`#actionTypeContent${el.id}`).empty();
-      break;
-    }
     case `oa.open.url`: {
-      $(`#actionTypeContent${el.id}`).empty();
       $(`#actionTypeContent${el.id}`).append(`
         <div class="slds-form-element" id="ccb-form-openUrl${el.id}-element">
           <label class="slds-form-element__label ccb-label" for="openUrl${el.id}"><abbr class="slds-required" title="required">* </abbr>URL:</label>
           <div class="slds-form-element__control">
-            <input class="slds-input ccb-input" type="text" id="openUrl${el.id}" name="openUrl${el.id}" placeholder="Enter your URL">
+            <input class="slds-input ccb-input" type="text" id="openUrl${el.id}" name="openUrl${el.id}" placeholder="Enter your Image URL">
           </div>
         </div>
       `);
@@ -1066,13 +1263,11 @@ const RenderActionTypes = (el, type) => {
       break;
     }
     case `oa.query.show`: {
-      console.log('el.payload: ', el, el.payload);
-      $(`#actionTypeContent${el.id}`).empty();
       $(`#actionTypeContent${el.id}`).append(`
         <div class="slds-form-element" id="ccb-form-payload${el.id}-element">
           <label class="slds-form-element__label ccb-label" for="payload${el.id}"><abbr class="slds-required" title="required">* </abbr>Payload:</label>
           <div class="slds-form-element__control">
-            <textarea class="slds-input ccb-input" type="text" id="payload${el.id}" maxlength="1000" name="payload${el.id}" placeholder="Enter your payload. Maximum length: 1000"></textarea>
+            <textarea class="slds-input ccb-textarea" type="text" id="payload${el.id}" maxlength="1000" name="payload${el.id}" placeholder="Enter your payload. Maximum length: 1000"></textarea>
           </div>
         </div>
       `);
@@ -1084,12 +1279,11 @@ const RenderActionTypes = (el, type) => {
       break;
     }
     case `oa.query.hide`: {
-      $(`#actionTypeContent${el.id}`).empty();
       $(`#actionTypeContent${el.id}`).append(`
         <div class="slds-form-element" id="ccb-form-payload${el.id}-element">
           <label class="slds-form-element__label ccb-label" for="payload${el.id}"><abbr class="slds-required" title="required">* </abbr>Payload:</label>
           <div class="slds-form-element__control">
-            <textarea class="slds-input ccb-input" type="text" id="payload${el.id}" maxlength="1000" name="payload${el.id}" placeholder="Enter your payload. Maximum length: 1000"></textarea>
+            <textarea class="slds-input ccb-textarea" type="text" id="payload${el.id}" maxlength="1000" name="payload${el.id}" placeholder="Enter your payload. Maximum length: 1000"></textarea>
           </div>
         </div>
       `);
@@ -1101,7 +1295,6 @@ const RenderActionTypes = (el, type) => {
       break;
     }
     case `oa.open.sms`: {
-      $(`#actionTypeContent${el.id}`).empty();
       $(`#actionTypeContent${el.id}`).append(`
         <div class="slds-form-element" id="ccb-form-smsContent${el.id}-element">
           <label class="slds-form-element__label ccb-label" for="smsContent${el.id}"><abbr class="slds-required" title="required">* </abbr>SMS message:</label>
@@ -1123,7 +1316,6 @@ const RenderActionTypes = (el, type) => {
       break;
     }
     case `oa.open.phone`: {
-      $(`#actionTypeContent${el.id}`).empty();
       $(`#actionTypeContent${el.id}`).append(`
         <div class="slds-form-element" id="ccb-form-phoneCode${el.id}-element">
           <label class="slds-form-element__label ccb-label" for="phoneCode${el.id}"><abbr class="slds-required" title="required">* </abbr>Phone number:</label>
@@ -1135,5 +1327,99 @@ const RenderActionTypes = (el, type) => {
       $(`#phoneCode${el.id}`).val(el.phoneCode);
       break;
     }
+  }
+};
+
+const renderImageFiles = (el) => {
+  $(`#ccb-form-imageUrl${el ? el.id : ''}-wrapper`).append(`
+    <div class="slds-form-element" id="ccb-form-imageUrl${el ? el.id : ''}-element">
+      <label class="slds-form-element__label ccb-label" for="imageUrl${
+        el ? el.id : ''
+      }"><abbr class="slds-required" title="required">* </abbr>Image File:</label>
+      <div class="slds-form-element__control">
+        <select class="slds-select ccb-select" id="imageUrl${el ? el.id : ''}" name="imageUrl${
+    el ? el.id : ''
+  }">  
+      </div>
+    </div>
+  `);
+  $(`#imageUrl${el ? el.id : ''}`).append(
+    $('<option>', {
+      value: '',
+      text: '--Select one of the following options--',
+    })
+  );
+  $.each(contentBuilderImages, (i, item) => {
+    $(`#imageUrl${el ? el.id : ''}`).append(
+      $('<option>', {
+        value: item.fileProperties.publishedURL,
+        text:
+          item.name +
+          ' (' +
+          Math.round((item.fileProperties.fileSize / 1048576) * 100) / 100 +
+          ' MB' +
+          ')',
+      })
+    );
+  });
+};
+
+const renderZNSAttachedFile = () => {
+  $('.ccb-form__znsContent-wrapper').append(
+    '<div id="ccb-form__Group" class="ccb-form__Group"></div>'
+  );
+  $('.ccb-form__Group').append(`
+    <div class="slds-form-element" id="ccb-form-attachedFile-element">
+      <label class="slds-form-element__label ccb-label" for="attachedFile"><abbr class="slds-required" title="required">* </abbr>Attached File: (maximum size of gif, docx, pdf file: 5MB)</label>
+      <div class="slds-form-element__control">
+        <select class="slds-select ccb-select" type="file" id="attachedFile" name="attachedFile"></select>
+      </div>
+    </div>
+  `);
+  $('#attachedFile').append(
+    $('<option>', {
+      value: '',
+      text: '--Select one of the following options--',
+    })
+  );
+  $.each(contentBuilderMetaData, (i, item) => {
+    $('#attachedFile').append(
+      $('<option>', {
+        value: JSON.stringify({
+          name: item.name.replace(/ /g, ''),
+          type: item.fileProperties.name,
+          url: item.fileProperties.publishedURL,
+          size: item.fileProperties.fileSize,
+          extension: item.fileProperties.extension,
+        }),
+        text:
+          item.name +
+          ' (' +
+          Math.round((item.fileProperties.fileSize / 1048576) * 100) / 100 +
+          ' MB' +
+          ')',
+      })
+    );
+  });
+  $('#submitBtn').show();
+  $('#addNormalList').hide();
+  $('#addButtonList').hide();
+};
+
+const getImageContent = async () => {
+  try {
+    const result = await superagent.get('/api/getimagecontent');
+    return JSON.parse(result.text);
+  } catch (error) {
+    console.log('error: ', error);
+  }
+};
+
+const getMetaDataContent = async () => {
+  try {
+    const result = await superagent.get('/api/getmetadatacontent');
+    return JSON.parse(result.text);
+  } catch (error) {
+    console.log('error: ', error);
   }
 };
