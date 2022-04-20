@@ -35,7 +35,7 @@ exports.execute = async (req, res) => {
 
     // Query OA Info
     const { rows } = await db.query(
-      `SELECT * FROM "${process.env.PSQL_ZALOOA}" WHERE "OAId" = '${data.inArguments[0].messType}' ORDER BY "OAId"`
+      `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${data.inArguments[0].messType}' ORDER BY "OAId"`
     );
     const OAInfo = rows[0];
     console.log('OAInfo: ', OAInfo);
@@ -69,7 +69,7 @@ exports.execute = async (req, res) => {
           valueList.push(`"${key}" = '${value}'`);
         }
         const result = await db.query(
-          `UPDATE "${process.env.PSQL_ZALOOA}" SET ${valueList} WHERE "OAId" = '${OAInfo.OAId}'`
+          `UPDATE "${process.env.PSQL_ZALOOA_TABLE}" SET ${valueList} WHERE "OAId" = '${OAInfo.OAId}'`
         );
         console.log(`Cap nhat db thanh cong cho OA ${OAInfo.OAName}: `, result);
       }
