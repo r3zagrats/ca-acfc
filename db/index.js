@@ -1,15 +1,22 @@
 require('dotenv').config();
 const { Pool } = require('pg')
  
+// const connectionConfig = {
+//   user: process.env.PSQL_HEROKU_USERNAME,
+//   // host: 'localhost',
+//   // host: `/cloudsql/${process.env.PSQL_INSTANCE_CONNECTION_NAME}`,
+//   host: process.env.PSQL_HEROKU_INSTANCE_CONNECTION_NAME,
+//   port: process.env.PSQL_HEROKU_PORT,
+//   password: process.env.PSQL_HEROKU_PASSWORD,
+//   database: process.env.PSQL_HEROKU_DATABASE
+// };
+
 const connectionConfig = {
-  user: process.env.PSQL_HEROKU_USERNAME,
-  // host: 'localhost',
-  // host: `/cloudsql/${process.env.PSQL_INSTANCE_CONNECTION_NAME}`,
-  host: process.env.PSQL_HEROKU_INSTANCE_CONNECTION_NAME,
-  port: process.env.PSQL_HEROKU_PORT,
-  password: process.env.PSQL_HEROKU_PASSWORD,
-  database: process.env.PSQL_HEROKU_DATABASE
-};
+  connectionString: 'postgres://rapqbqahxaswrn:2e38b6814f132cd2f3759083ad3562bee686d7397a900d69f86ee352edd57ddb@ec2-34-194-158-176.compute-1.amazonaws.com:5432/d3n23rch2pqkre',
+  ssl: {
+    rejectUnauthorized: false
+  }
+}
 
 const pool = new Pool(connectionConfig)
 
