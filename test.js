@@ -1,15 +1,16 @@
-const testfnc = async (data) => {
-  try {
-    if (data === 1) {
-      console.log('data =', 1);
-    } else if (typeof data !== 'number') {
-      throw new Error('data must be a number');
-    }
-    console.log('processing...');
-  } catch (error) {
-    console.error('catch an error: ', error);
-  }
-};
+const redis = require('redis')
 
-testfnc(1);
-testfnc('haha');
+;(async () => {
+  const client = redis.createClient({
+    url: 'redis://:ped7fa24fe4f7138a5db1b0a6c682e38348d31d120b01754a7168aa1c6f996375@ec2-54-227-24-175.compute-1.amazonaws.com:29620'
+  });
+
+  client.on('error', (err) => console.log('Redis Client Error', err));
+
+  await client.connect();
+
+  await client.set('key', 'value');
+  const value = await client.get('key');
+  console.log(value);
+  client.quit()
+})();

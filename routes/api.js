@@ -2,6 +2,8 @@ const RestClient = require('../utils/sfmc-client');
 const superagent = require('superagent');
 require('dotenv').config();
 const { Client } = require('pg');
+const { createClient } = require('redis');
+
 /**
  * @param req
  * @param res
@@ -359,21 +361,14 @@ function dynamicSort(property) {
 
 exports.test = async (req, res) => {
   try {
-    const client = new Client({
-      user: 'postgres',
-      password: 'postgres',
-      port: 5432,
-      host: `/cloudsql/crucial-zodiac-341510:asia-southeast1:ws-intecom-dev-db`,
-      database: 'mydb',
+    const client = createClient({
+      url: 'redis://:ped7fa24fe4f7138a5db1b0a6c682e38348d31d120b01754a7168aa1c6f996375@ec2-54-227-24-175.compute-1.amazonaws.com:29620'
     });
-    console.log(client);
-    client.connect();
-    let data;
-    client.query('SELECT * FROM "myTable"', (err, res) => {
-      console.log(err, res);
-      data = res;
-      client.end();
-    });
+    client.on('error', (err) => console.log('Redis Client Error', err));
+    await client.connect();
+    await client.set('key', 'value');
+    const value = await client.get('key');
+    console.log('value', value);
     res.status(200).send({ status: 'OK', data });
   } catch (error) {
     console.log(error);
