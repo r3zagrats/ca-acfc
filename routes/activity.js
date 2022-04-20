@@ -183,7 +183,7 @@ exports.save = async (req, res) => {
  * @param res
  */
 exports.publish = async (req, res) => {
-  console.log('publish: ', JSON.parse(req.body));
+  console.log('publish: ', req.body);
   res.status(200).send({
     status: 'ok',
   });
