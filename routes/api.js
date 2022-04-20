@@ -372,8 +372,8 @@ exports.test = async (req, res) => {
     await client.connect();
     await client.set('key', 'value');
     const value = await client.get('key');
-    console.log('value', value);
-    res.status(200).send({ status: 'OK', data });
+    console.log('value: ', value);
+    res.status(200).send({ status: 'OK'});
   } catch (error) {
     console.log(error);
     res.status(500).send({ status: 'error' });
