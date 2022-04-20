@@ -35,8 +35,8 @@ env_variables:
   PSQL_INSTANCE_CONNECTION_NAME: crucial-zodiac-341510:asia-southeast1:ws-intecom-dev-db
   PSQL_PORT: 5432
   PSQL_DATABASE: ws-intecom-dev-db
-  PSQL_ZALOOA: ZaloOA
-  PSQL_USER: User
+  PSQL_ZALOOA_TABLE: ZaloOA
+  PSQL_USER_TABLE: User
   ZALO_OAUTH_URL: https://oauth.zaloapp.com/v4/oa/access_token
   ZALO_UPLOAD_URL: https://openapi.zalo.me/v2.0/oa/upload/
   ZALO_APP_SECRET_KEY: 3NISUOi1kXG8SE6DL3WX

@@ -2,12 +2,13 @@ require('dotenv').config();
 const { Pool } = require('pg')
  
 const connectionConfig = {
-  user: process.env.PSQL_USERNAME,
+  user: process.env.PSQL_HEROKU_USERNAME,
   // host: 'localhost',
-  host: `/cloudsql/${process.env.PSQL_INSTANCE_CONNECTION_NAME}`,
-  port: process.env.PSQL_PORT,
-  password: process.env.PSQL_PASSWORD,
-  database: process.env.PSQL_DATABASE
+  // host: `/cloudsql/${process.env.PSQL_INSTANCE_CONNECTION_NAME}`,
+  host: process.env.PSQL_HEROKU_INSTANCE_CONNECTION_NAME,
+  port: process.env.PSQL_HEROKU_PORT,
+  password: process.env.PSQL_HEROKU_PASSWORD,
+  database: process.env.PSQL_HEROKU_DATABASE
 };
 
 const pool = new Pool(connectionConfig)

@@ -22,7 +22,7 @@ exports.config = (req, res) => {
  */
 exports.customActivity = async (req, res) => {
   if ((req.headers['referer'] ?? 'no end').includes('marketingcloudapps')) {
-    var { rows } = await db.query(`SELECT * FROM "${process.env.PSQL_ZALOOA}" ORDER BY "OAId"`);
+    var { rows } = await db.query(`SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" ORDER BY "OAId"`);
     res.render('customActivity', { messTypes: rows });
   } else {
     res.status(500).send({ Status: 'Access is not allowed' });
