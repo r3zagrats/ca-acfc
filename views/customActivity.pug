@@ -18,11 +18,18 @@ block content
         .slds-form-element
           .slds-form-element__control  
             .slds-select_container
+              //- select#messType.slds-select.js-activity-setting(name='messTypes')
+              //-   each messType in messTypes
+              //-     option(value=messType.OAId)= messType.OAName
+      form#step2.step.js-settings-form
+        .slds-form-element
+          .slds-form-element__control  
+            .slds-select_container
               select#messType.slds-select.js-activity-setting(name='messTypes')
                 each messType in messTypes
                   option(value=messType.OAId)= messType.OAName
 
-      form#step2.step.js-settings-form
+      form#step3.step.js-settings-form
         .slds-form-element
           .slds-form-element__control.js_de_lst        
           br
@@ -35,7 +42,7 @@ block content
           label.slds-form-element__label(for="DEFields") Data Extention Fields
           div#DEFields(name='DEFields')
 
-      form#step3.step.js-settings-form
+      form#step4.step.js-settings-form
         .slds-form-element
           .slds-form-element__control
             .slds-select_container
