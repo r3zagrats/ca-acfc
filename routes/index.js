@@ -22,8 +22,8 @@ exports.config = (req, res) => {
  */
 exports.customActivity = async (req, res) => {
   if ((req.headers['referer'] ?? 'no end').includes('marketingcloudapps')) {
-    const { Channels } = await db.query(`SELECT * FROM "${process.env.PSQL_CHANNEL_TABLE}" ORDER BY "Id"`);
-    const { Endpoints } = await db.query(`SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" ORDER BY "OAId"`);
+    const { rows:Channels } = await db.query(`SELECT * FROM "${process.env.PSQL_CHANNEL_TABLE}" ORDER BY "Id"`);
+    const { rows:Endpoints } = await db.query(`SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" ORDER BY "OAId"`);
     res.render('customActivity', { Channels, Endpoints });
   } else {
     res.status(500).send({ Status: 'Access is not allowed' });
