@@ -32,7 +32,6 @@ exports.execute = async (req, res) => {
       Content = Content.replaceAll(`%%${key}%%`, value);
     }
     console.log('Content before: ', Content);
-
     // Query OA Info
     const { rows } = await db.query(
       `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${data.inArguments[0].messType}' ORDER BY "OAId"`
