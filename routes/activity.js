@@ -217,6 +217,7 @@ exports.publish = async (req, res) => {
  * @param res
  */
 exports.stop = async (req, res) => {
+  console.log('stop: ', JWT(req.body));
   res.status(200).send({
     status: 'ok',
   });
@@ -229,6 +230,7 @@ exports.stop = async (req, res) => {
  * @param res
  */
 exports.validate = async (req, res) => {
+  console.log('validate: ', JWT(req.body));
   res.status(200).send({
     status: 'ok',
   });
