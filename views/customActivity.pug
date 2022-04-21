@@ -18,17 +18,16 @@ block content
         .slds-form-element
           .slds-form-element__control  
             .slds-select_container
-              //- select#messType.slds-select.js-activity-setting(name='messTypes')
-              //-   each messType in messTypes
-              //-     option(value=messType.OAId)= messType.OAName
+              select#Channel.slds-select.js-activity-setting(name='Channels')
+                each Channel in Channels
+                  option(value=Channel.Id)= Channel.Name
       form#step2.step.js-settings-form
         .slds-form-element
           .slds-form-element__control  
             .slds-select_container
-              select#messType.slds-select.js-activity-setting(name='messTypes')
-                each messType in messTypes
-                  option(value=messType.OAId)= messType.OAName
-
+              select#Endpoint.slds-select.js-activity-setting(name='Endpoints')
+                each Endpoint in Endpoints
+                  option(value=Endpoint.OAId)= Endpoint.OAName
       form#step3.step.js-settings-form
         .slds-form-element
           .slds-form-element__control.js_de_lst        

@@ -35,7 +35,7 @@ exports.execute = async (req, res) => {
   try {
     // Query OA Info
     const { rows } = await db.query(
-      `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${data.inArguments[0].messType}'`
+      `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${data.inArguments[0].Endpoint}'`
     );
     const OAInfo = rows[0];
     console.log('\nOAInfo: ', OAInfo);
