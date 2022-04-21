@@ -37,9 +37,10 @@ connection.on('requestedSchema', function (data) {
 
 var steps = [
   // initialize to the same value as what's set in config.json for consistency
-  { label: 'Endpoint', key: 'step1' },
-  { label: 'Data', key: 'step2' },
-  { label: 'Content', key: 'step3' },
+  { label: 'Channel', key: 'step1' },
+  { label: 'Endpoint', key: 'step2' },
+  { label: 'Data', key: 'step3' },
+  { label: 'Content', key: 'step4' },
 ];
 var currentStep = steps[0].key;
 
@@ -210,7 +211,7 @@ function save() {
  * Next settings
  */
 function next() {
-  if (currentStep.key === 'step3') {
+  if (currentStep.key === 'step4') {
     save();
   } else {
     connection.trigger('nextStep');
@@ -239,7 +240,7 @@ function showStep(step, stepIndex) {
   switch (currentStep.key) {
     case 'step1':
       $('#step1').show();
-      $('#titleDynamic').empty().append('Message Type');
+      $('#titleDynamic').empty().append('Channel');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
       connection.trigger('updateButton', {
         button: 'next',
@@ -252,6 +253,19 @@ function showStep(step, stepIndex) {
       break;
     case 'step2':
       $('#step2').show();
+      $('#titleDynamic').empty().append('Endpoint');
+      $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
+      connection.trigger('updateButton', {
+        button: 'next',
+        visible: true,
+      });
+      connection.trigger('updateButton', {
+        button: 'back',
+        visible: false,
+      });
+      break;
+    case 'step3':
+      $('#step3').show();
       $('#titleDynamic').empty().append('Data Extention');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
       if (
@@ -269,8 +283,8 @@ function showStep(step, stepIndex) {
         visible: false,
       });
       break;
-    case 'step3':
-      $('#step3').show();
+    case 'step4':
+      $('#step4').show();
       $('#titleDynamic').empty().append('Content');
       $('#iconDynamic').attr(
         'xlink:href',
