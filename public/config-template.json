@@ -50,8 +50,8 @@
     { "label": "Content", "key": "step3", "active": true }
   ],
   "userInterfaces": {
-    "configModal.fullscreen": true,
-    "configModal.height": "100%",
-    "configModal.width": "100%"
+    "configModal": {
+			"fullscreen": true
+		}
   }
 }
