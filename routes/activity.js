@@ -30,8 +30,8 @@ exports.execute = async (req, res) => {
   for (const [key, value] of Object.entries(data.inArguments[0])) {
     Content = Content.replaceAll(`%%${key}%%`, value);
   }
-  Content = JSON.parse(Content);
   console.log('\nContent', Content);
+  Content = JSON.parse(Content);
   try {
     // Query OA Info
     const { rows } = await db.query(
@@ -118,7 +118,7 @@ exports.execute = async (req, res) => {
       await redisClient.quit();
     }
     let znsContent = Content.payloadData;
-    console.log('\nznsContent:', znsContent);
+    console.log('\nznsContent:', JSON.stringify(znsContent));
     // Send Message
     const response = await superagent
       .post('https://openapi.zalo.me/v2.0/oa/message')

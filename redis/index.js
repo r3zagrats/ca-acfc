@@ -9,13 +9,13 @@ const client = createClient({
 });
 
 client.on('ready', () => {
-  console.log('connection ready')
+  console.log('\nconnection ready')
 })
 
 client.on('end', () => {
-  console.log('close connection')
+  console.log('\nclose connection')
 })
 
-client.on('error', (err) => console.log('Redis Client Error', err));
+client.on('error', (err) => console.log('\nRedis Client Error', err));
 
 module.exports = client;
