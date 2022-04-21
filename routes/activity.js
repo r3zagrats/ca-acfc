@@ -122,7 +122,7 @@ exports.execute = async (req, res) => {
       }
       console.log('tmpToken: ', tmpToken);
       if (Content.value.extension === 'gif') {
-        Content.payloadData.message.attachment.payload.attachment_id = tmpToken;
+        Content.payloadData.message.attachment.payload.elements[0].attachment_id = tmpToken;
       } else {
         Content.payloadData.message.attachment.payload.token = tmpToken;
       }
@@ -138,7 +138,7 @@ exports.execute = async (req, res) => {
     console.log('Response data: ', response.text);
     const znsSendLog = JSON.parse(response.text);
     console.log('znsSendLog: ', znsSendLog);
-    if (znsSendLog.error !== 0) throw znsSendLog.error;
+    if (znsSendLog.error !== 0) throw znsSendLog.message;
     const temp = {
       MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
       ZaloId: znsSendLog.error === 0 ? znsSendLog.data.user_id : '',
