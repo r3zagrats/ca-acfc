@@ -50,7 +50,7 @@ exports.execute = async (req, res) => {
         .send(`refresh_token=${OAInfo.RefreshToken}`)
         .send(`app_id=${process.env.ZALO_APP_ID}`)
         .send('grant_type=refresh_token');
-      response = response.body;
+      response = JSON.parse(response.text);
       console.log(`\nAccessToken Response cua ${OAInfo.OAName}: "`, response);
       if (response && response.access_token) {
         tmpAccessToken = response.access_token;
