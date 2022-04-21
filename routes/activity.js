@@ -202,7 +202,6 @@ exports.save = async (req, res) => {
  * @param res
  */
 exports.publish = async (req, res) => {
-  await redisClient.quit();
   await redisClient.connect();
   console.log('publish: ', req.body);
   res.status(200).send({
