@@ -37,7 +37,7 @@ connection.on('requestedSchema', function (data) {
 
 var steps = [
   // initialize to the same value as what's set in config.json for consistency
-  { label: 'Message Type', key: 'step1' },
+  { label: 'Endpoint', key: 'step1' },
   { label: 'Data', key: 'step2' },
   { label: 'Content', key: 'step3' },
 ];

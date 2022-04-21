@@ -45,14 +45,11 @@
     }
   },
   "wizardSteps":[
-    { "label": "Message Type", "key": "step1", "active": true },
+    { "label": "Endpoint", "key": "step1", "active": true },
     { "label": "Data", "key": "step2", "active": true },
     { "label": "Content", "key": "step3", "active": true }
   ],
   "userInterfaces": {
-    "configInspector": {
-      "hideHeader": true,
-      "size": "scm-sm"
-    }
+    "configModal.fullscreen": true
   }
 }
