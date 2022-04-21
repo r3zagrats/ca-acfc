@@ -89,7 +89,7 @@ exports.execute = async (req, res) => {
       fileInfo = JSON.parse(fileInfo);
       console.log('fileInfo: ', fileInfo);
       let tmpToken = '';
-      if (fileInfo === null || IsExpiredToken(fileInfo.expires_in) === false) {
+      if (fileInfo === null || IsExpiredToken(fileInfo.expires_in) === true) {
         const result = await asyncget(Content.value.url, Content.value.name);
         console.log('result: ', result);
         const file = fs.createReadStream(`./public/data/${Content.value.name}`);
@@ -101,14 +101,14 @@ exports.execute = async (req, res) => {
           .set('content-type', 'multipart/form-data')
           .field('file', file);
         console.log('response', response.body);
-        if (response.body === '0' && response.body.data.token) {
+        if (response.body.error === '0' && response.body.data.token) {
           tmpToken = response.body.data.token;
           Content.payloadData.message.attachment.payload.token = response.body.data.token;
-        } else if (response.body === '0' && response.body.data.attachment_id) {
+        } else if (response.body.error === '0' && response.body.data.attachment_id) {
           tmpToken = response.body.data.attachment_id;
           Content.payloadData.message.attachment.payload.elements[0].attachment_id =
             response.body.data.attachment_id;
-        } else {
+        } else if (response.body.error !== 0) {
           throw response.body.message;
         }
         await redisClient.set(
@@ -120,11 +120,11 @@ exports.execute = async (req, res) => {
         );
       } else {
         tmpToken = fileInfo.token;
-      }
-      if (Content.value.extension === 'gif') {
-        Content.payloadData.message.attachment.payload.attachment_id = tmpToken;
-      } else {
-        Content.payloadData.message.attachment.payload.token = tmpToken;
+        if (Content.value.extension === 'gif') {
+          Content.payloadData.message.attachment.payload.attachment_id = tmpToken;
+        } else {
+          Content.payloadData.message.attachment.payload.token = tmpToken;
+        }
       }
     }
     let znsContent = Content.payloadData;
@@ -192,6 +192,7 @@ exports.execute = async (req, res) => {
  * @returns {Promise<void>}
  */
 exports.save = async (req, res) => {
+  console.log('save: ', JWT(req.body))
   res.status(200).send({
     status: 'ok',
   });
