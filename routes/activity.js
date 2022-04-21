@@ -112,7 +112,7 @@ exports.execute = async (req, res) => {
       console.log('tmpToken:', tmpToken);
       if (Content.value.extension === 'gif') {
         Content.payloadData.message.attachment.payload.elements[0].attachment_id = tmpToken;
-      } else if (Content.value.extension === 'docx' || Content.value.extension === 'pdf'){
+      } else {
         Content.payloadData.message.attachment.payload.token = tmpToken;
       }
       await redisClient.quit();
