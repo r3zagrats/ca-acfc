@@ -25,6 +25,8 @@ const redisClient = require('../redis');
 exports.execute = async (req, res) => {
   try {
     const data = JWT(req.body);
+    console.log('execute: ', JWT(req.body))
+
     console.log('data.inArguments: ', data.inArguments[0]);
     let Content = data.inArguments[0].ContentBuilder;
     // Handle Content
