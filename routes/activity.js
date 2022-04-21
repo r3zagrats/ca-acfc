@@ -89,7 +89,7 @@ exports.execute = async (req, res) => {
       fileInfo = JSON.parse(fileInfo);
       console.log('fileInfo: ', fileInfo);
       let tmpToken = '';
-      if (fileInfo === null || IsExpiredToken(fileInfo.expires_in) === true) {
+      if (fileInfo === null || IsExpiredToken(fileInfo.expires_in) === true || fileInfo.token === '') {
         const result = await asyncget(Content.value.url, Content.value.name);
         console.log('result: ', result);
         const file = fs.createReadStream(`./public/data/${Content.value.name}`);
@@ -111,6 +111,7 @@ exports.execute = async (req, res) => {
         } else if (response.body.error !== 0) {
           throw response.body.message;
         }
+        console.log('tmpToken: ', tmpToken)
         await redisClient.set(
           Content.value.name,
           JSON.stringify({
