@@ -109,25 +109,25 @@ exports.execute = async (req, res) => {
           })
         );
       }
-      console.log('tmpToken: ', tmpToken);
+      console.log('tmpToken:', tmpToken);
       if (Content.value.extension === 'gif') {
         Content.payloadData.message.attachment.payload.elements[0].attachment_id = tmpToken;
-      } else {
+      } else if (Content.value.extension === 'docx' || Content.value.extension === 'pdf'){
         Content.payloadData.message.attachment.payload.token = tmpToken;
       }
       await redisClient.quit();
     }
     let znsContent = Content.payloadData;
-    console.log('znsContent: ', JSON.stringify(znsContent));
+    console.log('znsContent:', JSON.stringify(znsContent));
     // Send Message
     const response = await superagent
       .post('https://openapi.zalo.me/v2.0/oa/message')
       .set('Content-Type', 'application/json')
       .set('access_token', tmpAccessToken)
       .send(JSON.stringify(znsContent));
-    console.log('Response data: ', response.body);
+    console.log('Response data:', response.body);
     const znsSendLog = response.body;
-    console.log('znsSendLog: ', znsSendLog);
+    console.log('znsSendLog:', znsSendLog);
     if (znsSendLog.error !== 0) throw znsSendLog.message;
     const temp = {
       MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
