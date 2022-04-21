@@ -94,7 +94,7 @@ server.on("error", (error) => {
  */
 
 server.on("listening", () => {
-  await redisClient.connect()
+  redisClient.connect()
   const addr = server.address();
   const bind = typeof addr === "string" ? `pipe ${addr}` : `port ${addr.port}`;
   debug(`Listening on ${bind}`);
