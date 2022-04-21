@@ -25,8 +25,6 @@ const redisClient = require('../redis');
 exports.execute = async (req, res) => {
   try {
     const data = JWT(req.body);
-    console.log('execute: ', JWT(req.body))
-
     console.log('data.inArguments: ', data.inArguments[0]);
     let Content = data.inArguments[0].ContentBuilder;
     // Handle Content
@@ -122,11 +120,12 @@ exports.execute = async (req, res) => {
         );
       } else {
         tmpToken = fileInfo.token;
-        if (Content.value.extension === 'gif') {
-          Content.payloadData.message.attachment.payload.attachment_id = tmpToken;
-        } else {
-          Content.payloadData.message.attachment.payload.token = tmpToken;
-        }
+      }
+      console.log('tmpToken: ', tmpToken)
+      if (Content.value.extension === 'gif') {
+        Content.payloadData.message.attachment.payload.attachment_id = tmpToken;
+      } else {
+        Content.payloadData.message.attachment.payload.token = tmpToken;
       }
     }
     let znsContent = Content.payloadData;
@@ -194,7 +193,6 @@ exports.execute = async (req, res) => {
  * @returns {Promise<void>}
  */
 exports.save = async (req, res) => {
-  console.log('save: ', JWT(req.body))
   res.status(200).send({
     status: 'ok',
   });
@@ -206,7 +204,6 @@ exports.save = async (req, res) => {
  * @param res
  */
 exports.publish = async (req, res) => {
-  console.log('publish: ', JWT(req.body));
   res.status(200).send({
     status: 'ok',
   });
@@ -218,7 +215,6 @@ exports.publish = async (req, res) => {
  * @param res
  */
 exports.stop = async (req, res) => {
-  console.log('stop: ', JWT(req.body));
   res.status(200).send({
     status: 'ok',
   });
@@ -231,7 +227,6 @@ exports.stop = async (req, res) => {
  * @param res
  */
 exports.validate = async (req, res) => {
-  console.log('validate: ', JWT(req.body));
   res.status(200).send({
     status: 'ok',
   });
