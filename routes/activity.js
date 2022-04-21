@@ -105,9 +105,9 @@ exports.execute = async (req, res) => {
           .set('content-type', 'multipart/form-data')
           .field('file', file);
         console.log('response', response.body);
-        if (response.body.data.token || response.body.data.attachment_id) {
+        if (response.body.error === 0) {
           tmpToken = response.body.data.token || response.body.data.attachment_id;
-        } else if (response.body.error !== 0) {
+        } else {
           throw response.body.message;
         }
         await redisClient.set(
