@@ -40,7 +40,7 @@ exports.execute = async (req, res) => {
     const OAInfo = rows[0];
     console.log('OAInfo: ', OAInfo);
 
-    let tmpAccessToken = OAInfo.AccessToken;
+    let tmpAccessToken = OAInfo.AccessToken || '';
 
     // Check if the access token is valid
     if (IsExpiredToken(Number(OAInfo.Timestamp))) {
@@ -88,7 +88,7 @@ exports.execute = async (req, res) => {
       let fileInfo = await redisClient.get(Content.value.name);
       fileInfo = JSON.parse(fileInfo);
       console.log('fileInfo: ', fileInfo);
-      let tmpToken = '';
+      let tmpToken = fileInfo.token || '';
       if (
         fileInfo === null ||
         IsExpiredToken(fileInfo.expires_in) === true ||
@@ -117,9 +117,7 @@ exports.execute = async (req, res) => {
             expires_in: Date.now() + 604800000,
           })
         );
-      } else {
-        tmpToken = fileInfo.token;
-      }
+      } 
       console.log('tmpToken: ', tmpToken);
       if (Content.value.extension === 'gif') {
         Content.payloadData.message.attachment.payload.elements[0].attachment_id = tmpToken;
@@ -153,34 +151,33 @@ exports.execute = async (req, res) => {
       })
     );
     res.status(200).send({ Status: 'Successfull' });
-    //   // case 'Webpush': {
-    //   //   console.log('Webpush method');
-    //   //   let FirebaseToken = data.inArguments[0].FirebaseToken;
-    //   //   if (FirebaseToken !== '') {
-    //   //     for (const [key, value] of Object.entries(data.inArguments[0])) {
-    //   //       Content = Content.replaceAll(`%%${key}%%`, value);
-    //   //     }
-    //   //     var payload = {
-    //   //       notification: JSON.parse(Content),
-    //   //     };
-    //   //     admin
-    //   //       .messaging()
-    //   //       .sendToDevice(FirebaseToken, payload)
-    //   //       .then((response) => {
-    //   //         console.log('Sent successfully.\n');
-    //   //         console.log(response);
-    //   //       })
-    //   //       .catch((error) => {
-    //   //         console.log('Sent failed.\n');
-    //   //         console.log(error);
-    //   //       });
-    //   //   }
-    //   //   res.status(200).send({ Status: 'Accept' });
-    //   //   break;
-    //   // }
+    // case 'Webpush': {
+    //   console.log('Webpush method');
+    //   let FirebaseToken = data.inArguments[0].FirebaseToken;
+    //   if (FirebaseToken !== '') {
+    //     for (const [key, value] of Object.entries(data.inArguments[0])) {
+    //       Content = Content.replaceAll(`%%${key}%%`, value);
+    //     }
+    //     var payload = {
+    //       notification: JSON.parse(Content),
+    //     };
+    //     admin
+    //       .messaging()
+    //       .sendToDevice(FirebaseToken, payload)
+    //       .then((response) => {
+    //         console.log('Sent successfully.\n');
+    //         console.log(response);
+    //       })
+    //       .catch((error) => {
+    //         console.log('Sent failed.\n');
+    //         console.log(error);
+    //       });
+    //   }
+    //   res.status(200).send({ Status: 'Accept' });
+    //   break;
+    // }
     // }
   } catch (error) {
-    console.log('error: ', error);
     res.status(500).send({ status: 'Error', message: error });
   }
 };
