@@ -13,7 +13,7 @@ const filePath = './log/ZNSsent.txt';
 const destFileName = 'ZNSsent.txt';
 const storage = new Storage();
 const db = require('../db');
-const asyncget = require('../utils/async-http-get');
+const asyncGet = require('../utils/async-http-get');
 const fs = require('fs');
 const redisClient = require('../redis');
 /**
@@ -23,24 +23,23 @@ const redisClient = require('../redis');
  * @returns {Promise<void>}
  */
 exports.execute = async (req, res) => {
+  const data = JWT(req.body);
+  console.log('data.inArguments: ', data.inArguments[0]);
+  let Content = data.inArguments[0].ContentBuilder;
+  // Handle Content
+  for (const [key, value] of Object.entries(data.inArguments[0])) {
+    Content = Content.replaceAll(`%%${key}%%`, value);
+  }
+  Content = JSON.parse(Content);
+  console.log('Content', Content);
   try {
-    const data = JWT(req.body);
-    console.log('data.inArguments: ', data.inArguments[0]);
-    let Content = data.inArguments[0].ContentBuilder;
-    // Handle Content
-    for (const [key, value] of Object.entries(data.inArguments[0])) {
-      Content = Content.replaceAll(`%%${key}%%`, value);
-    }
-    console.log('Content before: ', Content);
     // Query OA Info
     const { rows } = await db.query(
-      `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${data.inArguments[0].messType}' ORDER BY "OAId"`
+      `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${data.inArguments[0].messType}'`
     );
     const OAInfo = rows[0];
     console.log('OAInfo: ', OAInfo);
-
     let tmpAccessToken = OAInfo.AccessToken || '';
-
     // Check if the access token is valid
     if (IsExpiredToken(Number(OAInfo.Timestamp))) {
       console.log(`Access Token cua ${OAInfo.OAName} het han`);
@@ -51,7 +50,7 @@ exports.execute = async (req, res) => {
         .send(`refresh_token=${OAInfo.RefreshToken}`)
         .send(`app_id=${process.env.ZALO_APP_ID}`)
         .send('grant_type=refresh_token');
-      response = JSON.parse(response.text);
+      response = response.body;
       console.log(`AccessToken Response cua ${OAInfo.OAName}: "`, response);
       if (response && response.access_token) {
         tmpAccessToken = response.access_token;
@@ -78,22 +77,15 @@ exports.execute = async (req, res) => {
       console.log(`Access Token cua ${OAInfo.OAName} con han`);
     }
     console.log('tmpAccessToken: ', tmpAccessToken);
-    // Handle Content
-    Content = JSON.parse(Content);
-    console.log('Content after: ', Content);
     if (Content.type === 'AttachedFile') {
       // Check if file exists
-      await redisClient.connect()
+      await redisClient.connect();
       let fileInfo = await redisClient.get(Content.value.name);
       fileInfo = JSON.parse(fileInfo);
       console.log('fileInfo: ', fileInfo);
       let tmpToken = fileInfo.token || '';
-      if (
-        fileInfo === null ||
-        IsExpiredToken(fileInfo.expires_in) === true ||
-        fileInfo.token === ''
-      ) {
-        const result = await asyncget(Content.value.url, Content.value.name);
+      if (fileInfo === null || IsExpiredToken(fileInfo.expires_in) === true || !fileInfo.token) {
+        const result = await asyncGet(Content.value.url, Content.value.name);
         console.log('result: ', result);
         const file = fs.createReadStream(`./public/data/${Content.value.name}`);
         const response = await superagent
@@ -116,14 +108,14 @@ exports.execute = async (req, res) => {
             expires_in: Date.now() + 604800000,
           })
         );
-      } 
+      }
       console.log('tmpToken: ', tmpToken);
       if (Content.value.extension === 'gif') {
         Content.payloadData.message.attachment.payload.elements[0].attachment_id = tmpToken;
       } else {
         Content.payloadData.message.attachment.payload.token = tmpToken;
       }
-      await redisClient.quit()
+      await redisClient.quit();
     }
     let znsContent = Content.payloadData;
     console.log('znsContent: ', JSON.stringify(znsContent));
@@ -133,8 +125,8 @@ exports.execute = async (req, res) => {
       .set('Content-Type', 'application/json')
       .set('access_token', tmpAccessToken)
       .send(JSON.stringify(znsContent));
-    console.log('Response data: ', response.text);
-    const znsSendLog = JSON.parse(response.text);
+    console.log('Response data: ', response.body);
+    const znsSendLog = response.body;
     console.log('znsSendLog: ', znsSendLog);
     if (znsSendLog.error !== 0) throw znsSendLog.message;
     const temp = {
@@ -200,7 +192,6 @@ exports.save = async (req, res) => {
  * @param res
  */
 exports.publish = async (req, res) => {
-  console.log('publish', JWT(req.body))
   res.status(200).send({
     status: 'ok',
   });
