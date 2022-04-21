@@ -87,6 +87,7 @@ exports.execute = async (req, res) => {
       // Check if file exists
       let fileInfo = await redisClient.get(Content.value.name);
       fileInfo = JSON.parse(fileInfo);
+      console.log('fileInfo: ', fileInfo);
       let tmpToken = '';
       if (fileInfo === null || IsExpiredToken(fileInfo.expires_in) === false) {
         const result = await asyncget(Content.value.url, Content.value.name);
@@ -100,10 +101,10 @@ exports.execute = async (req, res) => {
           .set('content-type', 'multipart/form-data')
           .field('file', file);
         console.log('response', response.body);
-        if (response.body.data.token) {
+        if (response.body === '0' && response.body.data.token) {
           tmpToken = response.body.data.token;
           Content.payloadData.message.attachment.payload.token = response.body.data.token;
-        } else if (response.body.data.attachment_id) {
+        } else if (response.body === '0' && response.body.data.attachment_id) {
           tmpToken = response.body.data.attachment_id;
           Content.payloadData.message.attachment.payload.elements[0].attachment_id =
             response.body.data.attachment_id;
