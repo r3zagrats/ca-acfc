@@ -78,7 +78,6 @@ exports.execute = async (req, res) => {
       console.log(`Access Token cua ${OAInfo.OAName} con han`);
     }
     console.log('tmpAccessToken: ', tmpAccessToken);
-
     // Handle Content
     Content = JSON.parse(Content);
     console.log('Content after: ', Content);
