@@ -89,7 +89,11 @@ exports.execute = async (req, res) => {
       fileInfo = JSON.parse(fileInfo);
       console.log('fileInfo: ', fileInfo);
       let tmpToken = '';
-      if (fileInfo === null || IsExpiredToken(fileInfo.expires_in) === true || fileInfo.token === '') {
+      if (
+        fileInfo === null ||
+        IsExpiredToken(fileInfo.expires_in) === true ||
+        fileInfo.token === ''
+      ) {
         const result = await asyncget(Content.value.url, Content.value.name);
         console.log('result: ', result);
         const file = fs.createReadStream(`./public/data/${Content.value.name}`);
@@ -101,17 +105,11 @@ exports.execute = async (req, res) => {
           .set('content-type', 'multipart/form-data')
           .field('file', file);
         console.log('response', response.body);
-        if (response.body.error === '0' && response.body.data.token) {
-          tmpToken = response.body.data.token;
-          Content.payloadData.message.attachment.payload.token = response.body.data.token;
-        } else if (response.body.error === '0' && response.body.data.attachment_id) {
-          tmpToken = response.body.data.attachment_id;
-          Content.payloadData.message.attachment.payload.elements[0].attachment_id =
-            response.body.data.attachment_id;
+        if (response.body.data.token || response.body.data.attachment_id) {
+          tmpToken = response.body.data.token || response.body.data.attachment_id;
         } else if (response.body.error !== 0) {
           throw response.body.message;
         }
-        console.log('tmpToken: ', tmpToken)
         await redisClient.set(
           Content.value.name,
           JSON.stringify({
@@ -122,7 +120,7 @@ exports.execute = async (req, res) => {
       } else {
         tmpToken = fileInfo.token;
       }
-      console.log('tmpToken: ', tmpToken)
+      console.log('tmpToken: ', tmpToken);
       if (Content.value.extension === 'gif') {
         Content.payloadData.message.attachment.payload.attachment_id = tmpToken;
       } else {
