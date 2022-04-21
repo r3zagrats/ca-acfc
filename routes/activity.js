@@ -24,25 +24,25 @@ const redisClient = require('../redis');
  */
 exports.execute = async (req, res) => {
   const data = JWT(req.body);
-  console.log('data.inArguments: ', data.inArguments[0]);
+  console.log('\ndata.inArguments: ', data.inArguments[0]);
   let Content = data.inArguments[0].ContentBuilder;
   // Handle Content
   for (const [key, value] of Object.entries(data.inArguments[0])) {
     Content = Content.replaceAll(`%%${key}%%`, value);
   }
   Content = JSON.parse(Content);
-  console.log('Content', Content);
+  console.log('\nContent', Content);
   try {
     // Query OA Info
     const { rows } = await db.query(
       `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${data.inArguments[0].messType}'`
     );
     const OAInfo = rows[0];
-    console.log('OAInfo: ', OAInfo);
+    console.log('\nOAInfo: ', OAInfo);
     let tmpAccessToken = OAInfo.AccessToken || '';
     // Check if the access token is valid
     if (IsExpiredToken(Number(OAInfo.Timestamp))) {
-      console.log(`Access Token cua ${OAInfo.OAName} het han`);
+      console.log(`\nAccess Token cua ${OAInfo.OAName} het han`);
       // Refresh Token
       let response = await superagent
         .post(process.env.ZALO_OAUTH_URL)
@@ -51,7 +51,7 @@ exports.execute = async (req, res) => {
         .send(`app_id=${process.env.ZALO_APP_ID}`)
         .send('grant_type=refresh_token');
       response = response.body;
-      console.log(`AccessToken Response cua ${OAInfo.OAName}: "`, response);
+      console.log(`\nAccessToken Response cua ${OAInfo.OAName}: "`, response);
       if (response && response.access_token) {
         tmpAccessToken = response.access_token;
         let updateInfo = {
@@ -61,7 +61,7 @@ exports.execute = async (req, res) => {
           Timestamp: Date.now() + response.expires_in * 1000,
           ExpiryDate: new Date(Date.now() + response.expires_in * 1000).toUTCString(),
         };
-        console.log(`updateInfo cua OA ${OAInfo.OAName}: `, updateInfo);
+        console.log(`\nupdateInfo cua OA ${OAInfo.OAName}: `, updateInfo);
         let valueList = [];
         for (const [key, value] of Object.entries(updateInfo)) {
           valueList.push(`"${key}" = '${value}'`);
@@ -69,24 +69,24 @@ exports.execute = async (req, res) => {
         const result = await db.query(
           `UPDATE "${process.env.PSQL_ZALOOA_TABLE}" SET ${valueList} WHERE "OAId" = '${OAInfo.OAId}'`
         );
-        console.log(`Cap nhat db thanh cong cho OA ${OAInfo.OAName}: `, result);
+        console.log(`\nCap nhat db thanh cong cho OA ${OAInfo.OAName}: `, result);
       } else {
         throw response;
       }
     } else {
-      console.log(`Access Token cua ${OAInfo.OAName} con han`);
+      console.log(`\nAccess Token cua ${OAInfo.OAName} con han`);
     }
-    console.log('tmpAccessToken: ', tmpAccessToken);
+    console.log('\ntmpAccessToken: ', tmpAccessToken);
     if (Content.type === 'AttachedFile') {
       // Check if file exists
       await redisClient.connect();
       let fileInfo = await redisClient.get(Content.value.name);
       fileInfo = JSON.parse(fileInfo);
-      console.log('fileInfo: ', fileInfo);
+      console.log('\nfileInfo: ', fileInfo);
       let tmpToken = fileInfo.token || '';
       if (fileInfo === null || IsExpiredToken(fileInfo.expires_in) === true || !fileInfo.token) {
         const result = await asyncGet(Content.value.url, Content.value.name);
-        console.log('result: ', result);
+        console.log('\nresult: ', result);
         const file = fs.createReadStream(`./public/data/${Content.value.name}`);
         const response = await superagent
           .post(
@@ -95,7 +95,7 @@ exports.execute = async (req, res) => {
           .set('access_token', tmpAccessToken)
           .set('content-type', 'multipart/form-data')
           .field('file', file);
-        console.log('response', response.body);
+        console.log('\nresponse', response.body);
         if (response.body.error === 0) {
           tmpToken = response.body.data.token || response.body.data.attachment_id;
         } else {
@@ -109,7 +109,7 @@ exports.execute = async (req, res) => {
           })
         );
       }
-      console.log('tmpToken:', tmpToken);
+      console.log('\ntmpToken:', tmpToken);
       if (Content.value.extension === 'gif') {
         Content.payloadData.message.attachment.payload.elements[0].attachment_id = tmpToken;
       } else {
@@ -118,16 +118,16 @@ exports.execute = async (req, res) => {
       await redisClient.quit();
     }
     let znsContent = Content.payloadData;
-    console.log('znsContent:', JSON.stringify(znsContent));
+    console.log('\nznsContent:', znsContent);
     // Send Message
     const response = await superagent
       .post('https://openapi.zalo.me/v2.0/oa/message')
       .set('Content-Type', 'application/json')
       .set('access_token', tmpAccessToken)
       .send(JSON.stringify(znsContent));
-    console.log('Response data:', response.body);
+    console.log('\nResponse data:', response.body);
     const znsSendLog = response.body;
-    console.log('znsSendLog:', znsSendLog);
+    console.log('\nznsSendLog:', znsSendLog);
     if (znsSendLog.error !== 0) throw znsSendLog.message;
     const temp = {
       MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
@@ -144,7 +144,7 @@ exports.execute = async (req, res) => {
     );
     res.status(200).send({ Status: 'Successfull' });
     // case 'Webpush': {
-    //   console.log('Webpush method');
+    //   console.log('\nWebpush method');
     //   let FirebaseToken = data.inArguments[0].FirebaseToken;
     //   if (FirebaseToken !== '') {
     //     for (const [key, value] of Object.entries(data.inArguments[0])) {
@@ -157,12 +157,12 @@ exports.execute = async (req, res) => {
     //       .messaging()
     //       .sendToDevice(FirebaseToken, payload)
     //       .then((response) => {
-    //         console.log('Sent successfully.\n');
-    //         console.log(response);
+    //         console.log('\nSent successfully.\n');
+    //         console.log(r\nesponse);
     //       })
     //       .catch((error) => {
-    //         console.log('Sent failed.\n');
-    //         console.log(error);
+    //         console.log('\nSent failed.\n');
+    //         console.log(e\nrror);
     //       });
     //   }
     //   res.status(200).send({ Status: 'Accept' });
@@ -221,7 +221,7 @@ exports.validate = async (req, res) => {
 };
 
 const IsExpiredToken = (timestamp) => {
-  console.log('Current Time: ', new Date(Date.now()).toUTCString());
+  console.log('\nCurrent Time: ', new Date(Date.now()).toUTCString());
   console.log('Expired Time: ', new Date(timestamp).toUTCString());
   console.log(timestamp - Date.now());
   if (timestamp - Date.now() < 600000) return true;
