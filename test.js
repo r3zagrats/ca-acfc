@@ -1,6 +1,13 @@
-const superagent = require('superagent')
+const redisClient = require('./redis');
 
-;(async() => {
-  const result = await superagent.get('/pgdb/zalooa')
-  console.log(result)
-})()
+(async () => {
+  await redisClient.connect()
+  
+  const [ ping, get, quit] = await Promise.all([
+    redisClient.ping(),
+    redisClient.get('key'),
+    redisClient.quit()
+  ])
+  console.log(get)
+})();
+

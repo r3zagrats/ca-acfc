@@ -83,6 +83,7 @@ exports.execute = async (req, res) => {
     console.log('Content after: ', Content);
     if (Content.type === 'AttachedFile') {
       // Check if file exists
+      await redisClient.connect()
       let fileInfo = await redisClient.get(Content.value.name);
       fileInfo = JSON.parse(fileInfo);
       console.log('fileInfo: ', fileInfo);
@@ -122,6 +123,7 @@ exports.execute = async (req, res) => {
       } else {
         Content.payloadData.message.attachment.payload.token = tmpToken;
       }
+      await redisClient.quit()
     }
     let znsContent = Content.payloadData;
     console.log('znsContent: ', JSON.stringify(znsContent));

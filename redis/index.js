@@ -8,4 +8,14 @@ const client = createClient({
   },
 });
 
+client.on('ready', () => {
+  console.log('connection ready')
+})
+
+client.on('end', () => {
+  console.log('close connection')
+})
+
+client.on('error', (err) => console.log('Redis Client Error', err));
+
 module.exports = client;
