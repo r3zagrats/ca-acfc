@@ -15,6 +15,7 @@ const storage = new Storage();
 const db = require('../db');
 const asyncget = require('../utils/async-http-get');
 const fs = require('fs');
+const redisClient = require('../redis');
 /**
  * The Journey Builder calls this method for each contact processed by the journey.
  * @param req
@@ -26,7 +27,6 @@ exports.execute = async (req, res) => {
     const data = JWT(req.body);
     console.log('data.inArguments: ', data.inArguments[0]);
     let Content = data.inArguments[0].ContentBuilder;
-    let hasError = false;
     // Handle Content
     for (const [key, value] of Object.entries(data.inArguments[0])) {
       Content = Content.replaceAll(`%%${key}%%`, value);
@@ -43,7 +43,7 @@ exports.execute = async (req, res) => {
     let tmpAccessToken = OAInfo.AccessToken;
 
     // Check if the access token is valid
-    if (IsExpiredAccessToken(Number(OAInfo.Timestamp))) {
+    if (IsExpiredToken(Number(OAInfo.Timestamp))) {
       console.log(`Access Token cua ${OAInfo.OAName} het han`);
       // Refresh Token
       let response = await superagent
@@ -72,6 +72,8 @@ exports.execute = async (req, res) => {
           `UPDATE "${process.env.PSQL_ZALOOA_TABLE}" SET ${valueList} WHERE "OAId" = '${OAInfo.OAId}'`
         );
         console.log(`Cap nhat db thanh cong cho OA ${OAInfo.OAName}: `, result);
+      } else {
+        throw response;
       }
     } else {
       console.log(`Access Token cua ${OAInfo.OAName} con han`);
@@ -81,27 +83,50 @@ exports.execute = async (req, res) => {
     // Handle Content
     Content = JSON.parse(Content);
     console.log('Content after: ', Content);
-    let znsContent = Content.payloadData;
     if (Content.type === 'AttachedFile') {
-      const result = await asyncget(Content.value.url, Content.value.name);
-      console.log('result: ', result);
-      const file = fs.createReadStream(`./public/data/${Content.value.name}`);
-      const response = await superagent
-        .post(`${process.env.ZALO_UPLOAD_URL}${Content.value.extension === 'gif' ? 'gif' : 'file'}`)
-        .set('access_token', tmpAccessToken)
-        .set('content-type', 'multipart/form-data')
-        .field('file', file);
-      console.log('response', response.body);
-      if (response.body.error === 0 && response.body.data.token) {
-        Content.payloadData.message.attachment.payload.token = response.body.data.token;
-      } else if (response.body.error === 0 && response.body.data.attachment_id) {
-        Content.payloadData.message.attachment.payload.elements[0].attachment_id =
-          response.body.data.attachment_id;
+      // Check if file exists
+      let fileInfo = await redisClient.get(Content.value.name);
+      fileInfo = JSON.parse(fileInfo);
+      let tmpToken = '';
+      if (fileInfo === null || IsExpiredToken(fileInfo.expires_in) === false) {
+        const result = await asyncget(Content.value.url, Content.value.name);
+        console.log('result: ', result);
+        const file = fs.createReadStream(`./public/data/${Content.value.name}`);
+        const response = await superagent
+          .post(
+            `${process.env.ZALO_UPLOAD_URL}${Content.value.extension === 'gif' ? 'gif' : 'file'}`
+          )
+          .set('access_token', tmpAccessToken)
+          .set('content-type', 'multipart/form-data')
+          .field('file', file);
+        console.log('response', response.body);
+        if (response.body.data.token) {
+          tmpToken = response.body.data.token;
+          Content.payloadData.message.attachment.payload.token = response.body.data.token;
+        } else if (response.body.data.attachment_id) {
+          tmpToken = response.body.data.attachment_id;
+          Content.payloadData.message.attachment.payload.elements[0].attachment_id =
+            response.body.data.attachment_id;
+        } else {
+          throw response.body.message;
+        }
+        await redisClient.set(
+          Content.value.name,
+          JSON.stringify({
+            token: tmpToken,
+            expires_in: Date.now() + 604800000,
+          })
+        );
       } else {
-        hasError = true;
-        return new Error('co loi')
+        tmpToken = fileInfo.token;
+      }
+      if (Content.value.extension === 'gif') {
+        Content.payloadData.message.attachment.payload.attachment_id = tmpToken;
+      } else {
+        Content.payloadData.message.attachment.payload.token = tmpToken;
       }
     }
+    let znsContent = Content.payloadData;
     console.log('znsContent: ', JSON.stringify(znsContent));
     // Send Message
     const response = await superagent
@@ -112,7 +137,7 @@ exports.execute = async (req, res) => {
     console.log('Response data: ', response.text);
     const znsSendLog = JSON.parse(response.text);
     console.log('znsSendLog: ', znsSendLog);
-    if (znsSendLog.error !== 0) hasError = true
+    if (znsSendLog.error !== 0) throw znsSendLog.error;
     const temp = {
       MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
       ZaloId: znsSendLog.error === 0 ? znsSendLog.data.user_id : '',
@@ -126,13 +151,7 @@ exports.execute = async (req, res) => {
         items: [temp],
       })
     );
-    if (hasError) {
-      res.status(500).send({ Status: 'Error' });
-    } else {
-      console.log('Journey Builder Ran Successfully');
-      res.status(200).send({ Status: 'Successfull' });
-    }
-
+    res.status(200).send({ Status: 'Successfull' });
     //   // case 'Webpush': {
     //   //   console.log('Webpush method');
     //   //   let FirebaseToken = data.inArguments[0].FirebaseToken;
@@ -161,7 +180,7 @@ exports.execute = async (req, res) => {
     // }
   } catch (error) {
     console.log('error: ', error);
-    res.status(500).send({ Status: 'Error' });
+    res.status(500).send({ status: 'Error', message: error });
   }
 };
 
@@ -183,6 +202,8 @@ exports.save = async (req, res) => {
  * @param res
  */
 exports.publish = async (req, res) => {
+  await redisClient.quit();
+  await redisClient.connect();
   console.log('publish: ', req.body);
   res.status(200).send({
     status: 'ok',
@@ -212,7 +233,7 @@ exports.validate = async (req, res) => {
   });
 };
 
-const IsExpiredAccessToken = (timestamp) => {
+const IsExpiredToken = (timestamp) => {
   console.log('Current Time: ', new Date(Date.now()).toUTCString());
   console.log('Expired Time: ', new Date(timestamp).toUTCString());
   console.log(timestamp - Date.now());
