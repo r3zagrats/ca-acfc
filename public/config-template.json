@@ -18,8 +18,8 @@
       "format": "json",
       "useJwt": true,
       "retryCount": 2,
-      "retryDelay ": 10000,
-      "timeout": 100000
+      "retryDelay": 1000,
+      "timeout": 10000
     }
   },
   "configurationArguments": {

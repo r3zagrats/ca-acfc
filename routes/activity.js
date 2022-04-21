@@ -69,7 +69,7 @@ exports.execute = async (req, res) => {
         const result = await db.query(
           `UPDATE "${process.env.PSQL_ZALOOA_TABLE}" SET ${valueList} WHERE "OAId" = '${OAInfo.OAId}'`
         );
-        console.log(`\nCap nhat db thanh cong cho OA ${OAInfo.OAName}: `, result);
+        console.log(`\nCap nhat db thanh cong cho OA ${OAInfo.OAName}:`);
       } else {
         throw response;
       }
