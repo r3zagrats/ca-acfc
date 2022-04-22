@@ -9,6 +9,14 @@ var DEFieldsKey = '';
 var fieldSelected = '';
 var eventDefinitionKey = '';
 
+var steps = [
+  { label: 'Channel', key: 'step1' },
+  { label: 'Endpoint', key: 'step2' },
+  { label: 'Data', key: 'step3' },
+  { label: 'Content', key: 'step4' },
+];
+var currentStep = steps[0].key;
+
 connection.on('initActivity', initialize);
 connection.on('requestedTokens', onGetTokens);
 connection.on('requestedEndpoints', onGetEndpoints);
@@ -49,17 +57,13 @@ const onRender = () => {
 
   $('#ContentOption').on('change', (e) =>{
     console.log(e.target.value);
-    $('#ContentBuilder').val('Loading...');
+    $('#ContentBuilder').val('');
     checkContent('process');
   });
 
- 
-
   $('#refreshButton').on('click', async () => {
-    // console.log(tmpCustomContents.find(cont => cont.id == $("#ContentOption").val()));
-    $('#ContentBuilder').val('Loading...');
+    $('#ContentBuilder').val('');
     $('#ContentOption').empty();
-    $('#ContentOption').append('<option value="None">Loading...</option>');
     $('#DisplayContent').empty();
     try {
       const customContent = await getCustomContent();
@@ -410,20 +414,4 @@ const getEvent = async (key) => {
   }
 };
 
-$(window).ready(onRender);
-connection.on('initActivity', initialize);
-connection.on('requestedTokens', onGetTokens);
-connection.on('requestedEndpoints', onGetEndpoints);
-connection.on('requestedInteraction', requestedInteractionHandler);
-connection.on('clickedNext', next);
-connection.on('clickedBack', prev);
-connection.on('gotoStep', onGotoStep);
-connection.on('requestedSchema', function (data) {});
 
-var steps = [
-  { label: 'Channel', key: 'step1' },
-  { label: 'Endpoint', key: 'step2' },
-  { label: 'Data', key: 'step3' },
-  { label: 'Content', key: 'step4' },
-];
-var currentStep = steps[0].key;
