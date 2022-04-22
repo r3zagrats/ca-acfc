@@ -364,7 +364,7 @@ const requestedInteractionHandler = async (settings) => {
   try {
     const eventInfo = await getEvent(eventDefinitionKey);
     console.log('eventInfo: ', eventInfo);
-    $('.js_de_lst').append(`<p>${eventInfo.dataExtension.Name}</p>`);
+    $('.js_de_lst').append(`<p>${eventInfo.dataExtension.name}</p>`);
     fieldSelected = eventInfo.deCol;
     $('#DEFields').empty();
     $('#DEFieldsKey').empty();
