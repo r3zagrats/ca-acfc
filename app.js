@@ -61,7 +61,7 @@ app.delete('/pgdb/zalooa/', pgDBRouter.deleteOA);
 app.get('/pgdb/user/', pgDBRouter.getAllUser);
 app.post('/pgdb/user/', pgDBRouter.updateUser);
 // api
-app.post('/api/getde/', api.getDe);
+app.use('/api/getde/', api.getDe);
 app.use('/api/getdecol/', api.getDeColumn);
 app.use('/api/getderow/', api.getDeRow);
 app.use('/api/getcustomcontent/', api.getCustomContent);

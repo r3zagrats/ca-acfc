@@ -173,12 +173,12 @@ exports.execute = async (req, res) => {
         //     });
         // }
         console.log('\nThis is Web Push Notification Channel.');
-        res.status(200).send({ Status: 'Accept' });
+        res.status(200).send({ Status: 'Successful' });
         break;
       }
       case 'SMS': {
         console.log('\nThis is SMS Channel.');
-        res.status(200).send({ Status: 'Accept' });
+        res.status(200).send({ Status: 'Successful' });
         break;
       }
       default: {
