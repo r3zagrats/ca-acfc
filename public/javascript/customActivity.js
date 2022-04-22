@@ -71,7 +71,7 @@ const onRender = () => {
   connection.trigger('requestSchema');
   $('#Channels').on('change', (e) => {
     console.log(e.target.value);
-    if ('#Channels'.val()) {
+    if ($('#Channels').val()) {
       connection.trigger('updateButton', {
         button: 'next',
         enabled: true,
@@ -80,7 +80,7 @@ const onRender = () => {
   });
 
   $('#Endpoints').on('change', (e) => {
-    if ('#Endpoints'.val()) {
+    if ($('#Endpoints').val()) {
       connection.trigger('updateButton', {
         button: 'next',
         enabled: true,
@@ -89,7 +89,7 @@ const onRender = () => {
   });
 
   $('#DEFieldsKey').on('change', (e) => {
-    if ('#DEFieldsKey'.val()) {
+    if ($('#DEFieldsKey').val()) {
       connection.trigger('updateButton', {
         button: 'next',
         enabled: true,
