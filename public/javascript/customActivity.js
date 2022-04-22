@@ -364,7 +364,7 @@ const requestedInteractionHandler = async (settings) => {
   try {
     const eventInfo = await getEvent(eventDefinitionKey);
     console.log('eventInfo: ', eventInfo);
-    $('.js_de_lst').append(`<p>${eventInfo.dataExtension.name}</p>`);
+    $('.js_de_lst').append(`<p>${eventInfo.dataExtension.Name}</p>`);
     fieldSelected = eventInfo.deCol;
     $('#DEFields').empty();
     $('#DEFieldsKey').empty();
@@ -396,7 +396,7 @@ const requestedInteractionHandler = async (settings) => {
   } catch (error) {
     console.log('error:', error);
     alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
-    connection.trigger('destroy');
+    // connection.trigger('destroy');
   }
 };
 
