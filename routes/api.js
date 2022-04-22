@@ -294,6 +294,7 @@ exports.getAttEvent = async (req, res) => {
     if (req.query.key != '' || req.query.key != null) {
       const data = await RestClient.getJourney(req.query.key);
       //res.status(200).send(data.body.dataExtensionId);
+      console.log('data: ', data.body)
 
       const props = ['Name', 'CustomerKey', 'ObjectID'];
       RestClient.SDKClient.dataExtension({
