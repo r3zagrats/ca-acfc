@@ -33,10 +33,10 @@ block content
           .slds-form-element__control.js_de_lst        
           br
           label.slds-form-element__label(for="DEFields") Key Data Extention Field
-          div#DataExKey.js-activity-setting(name='DataExKey')
+          div#DEKeys.js-activity-setting(name='DEKeys')
           .slds-form-element__control
             .slds-select_container
-              select#DEkeyField.slds-select.js-activity-setting(name='DEkeyField')
+              select#DEFieldsKey.slds-select.js-activity-setting(name='DEFieldsKey')
           br
           label.slds-form-element__label(for="DEFields") Data Extention Fields
           div#DEFields(name='DEFields')
@@ -52,7 +52,7 @@ block content
               abbr.slds-required(title='required')
               | Content |
               span#errorText
-            button#buttonRefresh(type="button") Refresh
+            button#refreshButton(type="button") Refresh
           br
           .slds-form-element__control
             textarea#ContentBuilder.slds-input.js-activity-setting( rows = '20' required='', placeholder='', name='text', disabled)

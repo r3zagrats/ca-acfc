@@ -1409,17 +1409,19 @@ const renderZNSAttachedFile = () => {
 const getImageContent = async () => {
   try {
     const result = await superagent.get('/api/getimagecontent');
-    return JSON.parse(result.text);
+    return result.body
   } catch (error) {
     console.log('error: ', error);
+    return { status: error }
   }
 };
 
 const getMetaDataContent = async () => {
   try {
     const result = await superagent.get('/api/getmetadatacontent');
-    return JSON.parse(result.text);
+    return result.body
   } catch (error) {
     console.log('error: ', error);
+    return { status: error }
   }
 };
