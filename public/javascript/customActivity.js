@@ -72,7 +72,7 @@ function onRender() {
       buttonSettings.enabled = false;
     }
     connection.trigger('updateButton', buttonSettings);
-    $('#DataExKey').val('{{Event."' + eventDefinitionKey + '"."' + $('#DEkeyField').val() + '"}}');
+    $('#DataExKey').val(`{{Event.${eventDefinitionKey}.${$('#DEkeyField').val()}}}`);
   });
 
   $('#buttonRefresh').on('click', function () {
@@ -92,10 +92,8 @@ function onRender() {
         tmpIndexContent = null;
         $('#ContentOption').empty();
         tmpContent.forEach((value) => {
-          if ($('#ContentOption').find('option[value="' + value.id + '"]').length == 0) {
-            $('#ContentOption').append(
-              '<option value="' + value.id + '">' + value.name + '</option>'
-            );
+          if ($('#ContentOption').find(`option[value="${value.id}"]`).length == 0) {
+            $('#ContentOption').append(`<option value="${value.id}">${value.name}</option>`);
           }
         });
         $('#ContentOption').val(ContentOption);
@@ -148,7 +146,7 @@ function initialize(data) {
       }
     });
   });
-  console.log('inArguments After: ', inArguments);
+  console.log('inArguments After:', inArguments);
 }
 
 /**
@@ -312,10 +310,8 @@ function showStep(step, stepIndex) {
           tmpContent = data.items;
           $('#ContentOption').empty();
           tmpContent.forEach((value) => {
-            if ($('#ContentOption').find('option[value="' + value.id + '"]').length == 0) {
-              $('#ContentOption').append(
-                '<option value="' + value.id + '">' + value.name + '</option>'
-              );
+            if ($('#ContentOption').find(`option[value="${value.id}"]`).length == 0) {
+              $('#ContentOption').append(`<option value="${value.id}">${value.name}</option>`);
             }
           });
           $('#ContentOption').val(ContentOption);
@@ -341,7 +337,7 @@ function checkContent(type) {
     $('#DisplayContent').append(tmpContent[tmpIndexContent].content);
   }
   if ($('#ContentOption').val() != '' && $('#ContentOption').val() != 'None') {
-    console.log('ContentOption khong rong~: ', $('#ContentOption').val());
+    console.log('ContentOption khong rong~:', $('#ContentOption').val());
     console.log($('#ContentBuilder').val());
     tmpContent.forEach((value) => {
       if (value.id == $('#ContentOption').val()) {
@@ -405,7 +401,7 @@ function requestedInteractionHandler(settings) {
       success: function (data) {
         console.log('data', data);
         //$(".js_de_lst").append('<h2 value="' +CustomerKey + '">' + data.dataExtention.Name + '</option>');
-        $('.js_de_lst').append('<p>' + data.dataExtention.Name + '</p>');
+        $('.js_de_lst').append(`<p>${data.dataExtention.Name}</p>`);
         fieldSelected = data.deCol;
         $('#DEFields').empty();
         $('#DEkeyField').empty();
@@ -413,23 +409,15 @@ function requestedInteractionHandler(settings) {
         // DEkeyField
         fieldSelected.forEach((value) => {
           fieldSelected = value.Name + ' ' + fieldSelected;
-          if ($('#DEkeyField').find('option[value="' + value.Name + '"]').length == 0) {
-            $('#DEkeyField').append(
-              '<option value="' + value.Name + '">' + value.Name + '</option>'
-            );
+          if ($('#DEkeyField').find(`option[value=${value.Name}]`).length == 0) {
+            $('#DEkeyField').append(`<option value=${value.Name}>${value.Name}</option>`);
           }
           if ($('#DEFields').find('p[value="' + value.CustomerKey + '"]').length == 0) {
             $('#DEFields').append(
-              '<p value="' +
-                value.CustomerKey +
-                '" id = "' +
-                value.Name +
-                '" class = "js-activity-setting">' +
-                value.Name +
-                '</p>'
+              `<p value="${value.CustomerKey}" id="${value.Name}" class="js-activity-setting">${value.Name}</p>`
             );
           }
-          $('#' + value.Name).val('{{Event."' + eventDefinitionKey + '"."' + value.Name + '"}}');
+          $('#' + value.Name).val(`{{Event.${eventDefinitionKey}.${value.Name}}}`);
           if (DEkeyField) {
             $('#DEkeyField').val(DEkeyField);
             connection.trigger('updateButton', {
