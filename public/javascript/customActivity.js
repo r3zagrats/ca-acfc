@@ -15,19 +15,17 @@ const onRender = () => {
   connection.trigger('requestEndpoints');
   connection.trigger('requestInteraction');
   connection.trigger('requestSchema');
-
-  $('#ContentOption').change(() => {
+  $('#ContentOption').change((e) => {
+    console.log(e.target.value)
     $('#ContentBuilder').val('Loading...');
     checkContent('process');
   });
 
   $('#DEFieldsKey').change(() => {
-    if ($('#DEFieldsKey').val()) {
-      buttonSettings.enabled = true;
-    } else {
-      buttonSettings.enabled = false;
-    }
-    connection.trigger('updateButton', buttonSettings);
+    connection.trigger('updateButton', {
+      button: 'next',
+      enabled: true,
+    });
     $('#DEKeys').val(`{{Event.${eventDefinitionKey}.${$('#DEFieldsKey').val()}}}`);
   });
 
@@ -41,7 +39,7 @@ const onRender = () => {
       const customContent = await getCustomContent();
       tmpCustomContents = customContent.items;
       tmpIndexContent = null;
-      $('#ContentOption').empty();
+      $('#ContentOption').append(`<option value=''>--Select one of the following contents--</option>`);
       $.each(tmpCustomContents, (index, content) => {
         $('#ContentOption').append(`<option value=${content.id}>${content.name}</option>`);
       });
@@ -281,7 +279,7 @@ function checkContent(type) {
     $('#DisplayContent').empty();
     $('#DisplayContent').append(tmpCustomContents[tmpIndexContent].content);
   }
-  if ($('#ContentOption').val() != '' && $('#ContentOption').val() != 'None') {
+  if ($('#ContentOption').val()) {
     console.log('ContentOption khong rong~:', $('#ContentOption').val());
     console.log($('#ContentBuilder').val());
     tmpCustomContents.forEach((value) => {
@@ -370,14 +368,13 @@ const getCustomContent = async () => {
     const response = await superagent.get('/api/getcustomcontent');
     return response.body;
   } catch (error) {
-    return { status: 'error', message: error.message };
+    throw new Error(error.message);
   }
 };
 
 const getEvent = async (key) => {
   try {
     const response = await superagent.post('/api/getevent').send({ key });
-    console.log('response getevent:', response);
     return response.body;
   } catch (error) {
     throw new Error(error.message);
@@ -392,11 +389,7 @@ connection.on('requestedInteraction', requestedInteractionHandler);
 connection.on('clickedNext', next);
 connection.on('clickedBack', prev);
 connection.on('gotoStep', onGotoStep);
-connection.on('requestedSchema', function (data) {
-  // save schema
-  //console.log('*** Schema ***', JSON.stringify(data['schema']));
-});
-//connection.on('clickedNext', save);
+connection.on('requestedSchema', function (data) {});
 
 var steps = [
   { label: 'Channel', key: 'step1' },
