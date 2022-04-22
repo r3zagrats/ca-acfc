@@ -403,6 +403,7 @@ function requestedInteractionHandler(settings) {
       type: 'GET',
       // beforeSend: function (xhr) { xhr.setRequestHeader('X-Test-Header', 'SetHereYourValueForTheHeader'); },
       success: function (data) {
+        console.log('data', data);
         //$(".js_de_lst").append('<h2 value="' +CustomerKey + '">' + data.dataExtention.Name + '</option>');
         $('.js_de_lst').append('<p>' + data.dataExtention.Name + '</p>');
         fieldSelected = data.deCol;
