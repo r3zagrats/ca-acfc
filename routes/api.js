@@ -345,6 +345,7 @@ exports.getAttEvent = async (req, res) => {
       });
     } else res.status(500).send({ Status: 'Key Required' });
   } catch (error) {
+    console.log('error:', error);
     res.status(500).send({
       Status: 'Journey Invalid',
     });
