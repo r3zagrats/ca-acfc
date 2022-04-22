@@ -61,7 +61,7 @@ connection.on('requestedInteraction', requestedInteractionHandler);
 connection.on('clickedNext', next);
 connection.on('clickedBack', prev);
 connection.on('gotoStep', onGotoStep);
-connection.on('requestedSchema', function (data) {})
+connection.on('requestedSchema', function (data) {});
 
 const onRender = () => {
   connection.trigger('ready');
@@ -71,28 +71,34 @@ const onRender = () => {
   connection.trigger('requestSchema');
   $('#Channels').on('change', (e) => {
     console.log(e.target.value);
-    connection.trigger('updateButton', {
-      button: 'next',
-      enabled: true,
-    });
+    if ('#Channels'.val()) {
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: true,
+      });
+    }
   });
 
   $('#Endpoints').on('change', (e) => {
-    connection.trigger('updateButton', {
-      button: 'next',
-      enabled: true,
-    });
+    if ('#Endpoints'.val()) {
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: true,
+      });
+    }
   });
 
   $('#DEFieldsKey').on('change', (e) => {
-    connection.trigger('updateButton', {
-      button: 'next',
-      enabled: true,
-    });
+    if ('#DEFieldsKey'.val()) {
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: true,
+      });
+    }
     $('#DEKeys').val(`{{Event.${eventDefinitionKey}.${$('#DEFieldsKey').val()}}}`);
   });
 
-  $('#ContentOption').on('change', (e) =>{
+  $('#ContentOption').on('change', (e) => {
     console.log(e.target.value);
     $('#ContentBuilder').val('');
     checkContent('process');
@@ -413,5 +419,3 @@ const getEvent = async (key) => {
     throw new Error(error.message);
   }
 };
-
-
