@@ -326,7 +326,7 @@ const requestedInteractionHandler = async (settings) => {
     $.ajax({
       url: `/api/getevent/`,
       data: { key: eventDefinitionKey },
-      type: 'GET',
+      type: 'POST',
       // beforeSend: function (xhr) { xhr.setRequestHeader('X-Test-Header', 'SetHereYourValueForTheHeader'); },
       success: function (data) {
         console.log('data', data);
