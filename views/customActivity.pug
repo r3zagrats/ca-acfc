@@ -19,6 +19,7 @@ block content
           .slds-form-element__control  
             .slds-select_container
               select#Channels.slds-select.js-activity-setting(name='Channels')
+                option(value='')= '--Select one of the following channels--'
                 each Channel in Channels
                   option(value=Channel.Name)= Channel.Name
       form#step2.step.js-settings-form
@@ -26,6 +27,7 @@ block content
           .slds-form-element__control  
             .slds-select_container
               select#Endpoints.slds-select.js-activity-setting(name='Endpoints')
+                option(value='')= '--Select one of the following endpoints--'
                 each Endpoint in Endpoints
                   option(value=Endpoint.OAId)= Endpoint.OAName
       form#step3.step.js-settings-form
