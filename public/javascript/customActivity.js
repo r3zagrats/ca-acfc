@@ -363,7 +363,7 @@ const requestedInteractionHandler = async (settings) => {
     //   },
     // });
     const response = await getEvent(eventDefinitionKey);
-    console.log('response: ', response.body);
+    console.log('response: ', response);
   } catch (error) {
     console.error(error);
     alert('superagent:', error.message);
