@@ -341,7 +341,7 @@ exports.getAttEvent = async (req, res) => {
             _data.sort(dynamicSort('Name'));
             res.status(200).send({
               deCol: _data,
-              dataExtention: dataDE.body.Results[0],
+              dataExtension: dataDE.body.Results[0],
             });
           });
         } else res.status(500).send({ status: 'No Data Extension Found', message: error });
