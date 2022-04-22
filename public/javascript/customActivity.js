@@ -374,15 +374,15 @@ const requestedInteractionHandler = async (settings) => {
     $.each(fieldSelected, (index, field) => {
       fieldSelected = field.Name + ' ' + fieldSelected;
       // console.log(`index${index}` ,$('#DEFieldsKey').find(`option[value="${field.Name}"]`))
-      // if ($('#DEFieldsKey').find(`option[value="${field.Name}"]`).length == 0) {
+      if ($('#DEFieldsKey').find(`option[value="${field.Name}"]`).length == 0) {
       $('#DEFieldsKey').append(`<option value=${field.Name}>${field.Name}</option>`);
-      // }
-      console.log(`index${index}`, $('#DEFields').find(`p[value="${field.CustomerKey}"]`));
-      // if ($('#DEFields').find(`p[value="${field.CustomerKey}"]`).length == 0) {
+      }
+      // console.log(`index${index}`, $('#DEFields').find(`p[value="${field.CustomerKey}"]`));
+      if ($('#DEFields').find(`p[value="${field.CustomerKey}"]`).length == 0) {
         $('#DEFields').append(
           `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
         );
-      // }
+      }
       $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
       if (DEFieldsKey) {
         $('#DEFieldsKey').val(DEFieldsKey);
