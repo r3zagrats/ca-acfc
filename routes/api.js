@@ -164,7 +164,7 @@ exports.getCustomContent = async (req, res) => {
     res.status(200).send(data.body);
   } catch (error) {
     res.status(500).send({
-      status: error,
+      status: 'error', message: error
     });
   }
 };

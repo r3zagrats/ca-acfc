@@ -3,7 +3,7 @@ const connection = new Postmonger.Session();
 let authTokens = {};
 let payload = {};
 $(window).ready(onRender);
-var tmpContent = [];
+var tmpCustomContents = [];
 var tmpIndexContent = null;
 var ContentOption = '';
 var DEFieldsKey = '';
@@ -59,47 +59,24 @@ function onRender() {
   });
 
   $('#refreshButton').on('click', async () => {
-    // console.log(tmpContent.find(cont => cont.id == $("#ContentOption").val()));
+    // console.log(tmpCustomContents.find(cont => cont.id == $("#ContentOption").val()));
     $('#ContentBuilder').val('Loading...');
     $('#ContentOption').empty();
     $('#ContentOption').append('<option value="None">Loading...</option>');
     $('#DisplayContent').empty();
-    // $.ajax({
-    //   url: `/api/getcustomcontent/`,
-    //   type: 'GET',
-    //   beforeSend: function (xhr) {
-    //     xhr.setRequestHeader('X-Test-Header', 'SetHereYourValueForTheHeader');
-    //   },
-    //   success: function (data) {
-    //     tmpContent = data.items;
-    //     tmpIndexContent = null;
-    //     $('#ContentOption').empty();
-    //     tmpContent.forEach((value) => {
-    //       if ($('#ContentOption').find(`option[value="${value.id}"]`).length == 0) {
-    //         $('#ContentOption').append(`<option value=${value.id}>${value.name}</option>`);
-    //       }
-    //     });
-    //     $('#ContentOption').val(ContentOption);
-    //     checkContent('process');
-    //   },
-    // });
     try {
       const customContent = await getCustomContent();
-      tmpContent = customContent.items;
-        tmpIndexContent = null;
-        $('#ContentOption').empty();
-        tmpContent.forEach((value) => {
-          if ($('#ContentOption').find(`option[value="${value.id}"]`).length == 0) {
-            $('#ContentOption').append(`<option value=${value.id}>${value.name}</option>`);
-          }
-        });
-        $('#ContentOption').val(ContentOption);
-        checkContent('process');
+      tmpCustomContents = customContent.items;
+      tmpIndexContent = null;
+      $('#ContentOption').empty();
+      $.each(tmpCustomContents, (index, content) => {
+        $('#ContentOption').append(`<option value=${content.id}>${content.name}</option>`);
+      })
+      $('#ContentOption').val(ContentOption);
+      checkContent('process');
     } catch (error) {
-      console.error(error)
+      alert(`Error on fetching data: ${error.message}`);
     }
-
-    console.log('customContent', customContent);
   });
 }
 
@@ -294,9 +271,9 @@ function showStep(step, stepIndex) {
         },
         success: function (data) {
           console.log(data);
-          tmpContent = data.items;
+          tmpCustomContents = data.items;
           $('#ContentOption').empty();
-          tmpContent.forEach((value) => {
+          tmpCustomContents.forEach((value) => {
             if ($('#ContentOption').find(`option[value="${value.id}"]`).length == 0) {
               $('#ContentOption').append(`<option value=${value.id}>${value.name}</option>`);
             }
@@ -314,19 +291,19 @@ function checkContent(type) {
   var alerts = false;
   //var dataRex = type == 'process' ? value.content : $("#ContentBuilder").val();
   console.log($('#ContentBuilder').val());
-  console.log('tmpContent: ', tmpContent);
+  console.log('tmpCustomContents: ', tmpCustomContents);
   console.log('tmpIndexContent: ' + tmpIndexContent);
   if (tmpIndexContent !== null) {
-    const payloadData = tmpContent[tmpIndexContent].meta.options.customBlockData;
+    const payloadData = tmpCustomContents[tmpIndexContent].meta.options.customBlockData;
     console.log('payloadData', payloadData);
     $('#ContentBuilder').val(JSON.stringify(payloadData));
     $('#DisplayContent').empty();
-    $('#DisplayContent').append(tmpContent[tmpIndexContent].content);
+    $('#DisplayContent').append(tmpCustomContents[tmpIndexContent].content);
   }
   if ($('#ContentOption').val() != '' && $('#ContentOption').val() != 'None') {
     console.log('ContentOption khong rong~:', $('#ContentOption').val());
     console.log($('#ContentBuilder').val());
-    tmpContent.forEach((value) => {
+    tmpCustomContents.forEach((value) => {
       if (value.id == $('#ContentOption').val()) {
         const regex = /%%([\s\S]*?)%%/gm;
         let m;
@@ -345,7 +322,7 @@ function checkContent(type) {
           }
         }
         if (type == 'process') {
-          tmpIndexContent = tmpContent.indexOf(value);
+          tmpIndexContent = tmpCustomContents.indexOf(value);
           const payloadData = value.meta.options.customBlockData;
           console.log('payloadData', payloadData);
           $('#ContentBuilder').val(JSON.stringify(payloadData));
@@ -425,10 +402,9 @@ function requestedInteractionHandler(settings) {
 
 const getCustomContent = async () => {
   try {
-    const response = await superagent.get('/api/getcustomcontent')
-    return response.body
+    const response = await superagent.get('/api/getcustomcontent');
+    return response.body;
   } catch (error) {
-    console.log('error:', error);
-    return { status: error }
+    return { status: 'error', message: error.message };
   }
-}
+};
