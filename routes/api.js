@@ -290,10 +290,10 @@ exports.upsertDE = async (req, res) => {
  *  @returns {Promise<void>}
  */
 exports.getAttEvent = async (req, res) => {
-  console.log('request:', req.query)
+  console.log('request:', req.body)
   try {
-    if (req.query.key != '' || req.query.key != null) {
-      const data = await RestClient.getJourney(req.query.key);
+    if (req.body.key != '' || req.body.key != null) {
+      const data = await RestClient.getJourney(req.body.key);
       //res.status(200).send(data.body.dataExtensionId);
       console.log('data: ', data.body)
 

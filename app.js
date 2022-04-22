@@ -68,7 +68,7 @@ app.use('/api/getcustomcontent/', api.getCustomContent);
 app.use('/api/getimagecontent/', api.getImageContent);
 app.use('/api/getmetadatacontent/', api.getMetaDataContent);
 app.post('/api/insertde/', api.insertDE);
-app.use('/api/getevent/', api.getAttEvent);
+app.post('/api/getevent/', api.getAttEvent);
 app.use('/api/zaloauth/', api.zaloAuth)
 app.use('/api/test/', api.test);
 // zalo webhook

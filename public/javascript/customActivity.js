@@ -341,7 +341,7 @@ function checkContent(type) {
   }
 }
 
-function requestedInteractionHandler(settings) {
+const requestedInteractionHandler = async (settings) => {
   console.log('--debug requestedInteractionHandler:');
   console.log('settings:', settings);
   try {
@@ -389,6 +389,8 @@ function requestedInteractionHandler(settings) {
         connection.trigger('destroy');
       },
     });
+    const response = await getEvent(eventDefinitionKey)
+    console.log('response: ', response.body)
   } catch (err) {
     console.error(err);
   }
@@ -397,6 +399,15 @@ function requestedInteractionHandler(settings) {
 const getCustomContent = async () => {
   try {
     const response = await superagent.get('/api/getcustomcontent');
+    return response.body;
+  } catch (error) {
+    return { status: 'error', message: error.message };
+  }
+};
+
+const getEvent = async (key) => {
+  try {
+    const response = await superagent.post('/api/getevent').send({ key });
     return response.body;
   } catch (error) {
     return { status: 'error', message: error.message };
