@@ -71,11 +71,16 @@ const onRender = () => {
   connection.trigger('requestSchema');
   $('#Channels').on('change', (e) => {
     console.log(e.target.value);
-    console.log($('#Channels').val() === '')
+    console.log($('#Channels').val() === '');
     if ($('#Channels').val()) {
       connection.trigger('updateButton', {
         button: 'next',
         enabled: true,
+      });
+    } else {
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: false,
       });
     }
   });
