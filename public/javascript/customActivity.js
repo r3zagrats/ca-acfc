@@ -372,7 +372,6 @@ function checkContent(type) {
       }
     });
     if (alerts == true) {
-      //$("#errorText").val("Giá trị ( %%<Field DE>%%) trong Content không hợp lệ ! ");
       alert('Tồn tại giá trị ( %%<Field DE>%%) trong Content không hợp lệ ! ');
     } else {
       connection.trigger('updateButton', {
@@ -389,7 +388,8 @@ function checkContent(type) {
 }
 
 function requestedInteractionHandler(settings) {
-  //console.log('--debug requestedInteractionHandler:');
+  console.log('--debug requestedInteractionHandler:');
+  console.log('settings:', settings);
   //what they are doig on this
   try {
     eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;

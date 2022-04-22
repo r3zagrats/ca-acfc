@@ -10,34 +10,55 @@ const { createClient } = require('redis');
  *  @returns {Promise<void>}
  */
 exports.getDe = async (req, res) => {
-  try {
-    var DEOptions = [];
-    const props = ['Name', 'CustomerKey', 'ObjectID'];
-    RestClient.SDKClient.dataExtension({
-      props,
-      filter: {
-        //remove filter for all.
-        leftOperand: 'ObjectID',
-        operator: 'equals',
-        rightOperand: 'A7B622D8-35E6-4A12-8043-658AA817DD0B',
-      },
-    }).get((err, data) => {
-      data.body.Results.forEach((opt) => {
-        if (opt.Name.charAt(0) != '_') {
-          DEOptions.push({
-            name: opt.Name,
-            CustomerKey: opt.CustomerKey + '||' + opt.Name,
-            ID: opt.ObjectID,
-          });
-        }
-      });
-      res.status(200).send(DEOptions);
-    });
-  } catch (e) {
-    res.status(500).send({
-      status: 'Fail',
-    });
-  }
+  // try {
+  //   var DEOptions = [];
+  //   const props = ['Name', 'CustomerKey', 'ObjectID'];
+  //   RestClient.SDKClient.dataExtension({
+  //     props,
+  //     filter: {
+  //       //remove filter for all.
+  //       leftOperand: 'ObjectID',
+  //       operator: 'equals',
+  //       rightOperand: 'A7B622D8-35E6-4A12-8043-658AA817DD0B',
+  //     },
+  //   }).get((err, data) => {
+  //     data.body.Results.forEach((opt) => {
+  //       if (opt.Name.charAt(0) != '_') {
+  //         DEOptions.push({
+  //           name: opt.Name,
+  //           CustomerKey: opt.CustomerKey + '||' + opt.Name,
+  //           ID: opt.ObjectID,
+  //         });
+  //       }
+  //     });
+  //     res.status(200).send(DEOptions);
+  //   });
+  // } catch (e) {
+  //   res.status(500).send({
+  //     status: 'Fail',
+  //   });
+  // }
+  var options = {
+    props: ['Name', 'CustomerKey', 'ObjectID', 'Status', 'Description'], //required
+    filter: {
+      //remove filter for all.
+      leftOperand: 'CustomerKey',
+      operator: 'equals',
+      rightOperand: 'CC67F80E-EA7F-429E-89DE-B9D48C0F51C6',
+    },
+  };
+  var de = RestClient.SDKClient.dataExtension(options);
+
+  de.get(function (err, response) {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      var statusCode =
+        response && response.res && response.res.statusCode ? response.res.statusCode : 200;
+      var result = response && response.body ? response.body : response;
+      response && res.status(statusCode).send(result);
+    }
+  });
 };
 
 /**
@@ -365,15 +386,15 @@ exports.test = async (req, res) => {
       url: 'redis://:ped7fa24fe4f7138a5db1b0a6c682e38348d31d120b01754a7168aa1c6f996375@ec2-54-227-24-175.compute-1.amazonaws.com:29620',
       socket: {
         tls: true,
-        rejectUnauthorized: false
-      }
+        rejectUnauthorized: false,
+      },
     });
     client.on('error', (err) => console.log('Redis Client Error', err));
     await client.connect();
     await client.set('key', 'value');
     const value = await client.get('key');
     console.log('value: ', value);
-    res.status(200).send({ status: 'OK'});
+    res.status(200).send({ status: 'OK' });
   } catch (error) {
     console.log(error);
     res.status(500).send({ status: 'error' });

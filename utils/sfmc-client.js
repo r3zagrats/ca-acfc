@@ -146,7 +146,6 @@ const saveData = async (externalKey, data) =>
   });
 
 module.exports = {
-  RestClient,
   SDKClient,
   getContent,
   getJourney,
