@@ -64,14 +64,28 @@ function onRender() {
     $('#ContentOption').empty();
     $('#ContentOption').append('<option value="None">Loading...</option>');
     $('#DisplayContent').empty();
-    $.ajax({
-      url: `/api/getcustomcontent/`,
-      type: 'GET',
-      beforeSend: function (xhr) {
-        xhr.setRequestHeader('X-Test-Header', 'SetHereYourValueForTheHeader');
-      },
-      success: function (data) {
-        tmpContent = data.items;
+    // $.ajax({
+    //   url: `/api/getcustomcontent/`,
+    //   type: 'GET',
+    //   beforeSend: function (xhr) {
+    //     xhr.setRequestHeader('X-Test-Header', 'SetHereYourValueForTheHeader');
+    //   },
+    //   success: function (data) {
+    //     tmpContent = data.items;
+    //     tmpIndexContent = null;
+    //     $('#ContentOption').empty();
+    //     tmpContent.forEach((value) => {
+    //       if ($('#ContentOption').find(`option[value="${value.id}"]`).length == 0) {
+    //         $('#ContentOption').append(`<option value=${value.id}>${value.name}</option>`);
+    //       }
+    //     });
+    //     $('#ContentOption').val(ContentOption);
+    //     checkContent('process');
+    //   },
+    // });
+    try {
+      const customContent = await getCustomContent();
+      tmpContent = customContent.items;
         tmpIndexContent = null;
         $('#ContentOption').empty();
         tmpContent.forEach((value) => {
@@ -81,9 +95,10 @@ function onRender() {
         });
         $('#ContentOption').val(ContentOption);
         checkContent('process');
-      },
-    });
-    const customContent = await getCustomContent();
+    } catch (error) {
+      console.error(error)
+    }
+
     console.log('customContent', customContent);
   });
 }
