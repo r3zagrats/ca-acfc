@@ -344,8 +344,6 @@ const requestedInteractionHandler = async (settings) => {
     fieldSelected = eventInfo.deCol;
     $('#DEFields').empty();
     $('#DEFieldsKey').empty();
-    $('#DEFieldsKey').append('<option value=""></option>');
-
     $.each(fieldSelected, (index, field) => {
       fieldSelected = field.Name + ' ' + fieldSelected;
       $('#DEFieldsKey').append(`<option value=${field.Name}>${field.Name}</option>`);
