@@ -17,6 +17,43 @@ var steps = [
 ];
 var currentStep = steps[0].key;
 
+const requestedInteractionHandler = async (settings) => {
+  console.log('--debug requestedInteractionHandler:');
+  console.log('settings:', settings);
+  eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
+  //document.getElementById('select-entryevent-defkey').value = eventDefinitionKey;
+  //console.log('eventDefinitionKey:' + JSON.stringify(settings));
+  $('#DEFieldsKey').append('<option value="None">Loading...</option>');
+  $('#DEFields').append('<p value="None"></p>Loading............</p>');
+
+  try {
+    const eventInfo = await getEvent(eventDefinitionKey);
+    console.log('eventInfo: ', eventInfo);
+    $('.js_de_lst').append(`<p>${eventInfo.dataExtension.Name}</p>`);
+    fieldSelected = eventInfo.deCol;
+    $('#DEFields').empty();
+    $('#DEFieldsKey').empty();
+    $.each(fieldSelected, (index, field) => {
+      fieldSelected = field.Name + ' ' + fieldSelected;
+      $('#DEFieldsKey').append(`<option value=${field.Name}>${field.Name}</option>`);
+      $('#DEFields').append(
+        `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
+      );
+      $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
+      if (DEFieldsKey) {
+        $('#DEFieldsKey').val(DEFieldsKey);
+        connection.trigger('updateButton', {
+          button: 'next',
+          enabled: true,
+        });
+      }
+    });
+  } catch (error) {
+    alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
+    connection.trigger('destroy');
+  }
+};
+
 connection.on('initActivity', initialize);
 connection.on('requestedTokens', onGetTokens);
 connection.on('requestedEndpoints', onGetEndpoints);
@@ -358,43 +395,6 @@ function checkContent(type) {
     });
   }
 }
-
-const requestedInteractionHandler = async (settings) => {
-  console.log('--debug requestedInteractionHandler:');
-  console.log('settings:', settings);
-  eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
-  //document.getElementById('select-entryevent-defkey').value = eventDefinitionKey;
-  //console.log('eventDefinitionKey:' + JSON.stringify(settings));
-  $('#DEFieldsKey').append('<option value="None">Loading...</option>');
-  $('#DEFields').append('<p value="None"></p>Loading............</p>');
-
-  try {
-    const eventInfo = await getEvent(eventDefinitionKey);
-    console.log('eventInfo: ', eventInfo);
-    $('.js_de_lst').append(`<p>${eventInfo.dataExtension.Name}</p>`);
-    fieldSelected = eventInfo.deCol;
-    $('#DEFields').empty();
-    $('#DEFieldsKey').empty();
-    $.each(fieldSelected, (index, field) => {
-      fieldSelected = field.Name + ' ' + fieldSelected;
-      $('#DEFieldsKey').append(`<option value=${field.Name}>${field.Name}</option>`);
-      $('#DEFields').append(
-        `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
-      );
-      $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
-      if (DEFieldsKey) {
-        $('#DEFieldsKey').val(DEFieldsKey);
-        connection.trigger('updateButton', {
-          button: 'next',
-          enabled: true,
-        });
-      }
-    });
-  } catch (error) {
-    alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
-    connection.trigger('destroy');
-  }
-};
 
 const getCustomContent = async () => {
   try {
