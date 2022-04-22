@@ -323,50 +323,51 @@ const requestedInteractionHandler = async (settings) => {
     //console.log('eventDefinitionKey:' + JSON.stringify(settings));
     $('#DEFieldsKey').append('<option value="None">Loading...</option>');
     $('#DEFields').append('<p value="None"></p>Loading............</p>');
-    $.ajax({
-      url: `/api/getevent/`,
-      data: { key: eventDefinitionKey },
-      type: 'POST',
-      // beforeSend: function (xhr) { xhr.setRequestHeader('X-Test-Header', 'SetHereYourValueForTheHeader'); },
-      success: function (data) {
-        console.log('data', data);
-        //$(".js_de_lst").append('<h2 value="' +CustomerKey + '">' + data.dataExtention.Name + '</option>');
-        $('.js_de_lst').append(`<p>${data.dataExtention.Name}</p>`);
-        fieldSelected = data.deCol;
-        $('#DEFields').empty();
-        $('#DEFieldsKey').empty();
-        $('#DEFieldsKey').append('<option value=""></option>');
-        // DEFieldsKey
-        fieldSelected.forEach((value) => {
-          fieldSelected = value.Name + ' ' + fieldSelected;
-          if ($('#DEFieldsKey').find(`option[value="${value.Name}"]`).length == 0) {
-            $('#DEFieldsKey').append(`<option value=${value.Name}>${value.Name}</option>`);
-          }
-          if ($('#DEFields').find(`p[value="${value.CustomerKey}"]`).length == 0) {
-            $('#DEFields').append(
-              `<p value=${value.CustomerKey} id=${value.Name} class="js-activity-setting">${value.Name}</p>`
-            );
-          }
-          $(`#${value.Name}`).val(`{{Event.${eventDefinitionKey}.${value.Name}}}`);
-          if (DEFieldsKey) {
-            $('#DEFieldsKey').val(DEFieldsKey);
-            connection.trigger('updateButton', {
-              button: 'next',
-              enabled: true,
-            });
-          }
-        });
-      },
-      error: function (XMLHttpRequest, textStatus, errorThrown) {
-        alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
-        // connection.trigger('destroy');
-      },
-    });
+    // $.ajax({
+    //   url: `/api/getevent/`,
+    //   data: { key: eventDefinitionKey },
+    //   type: 'POST',
+    //   // beforeSend: function (xhr) { xhr.setRequestHeader('X-Test-Header', 'SetHereYourValueForTheHeader'); },
+    //   success: function (data) {
+    //     console.log('data', data);
+    //     //$(".js_de_lst").append('<h2 value="' +CustomerKey + '">' + data.dataExtention.Name + '</option>');
+    //     $('.js_de_lst').append(`<p>${data.dataExtention.Name}</p>`);
+    //     fieldSelected = data.deCol;
+    //     $('#DEFields').empty();
+    //     $('#DEFieldsKey').empty();
+    //     $('#DEFieldsKey').append('<option value=""></option>');
+    //     // DEFieldsKey
+    //     fieldSelected.forEach((value) => {
+    //       fieldSelected = value.Name + ' ' + fieldSelected;
+    //       if ($('#DEFieldsKey').find(`option[value="${value.Name}"]`).length == 0) {
+    //         $('#DEFieldsKey').append(`<option value=${value.Name}>${value.Name}</option>`);
+    //       }
+    //       if ($('#DEFields').find(`p[value="${value.CustomerKey}"]`).length == 0) {
+    //         $('#DEFields').append(
+    //           `<p value=${value.CustomerKey} id=${value.Name} class="js-activity-setting">${value.Name}</p>`
+    //         );
+    //       }
+    //       $(`#${value.Name}`).val(`{{Event.${eventDefinitionKey}.${value.Name}}}`);
+    //       if (DEFieldsKey) {
+    //         $('#DEFieldsKey').val(DEFieldsKey);
+    //         connection.trigger('updateButton', {
+    //           button: 'next',
+    //           enabled: true,
+    //         });
+    //       }
+    //     });
+    //   },
+    //   error: function (XMLHttpRequest, textStatus, errorThrown) {
+    //     alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
+    //     connection.trigger('destroy');
+    //   },
+    // });
     const response = await getEvent(eventDefinitionKey);
     console.log('response: ', response.body);
   } catch (error) {
     console.error(error);
     alert('superagent:', error.message);
+    connection.trigger('destroy');
   }
 };
 
