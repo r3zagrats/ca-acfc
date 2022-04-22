@@ -186,11 +186,12 @@ const showStep = async (step, stepIndex) => {
           button: 'next',
           enabled: true,
         });
+      } else {
+        connection.trigger('updateButton', {
+          button: 'next',
+          enabled: false,
+        });
       }
-      connection.trigger('updateButton', {
-        button: 'next',
-        enabled: false,
-      });
       break;
     case 'step2':
       $('#step2').show();
@@ -201,14 +202,15 @@ const showStep = async (step, stepIndex) => {
           button: 'next',
           enabled: true,
         });
-      } 
+      } else {
+        connection.trigger('updateButton', {
+          button: 'next',
+          enabled: false,
+        });
+      }
       connection.trigger('updateButton', {
         button: 'back',
         enabled: true,
-      });
-      connection.trigger('updateButton', {
-        button: 'next',
-        enabled: false,
       });
       break;
     case 'step3':
@@ -220,14 +222,15 @@ const showStep = async (step, stepIndex) => {
           button: 'next',
           enabled: true,
         });
+      } else {
+        connection.trigger('updateButton', {
+          button: 'next',
+          enabled: false,
+        });
       }
       connection.trigger('updateButton', {
         button: 'back',
         enabled: true,
-      });
-      connection.trigger('updateButton', {
-        button: 'next',
-        enabled: false,
       });
       break;
     case 'step4':
