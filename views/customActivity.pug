@@ -18,27 +18,27 @@ block content
         .slds-form-element
           .slds-form-element__control  
             .slds-select_container
-              select#Channel.slds-select.js-activity-setting(name='Channels')
+              select#Channels.slds-select.js-activity-setting(name='Channels')
                 each Channel in Channels
                   option(value=Channel.Name)= Channel.Name
       form#step2.step.js-settings-form
         .slds-form-element
           .slds-form-element__control  
             .slds-select_container
-              select#Endpoint.slds-select.js-activity-setting(name='Endpoints')
+              select#Endpoints.slds-select.js-activity-setting(name='Endpoints')
                 each Endpoint in Endpoints
                   option(value=Endpoint.OAId)= Endpoint.OAName
       form#step3.step.js-settings-form
         .slds-form-element
           .slds-form-element__control.js_de_lst        
           br
-          label.slds-form-element__label(for="DEFields") Key Data Extention Field
+          label.slds-form-element__label(for="DEFields") Key Data Extension Field
           div#DEKeys.js-activity-setting(name='DEKeys')
           .slds-form-element__control
             .slds-select_container
               select#DEFieldsKey.slds-select.js-activity-setting(name='DEFieldsKey')
           br
-          label.slds-form-element__label(for="DEFields") Data Extention Fields
+          label.slds-form-element__label(for="DEFields") Data Extension Fields
           div#DEFields(name='DEFields')
 
       form#step4.step.js-settings-form

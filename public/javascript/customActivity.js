@@ -181,44 +181,53 @@ const showStep = async (step, stepIndex) => {
       $('#step1').show();
       $('#titleDynamic').empty().append('Channel');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
-      connection.trigger('updateButton', {
-        button: 'next',
-        visible: true,
-      });
-      // connection.trigger('updateButton', {
-      //   button: 'back',
-      //   visible: false,
-      // });
-      break;
-    case 'step2':
-      $('#step2').show();
-      $('#titleDynamic').empty().append('Endpoint');
-      $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
-      connection.trigger('updateButton', {
-        button: 'next',
-        visible: true,
-      });
-      connection.trigger('updateButton', {
-        button: 'back',
-        visible: true,
-      });
-      break;
-    case 'step3':
-      $('#step3').show();
-      $('#titleDynamic').empty().append('Data Extention');
-      $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
-      if ($('#DEFieldsKey').val()) {
-        buttonSettings.enabled = true;
-      } else {
-        buttonSettings.enabled = false;
+      if ($('#Channels').val()) {
+        connection.trigger('updateButton', {
+          button: 'next',
+          enabled: true,
+        });
       }
       connection.trigger('updateButton', {
         button: 'next',
         enabled: false,
       });
+      break;
+    case 'step2':
+      $('#step2').show();
+      $('#titleDynamic').empty().append('Endpoint');
+      $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
+      if ($('#Endpoints').val()) {
+        connection.trigger('updateButton', {
+          button: 'next',
+          enabled: true,
+        });
+      } 
       connection.trigger('updateButton', {
         button: 'back',
-        visible: true,
+        enabled: true,
+      });
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: false,
+      });
+      break;
+    case 'step3':
+      $('#step3').show();
+      $('#titleDynamic').empty().append('Data Extension');
+      $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
+      if ($('#DEFieldsKey').val()) {
+        connection.trigger('updateButton', {
+          button: 'next',
+          enabled: true,
+        });
+      }
+      connection.trigger('updateButton', {
+        button: 'back',
+        enabled: true,
+      });
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: false,
       });
       break;
     case 'step4':
@@ -231,12 +240,11 @@ const showStep = async (step, stepIndex) => {
       $('#ContentOption').append('<option value="None">Loading...</option>');
       connection.trigger('updateButton', {
         button: 'back',
-        visible: true,
+        enabled: true,
       });
       connection.trigger('updateButton', {
         button: 'next',
         text: 'done',
-        visible: true,
         enabled: false,
       });
       try {
