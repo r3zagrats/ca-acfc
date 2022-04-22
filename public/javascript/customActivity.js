@@ -71,7 +71,7 @@ function onRender() {
       $('#ContentOption').empty();
       $.each(tmpCustomContents, (index, content) => {
         $('#ContentOption').append(`<option value=${content.id}>${content.name}</option>`);
-      })
+      });
       $('#ContentOption').val(ContentOption);
       checkContent('process');
     } catch (error) {
@@ -197,7 +197,7 @@ function onGotoStep(step) {
   connection.trigger('ready');
 }
 
-function showStep(step, stepIndex) {
+const showStep = async (step, stepIndex) => {
   if (stepIndex && !step) {
     step = steps[stepIndex - 1];
   }
@@ -263,28 +263,22 @@ function showStep(step, stepIndex) {
         visible: true,
         enabled: false,
       });
-      $.ajax({
-        url: `/api/getcustomcontent/`,
-        type: 'GET',
-        beforeSend: function (xhr) {
-          xhr.setRequestHeader('X-Test-Header', 'SetHereYourValueForTheHeader');
-        },
-        success: function (data) {
-          console.log(data);
-          tmpCustomContents = data.items;
-          $('#ContentOption').empty();
-          tmpCustomContents.forEach((value) => {
-            if ($('#ContentOption').find(`option[value="${value.id}"]`).length == 0) {
-              $('#ContentOption').append(`<option value=${value.id}>${value.name}</option>`);
-            }
-          });
-          $('#ContentOption').val(ContentOption);
-          checkContent('init');
-        },
-      });
+      try {
+        const customContent = await getCustomContent();
+        tmpCustomContents = customContent.items;
+        tmpIndexContent = null;
+        $('#ContentOption').empty();
+        $.each(tmpCustomContents, (index, content) => {
+          $('#ContentOption').append(`<option value=${content.id}>${content.name}</option>`);
+        });
+        $('#ContentOption').val(ContentOption);
+        checkContent('init');
+      } catch (error) {
+        alert(`Error on fetching data: ${error.message}`);
+      }
       break;
   }
-}
+};
 
 function checkContent(type) {
   console.log('type: ' + type);
