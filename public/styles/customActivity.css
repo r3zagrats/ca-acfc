@@ -8,6 +8,10 @@ font-weight: 600;
 }
 #DEFields{ font-size: 0.75rem;}
 
+ca-container {
+  min-width: 100vh;
+}
+
 #okia{ padding-right: 10px;}
 
 .loading-indicator {
