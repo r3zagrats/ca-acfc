@@ -2,7 +2,6 @@
 const connection = new Postmonger.Session();
 let authTokens = {};
 let payload = {};
-$(window).ready(onRender);
 var tmpCustomContents = [];
 var tmpIndexContent = null;
 var ContentOption = '';
@@ -10,33 +9,7 @@ var DEFieldsKey = '';
 var fieldSelected = '';
 var eventDefinitionKey = '';
 
-connection.on('initActivity', initialize);
-connection.on('requestedTokens', onGetTokens);
-connection.on('requestedEndpoints', onGetEndpoints);
-connection.on('requestedInteraction', requestedInteractionHandler);
-connection.on('clickedNext', next);
-connection.on('clickedBack', prev);
-connection.on('gotoStep', onGotoStep);
-connection.on('requestedSchema', function (data) {
-  // save schema
-  //console.log('*** Schema ***', JSON.stringify(data['schema']));
-});
-//connection.on('clickedNext', save);
-
-var steps = [
-  { label: 'Channel', key: 'step1' },
-  { label: 'Endpoint', key: 'step2' },
-  { label: 'Data', key: 'step3' },
-  { label: 'Content', key: 'step4' },
-];
-var currentStep = steps[0].key;
-
-const buttonSettings = {
-  button: 'next',
-  enabled: false,
-};
-
-function onRender() {
+const onRender = () => {
   connection.trigger('ready');
   connection.trigger('requestTokens');
   connection.trigger('requestEndpoints');
@@ -78,7 +51,7 @@ function onRender() {
       alert(`Error on fetching data: ${error.message}`);
     }
   });
-}
+};
 
 /**
  * Initialization
@@ -389,12 +362,12 @@ const requestedInteractionHandler = async (settings) => {
         connection.trigger('destroy');
       },
     });
-    const response = await getEvent(eventDefinitionKey)
-    console.log('response: ', response.body)
+    const response = await getEvent(eventDefinitionKey);
+    console.log('response: ', response.body);
   } catch (err) {
     console.error(err);
   }
-}
+};
 
 const getCustomContent = async () => {
   try {
@@ -412,4 +385,31 @@ const getEvent = async (key) => {
   } catch (error) {
     return { status: 'error', message: error.message };
   }
+};
+
+$(window).ready(onRender);
+connection.on('initActivity', initialize);
+connection.on('requestedTokens', onGetTokens);
+connection.on('requestedEndpoints', onGetEndpoints);
+connection.on('requestedInteraction', requestedInteractionHandler);
+connection.on('clickedNext', next);
+connection.on('clickedBack', prev);
+connection.on('gotoStep', onGotoStep);
+connection.on('requestedSchema', function (data) {
+  // save schema
+  //console.log('*** Schema ***', JSON.stringify(data['schema']));
+});
+//connection.on('clickedNext', save);
+
+var steps = [
+  { label: 'Channel', key: 'step1' },
+  { label: 'Endpoint', key: 'step2' },
+  { label: 'Data', key: 'step3' },
+  { label: 'Content', key: 'step4' },
+];
+var currentStep = steps[0].key;
+
+const buttonSettings = {
+  button: 'next',
+  enabled: false,
 };
