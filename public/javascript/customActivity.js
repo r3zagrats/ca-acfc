@@ -383,6 +383,7 @@ const getCustomContent = async () => {
 const getEvent = async (key) => {
   try {
     const response = await superagent.post('/api/getevent').send({ key });
+    console.log('response getevent:', response)
     return response.body;
   } catch (error) {
     return { status: 'error', message: error.message };
