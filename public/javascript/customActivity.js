@@ -370,6 +370,10 @@ const requestedInteractionHandler = async (settings) => {
     $('#DEFieldsKey').empty();
     $('#DEFieldsKey').append('<option value=""></option>');
     // DEFieldsKey
+
+    // $.each(fieldSelected, (index, field) => {
+
+    // })
     fieldSelected.forEach((value) => {
       fieldSelected = value.Name + ' ' + fieldSelected;
       if ($('#DEFieldsKey').find(`option[value="${value.Name}"]`).length == 0) {
@@ -390,6 +394,7 @@ const requestedInteractionHandler = async (settings) => {
       }
     });
   } catch (error) {
+    console.log('error:', error);
     alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
     connection.trigger('destroy');
   }
