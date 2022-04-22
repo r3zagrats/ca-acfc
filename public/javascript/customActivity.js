@@ -366,7 +366,7 @@ const requestedInteractionHandler = async (settings) => {
     console.log('response: ', response);
   } catch (error) {
     console.error(error);
-    alert('superagent:', error.message);
+    alert('superagent:', error);
     connection.trigger('destroy');
   }
 };
@@ -386,7 +386,7 @@ const getEvent = async (key) => {
     console.log('response getevent:', response);
     return response.body;
   } catch (error) {
-    throw new Error({ status: 'error', message: error.message });
+    throw new Error(error.message);
   }
 };
 
