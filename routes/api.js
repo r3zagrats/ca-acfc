@@ -164,7 +164,8 @@ exports.getCustomContent = async (req, res) => {
     res.status(200).send(data.body);
   } catch (error) {
     res.status(500).send({
-      status: 'error', message: error
+      status: 'error',
+      message: error,
     });
   }
 };
@@ -290,12 +291,12 @@ exports.upsertDE = async (req, res) => {
  *  @returns {Promise<void>}
  */
 exports.getAttEvent = async (req, res) => {
-  console.log('request:', req.body)
+  console.log('request:', req.body);
   try {
     if (req.body.key != '' || req.body.key != null) {
       const data = await RestClient.getJourney(req.body.key);
       //res.status(200).send(data.body.dataExtensionId);
-      console.log('data: ', data.body)
+      console.log('data: ', data.body);
 
       const props = ['Name', 'CustomerKey', 'ObjectID'];
       RestClient.SDKClient.dataExtension({
@@ -343,13 +344,14 @@ exports.getAttEvent = async (req, res) => {
               dataExtention: dataDE.body.Results[0],
             });
           });
-        } else res.status(500).send({ Status: 'No Data Extension Found' });
+        } else res.status(500).send({ status: 'No Data Extension Found', message: error });
       });
-    } else res.status(500).send({ Status: 'Key Required' });
+    } else res.status(500).send({ status: 'Key Required', message: error });
   } catch (error) {
     console.log('error:', error);
     res.status(500).send({
-      Status: 'Journey Invalid',
+      status: 'Journey Invalid',
+      message: error,
     });
   }
 };
