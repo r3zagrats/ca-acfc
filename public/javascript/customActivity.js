@@ -9,25 +9,51 @@ var DEFieldsKey = '';
 var fieldSelected = '';
 var eventDefinitionKey = '';
 
+connection.on('initActivity', initialize);
+connection.on('requestedTokens', onGetTokens);
+connection.on('requestedEndpoints', onGetEndpoints);
+connection.on('requestedInteraction', requestedInteractionHandler);
+connection.on('clickedNext', next);
+connection.on('clickedBack', prev);
+connection.on('gotoStep', onGotoStep);
+connection.on('requestedSchema', function (data) {})
+
 const onRender = () => {
   connection.trigger('ready');
   connection.trigger('requestTokens');
   connection.trigger('requestEndpoints');
   connection.trigger('requestInteraction');
   connection.trigger('requestSchema');
-  $('#ContentOption').change((e) => {
-    console.log(e.target.value)
-    $('#ContentBuilder').val('Loading...');
-    checkContent('process');
+  $('#Channels').on('change', (e) => {
+    console.log(e.target.value);
+    connection.trigger('updateButton', {
+      button: 'next',
+      enabled: true,
+    });
   });
 
-  $('#DEFieldsKey').change(() => {
+  $('#Endpoints').on('change', (e) => {
+    connection.trigger('updateButton', {
+      button: 'next',
+      enabled: true,
+    });
+  });
+
+  $('#DEFieldsKey').on('change', (e) => {
     connection.trigger('updateButton', {
       button: 'next',
       enabled: true,
     });
     $('#DEKeys').val(`{{Event.${eventDefinitionKey}.${$('#DEFieldsKey').val()}}}`);
   });
+
+  $('#ContentOption').on('change', (e) =>{
+    console.log(e.target.value);
+    $('#ContentBuilder').val('Loading...');
+    checkContent('process');
+  });
+
+ 
 
   $('#refreshButton').on('click', async () => {
     // console.log(tmpCustomContents.find(cont => cont.id == $("#ContentOption").val()));
@@ -39,7 +65,9 @@ const onRender = () => {
       const customContent = await getCustomContent();
       tmpCustomContents = customContent.items;
       tmpIndexContent = null;
-      $('#ContentOption').append(`<option value=''>--Select one of the following contents--</option>`);
+      $('#ContentOption').append(
+        `<option value=''>--Select one of the following contents--</option>`
+      );
       $.each(tmpCustomContents, (index, content) => {
         $('#ContentOption').append(`<option value=${content.id}>${content.name}</option>`);
       });
@@ -51,6 +79,7 @@ const onRender = () => {
   });
 };
 
+$(window).ready(onRender);
 /**
  * Initialization
  * @param data
