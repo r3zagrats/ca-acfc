@@ -430,7 +430,7 @@ function requestedInteractionHandler(settings) {
             );
           }
           $('#' + value.Name).val('{{Event."' + eventDefinitionKey + '"."' + value.Name + '"}}');
-          if (DEkeyField != '' && DEkeyField != 'None' && DEkeyField != null) {
+          if (DEkeyField) {
             $('#DEkeyField').val(DEkeyField);
             connection.trigger('updateButton', {
               button: 'next',
@@ -441,7 +441,7 @@ function requestedInteractionHandler(settings) {
       },
       error: function (XMLHttpRequest, textStatus, errorThrown) {
         alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
-        // connection.trigger('destroy');
+        connection.trigger('destroy');
       },
     });
   } catch (err) {
