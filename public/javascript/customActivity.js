@@ -185,10 +185,10 @@ const showStep = async (step, stepIndex) => {
         button: 'next',
         visible: true,
       });
-      connection.trigger('updateButton', {
-        button: 'back',
-        visible: false,
-      });
+      // connection.trigger('updateButton', {
+      //   button: 'back',
+      //   visible: false,
+      // });
       break;
     case 'step2':
       $('#step2').show();
@@ -200,7 +200,7 @@ const showStep = async (step, stepIndex) => {
       });
       connection.trigger('updateButton', {
         button: 'back',
-        visible: false,
+        visible: true,
       });
       break;
     case 'step3':
@@ -212,10 +212,13 @@ const showStep = async (step, stepIndex) => {
       } else {
         buttonSettings.enabled = false;
       }
-      connection.trigger('updateButton', buttonSettings);
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: false,
+      });
       connection.trigger('updateButton', {
         button: 'back',
-        visible: false,
+        visible: true,
       });
       break;
     case 'step4':
@@ -322,45 +325,7 @@ const requestedInteractionHandler = async (settings) => {
   //console.log('eventDefinitionKey:' + JSON.stringify(settings));
   $('#DEFieldsKey').append('<option value="None">Loading...</option>');
   $('#DEFields').append('<p value="None"></p>Loading............</p>');
-  // $.ajax({
-  //   url: `/api/getevent/`,
-  //   data: { key: eventDefinitionKey },
-  //   type: 'POST',
-  //   // beforeSend: function (xhr) { xhr.setRequestHeader('X-Test-Header', 'SetHereYourValueForTheHeader'); },
-  //   success: function (data) {
-  //     console.log('data', data);
-  //     //$(".js_de_lst").append('<h2 value="' +CustomerKey + '">' + data.dataExtention.Name + '</option>');
-  //     $('.js_de_lst').append(`<p>${data.dataExtention.Name}</p>`);
-  //     fieldSelected = data.deCol;
-  //     $('#DEFields').empty();
-  //     $('#DEFieldsKey').empty();
-  //     $('#DEFieldsKey').append('<option value=""></option>');
-  //     // DEFieldsKey
-  //     fieldSelected.forEach((value) => {
-  //       fieldSelected = value.Name + ' ' + fieldSelected;
-  //       if ($('#DEFieldsKey').find(`option[value="${value.Name}"]`).length == 0) {
-  //         $('#DEFieldsKey').append(`<option value=${value.Name}>${value.Name}</option>`);
-  //       }
-  //       if ($('#DEFields').find(`p[value="${value.CustomerKey}"]`).length == 0) {
-  //         $('#DEFields').append(
-  //           `<p value=${value.CustomerKey} id=${value.Name} class="js-activity-setting">${value.Name}</p>`
-  //         );
-  //       }
-  //       $(`#${value.Name}`).val(`{{Event.${eventDefinitionKey}.${value.Name}}}`);
-  //       if (DEFieldsKey) {
-  //         $('#DEFieldsKey').val(DEFieldsKey);
-  //         connection.trigger('updateButton', {
-  //           button: 'next',
-  //           enabled: true,
-  //         });
-  //       }
-  //     });
-  //   },
-  //   error: function (XMLHttpRequest, textStatus, errorThrown) {
-  //     alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
-  //     connection.trigger('destroy');
-  //   },
-  // });
+
   try {
     const eventInfo = await getEvent(eventDefinitionKey);
     console.log('eventInfo: ', eventInfo);
@@ -369,20 +334,13 @@ const requestedInteractionHandler = async (settings) => {
     $('#DEFields').empty();
     $('#DEFieldsKey').empty();
     $('#DEFieldsKey').append('<option value=""></option>');
-    // DEFieldsKey
 
     $.each(fieldSelected, (index, field) => {
       fieldSelected = field.Name + ' ' + fieldSelected;
-      // console.log(`index${index}` ,$('#DEFieldsKey').find(`option[value="${field.Name}"]`))
-      if ($('#DEFieldsKey').find(`option[value="${field.Name}"]`).length == 0) {
       $('#DEFieldsKey').append(`<option value=${field.Name}>${field.Name}</option>`);
-      }
-      // console.log(`index${index}`, $('#DEFields').find(`p[value="${field.CustomerKey}"]`));
-      if ($('#DEFields').find(`p[value="${field.CustomerKey}"]`).length == 0) {
-        $('#DEFields').append(
-          `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
-        );
-      }
+      $('#DEFields').append(
+        `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
+      );
       $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
       if (DEFieldsKey) {
         $('#DEFieldsKey').val(DEFieldsKey);
@@ -393,7 +351,6 @@ const requestedInteractionHandler = async (settings) => {
       }
     });
   } catch (error) {
-    console.log('error:', error);
     alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
     connection.trigger('destroy');
   }
@@ -439,8 +396,3 @@ var steps = [
   { label: 'Content', key: 'step4' },
 ];
 var currentStep = steps[0].key;
-
-const buttonSettings = {
-  button: 'next',
-  enabled: false,
-};
