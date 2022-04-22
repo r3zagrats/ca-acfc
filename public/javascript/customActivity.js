@@ -365,8 +365,7 @@ const requestedInteractionHandler = async (settings) => {
     const response = await getEvent(eventDefinitionKey);
     console.log('response: ', response);
   } catch (error) {
-    console.error(error);
-    alert('superagent:', error);
+    alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
     connection.trigger('destroy');
   }
 };
