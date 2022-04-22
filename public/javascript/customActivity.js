@@ -371,20 +371,19 @@ const requestedInteractionHandler = async (settings) => {
     $('#DEFieldsKey').append('<option value=""></option>');
     // DEFieldsKey
 
-    // $.each(fieldSelected, (index, field) => {
-
-    // })
-    fieldSelected.forEach((value) => {
-      fieldSelected = value.Name + ' ' + fieldSelected;
-      if ($('#DEFieldsKey').find(`option[value="${value.Name}"]`).length == 0) {
-        $('#DEFieldsKey').append(`<option value=${value.Name}>${value.Name}</option>`);
+    $.each(fieldSelected, (index, field) => {
+      fieldSelected = field.Name + ' ' + fieldSelected;
+      console.log(`index${index}` ,$('#DEFieldsKey').find(`option[value="${field.Name}"]`))
+      if ($('#DEFieldsKey').find(`option[value="${field.Name}"]`).length == 0) {
+        $('#DEFieldsKey').append(`<option value=${field.Name}>${field.Name}</option>`);
       }
-      if ($('#DEFields').find(`p[value="${value.CustomerKey}"]`).length == 0) {
+      console.log(`index${index}`, $('#DEFields').find(`p[value="${field.CustomerKey}"]`))
+      if ($('#DEFields').find(`p[value="${field.CustomerKey}"]`).length == 0) {
         $('#DEFields').append(
-          `<p value=${value.CustomerKey} id=${value.Name} class="js-activity-setting">${value.Name}</p>`
+          `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
         );
       }
-      $(`#${value.Name}`).val(`{{Event.${eventDefinitionKey}.${value.Name}}}`);
+      $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
       if (DEFieldsKey) {
         $('#DEFieldsKey').val(DEFieldsKey);
         connection.trigger('updateButton', {
@@ -392,7 +391,7 @@ const requestedInteractionHandler = async (settings) => {
           enabled: true,
         });
       }
-    });
+    })
   } catch (error) {
     console.log('error:', error);
     alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
