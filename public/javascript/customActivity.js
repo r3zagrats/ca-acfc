@@ -440,7 +440,7 @@ function requestedInteractionHandler(settings) {
       },
       error: function (XMLHttpRequest, textStatus, errorThrown) {
         alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
-        connection.trigger('destroy');
+        // connection.trigger('destroy');
       },
     });
   } catch (err) {
