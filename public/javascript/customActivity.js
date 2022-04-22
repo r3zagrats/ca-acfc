@@ -75,7 +75,7 @@ function onRender() {
         tmpIndexContent = null;
         $('#ContentOption').empty();
         tmpContent.forEach((value) => {
-          if ($('#ContentOption').find(`option[value=${value.id}]`).length == 0) {
+          if ($('#ContentOption').find(`option[value="${value.id}"]`).length == 0) {
             $('#ContentOption').append(`<option value=${value.id}>${value.name}</option>`);
           }
         });
@@ -282,7 +282,7 @@ function showStep(step, stepIndex) {
           tmpContent = data.items;
           $('#ContentOption').empty();
           tmpContent.forEach((value) => {
-            if ($('#ContentOption').find(`option[value=${value.id}]`).length == 0) {
+            if ($('#ContentOption').find(`option[value="${value.id}"]`).length == 0) {
               $('#ContentOption').append(`<option value=${value.id}>${value.name}</option>`);
             }
           });
@@ -380,10 +380,10 @@ function requestedInteractionHandler(settings) {
         // DEFieldsKey
         fieldSelected.forEach((value) => {
           fieldSelected = value.Name + ' ' + fieldSelected;
-          if ($('#DEFieldsKey').find(`option[value=${value.Name}]`).length == 0) {
+          if ($('#DEFieldsKey').find(`option[value="${value.Name}"]`).length == 0) {
             $('#DEFieldsKey').append(`<option value=${value.Name}>${value.Name}</option>`);
           }
-          if ($('#DEFields').find(`p[value=${value.CustomerKey}]`).length == 0) {
+          if ($('#DEFields').find(`p[value="${value.CustomerKey}"]`).length == 0) {
             $('#DEFields').append(
               `<p value=${value.CustomerKey} id=${value.Name} class="js-activity-setting">${value.Name}</p>`
             );
