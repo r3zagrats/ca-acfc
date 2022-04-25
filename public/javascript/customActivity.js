@@ -4,9 +4,9 @@ let authTokens = {};
 let payload = {};
 var tmpCustomContents = [];
 var tmpIndexContent = null;
-var ContentOption = '';
+var contentOption = '';
 var DEFieldsKey = '';
-var fieldSelected = '';
+var selectedField = '';
 var eventDefinitionKey = '';
 
 var steps = [
@@ -26,15 +26,16 @@ const requestedInteractionHandler = async (settings) => {
   $('#DEFieldsKey').append('<option value="None">Loading...</option>');
   $('#DEFields').append('<p value="None"></p>Loading............</p>');
   try {
-    const eventInfo = await getEvent(eventDefinitionKey);
-    console.log('eventInfo: ', eventInfo);
-    $('.js_de_lst').append(`<p>${eventInfo.dataExtension.Name}</p>`);
-    fieldSelected = eventInfo.deCol;
-    $('#DEFields').empty();
+    const deInfo = await getEvent(eventDefinitionKey);
+    console.log('deInfo: ', deInfo);
+    $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
+    selectedField = deInfo.deCol;
     $('#DEFieldsKey').empty();
+    $('#DEFields').empty();
     $('#DEFieldsKey').append(`<option value=''>--Select one of the following fields--<option>`);
-    $.each(fieldSelected, (index, field) => {
-      fieldSelected = field.Name + ' ' + fieldSelected;
+    $.each(selectedField, (index, field) => {
+      selectedField = field.Name + ' ' + selectedField;
+      console.log('selectedField: ', selectedField);
       $('#DEFieldsKey').append(`<option value=${field.Name}>${field.Name}</option>`);
       $('#DEFields').append(
         `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
@@ -121,7 +122,7 @@ const onRender = () => {
       $.each(tmpCustomContents, (index, content) => {
         $('#ContentOption').append(`<option value=${content.id}>${content.name}</option>`);
       });
-      $('#ContentOption').val(ContentOption);
+      $('#ContentOption').val(contentOption);
       checkContent('process');
     } catch (error) {
       alert(`Error on fetching data: ${error.message}`);
@@ -158,7 +159,7 @@ function initialize(data) {
         $el.val(value);
       }
       if (key === 'ContentOption') {
-        ContentOption = value;
+        contentOption = value;
       }
       if (key === 'DEFieldsKey') {
         DEFieldsKey = value;
@@ -337,7 +338,7 @@ const showStep = async (step, stepIndex) => {
         $.each(tmpCustomContents, (index, content) => {
           $('#ContentOption').append(`<option value=${content.id}>${content.name}</option>`);
         });
-        $('#ContentOption').val(ContentOption);
+        $('#ContentOption').val(contentOption);
         checkContent('init');
       } catch (error) {
         alert(`Error on fetching data: ${error.message}`);
@@ -373,7 +374,7 @@ function checkContent(type) {
           if (m.index === regex.lastIndex) {
             regex.lastIndex++;
           }
-          if (!fieldSelected.includes(m[1])) {
+          if (!selectedField.includes(m[1])) {
             connection.trigger('updateButton', {
               button: 'next',
               enabled: false,
