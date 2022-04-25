@@ -32,6 +32,7 @@ const requestedInteractionHandler = async (settings) => {
     fieldSelected = eventInfo.deCol;
     $('#DEFields').empty();
     $('#DEFieldsKey').empty();
+    $('#DEFieldsKey').append(`<option value=''>--Select one of the following fields--<option>`);
     $.each(fieldSelected, (index, field) => {
       fieldSelected = field.Name + ' ' + fieldSelected;
       $('#DEFieldsKey').append(`<option value=${field.Name}>${field.Name}</option>`);
@@ -69,8 +70,6 @@ const onRender = () => {
   connection.trigger('requestInteraction');
   connection.trigger('requestSchema');
   $('#Channels').on('change', (e) => {
-    console.log(e.target.value);
-    console.log($('#Channels').val() === '');
     if ($('#Channels').val()) {
       connection.trigger('updateButton', {
         button: 'next',
@@ -83,7 +82,6 @@ const onRender = () => {
       });
     }
   });
-
   $('#Endpoints').on('change', (e) => {
     if ($('#Endpoints').val()) {
       connection.trigger('updateButton', {
@@ -97,7 +95,6 @@ const onRender = () => {
       });
     }
   });
-
   $('#DEFieldsKey').on('change', (e) => {
     if ($('#DEFieldsKey').val()) {
       connection.trigger('updateButton', {
@@ -112,13 +109,11 @@ const onRender = () => {
     }
     $('#DEKeys').val(`{{Event.${eventDefinitionKey}.${$('#DEFieldsKey').val()}}}`);
   });
-
   $('#ContentOption').on('change', (e) => {
     console.log(e.target.value);
     $('#ContentBuilder').val('');
     checkContent('process');
   });
-
   $('#refreshButton').on('click', async () => {
     $('#ContentBuilder').val('');
     $('#ContentOption').empty();
@@ -343,6 +338,9 @@ const showStep = async (step, stepIndex) => {
         tmpCustomContents = customContent.items;
         tmpIndexContent = null;
         $('#ContentOption').empty();
+        $('#ContentOption').append(
+          `<option value=''>--Select one of the following contents--</option>`
+        );
         $.each(tmpCustomContents, (index, content) => {
           $('#ContentOption').append(`<option value=${content.id}>${content.name}</option>`);
         });
