@@ -33,7 +33,7 @@ exports.execute = async (req, res) => {
   console.log('\nContent', Content);
   Content = JSON.parse(Content);
   try {
-    switch (data.inArguments[0].Channel) {
+    switch (data.inArguments[0].Channels) {
       case 'Zalo Notification Service': {
         // Query OA Info
         const { rows } = await db.query(
