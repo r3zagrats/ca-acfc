@@ -169,20 +169,20 @@ function save() {
       value: $(this).val(),
     };
     console.log('setting', setting);
-    // $.each(payload['arguments'].execute.inArguments, (index, value) => {
-    //   console.log('value', value)
-    //   if ($el.attr('type') === 'checkbox') {
-    //     console.log('checked')
-    //     if ($el.is(':checked')) {
-    //       value[setting.id] = setting.value;
-    //     } else {
-    //       value[setting.id] = 'false';
-    //     }
-    //   } else {
-    //     console.log('not checked')
-    //     value[setting.id] = setting.value;
-    //   }
-    // });
+    $.each(payload['arguments'].execute.inArguments, (index, value) => {
+      console.log('value', value)
+      if ($el.attr('type') === 'checkbox') {
+        console.log('checked')
+        if ($el.is(':checked')) {
+          value[setting.id] = setting.value;
+        } else {
+          value[setting.id] = 'false';
+        }
+      } else {
+        console.log('not checked')
+        value[setting.id] = setting.value;
+      }
+    });
   });
   console.log('payload:', payload);
   connection.trigger('updateActivity', payload);
