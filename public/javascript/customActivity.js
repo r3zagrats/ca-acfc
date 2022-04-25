@@ -189,7 +189,7 @@ function save() {
   ];
   tmpIndexContent = null;
   console.log('payload: ', payload);
-  $('.js-activity-setting').each(() => {
+  $('.js-activity-setting').each(function() {
     const $el = $(this);
     const setting = {
       id: $(this).attr('id'),
