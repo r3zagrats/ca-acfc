@@ -365,7 +365,7 @@ function checkContent(type) {
             regex.lastIndex++;
           }
           if (!deFields.includes(message[1])) {
-            const regex2 = /[^\:\s]*$/gm;
+            const regex2 = /(?<=:)[^\:\s]*$/gm
             if (!regex2.test(message[1])) {
               console.log('deFields:', deFields);
               connection.trigger('updateButton', {
