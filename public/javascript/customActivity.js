@@ -26,13 +26,12 @@ const requestedInteractionHandler = async (settings) => {
     console.log('deInfo: ', deInfo);
     $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
     deFields = deInfo.deCol;
-    $('#DEFieldsKey').empty();
+    // $('#DEFieldsKey').empty();
     $('#DEFields').empty();
-    $('#DEFieldsKey').append(`<option value=''>--Select one of the following fields--</option>`);
+    // $('#DEFieldsKey').append(`<option value=''>--Select one of the following fields--</option>`);
     $.each(deFields, (index, field) => {
       deFields = field.Name;
-      console.log('deFields: ', deFields);
-      $('#DEFieldsKey').append(`<option value=${field.Name}>${field.Name}</option>`);
+      // $('#DEFieldsKey').append(`<option value=${field.Name}>${field.Name}</option>`);
       $('#DEFields').append(
         `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
       );
@@ -84,19 +83,19 @@ const onRender = () => {
       });
     }
   });
-  $('#DEFieldsKey').on('change', (e) => {
-    if ($('#DEFieldsKey').val()) {
-      connection.trigger('updateButton', {
-        button: 'next',
-        enabled: true,
-      });
-    } else {
-      connection.trigger('updateButton', {
-        button: 'next',
-        enabled: false,
-      });
-    }
-  });
+  // $('#DEFieldsKey').on('change', (e) => {
+  //   if ($('#DEFieldsKey').val()) {
+  //     connection.trigger('updateButton', {
+  //       button: 'next',
+  //       enabled: true,
+  //     });
+  //   } else {
+  //     connection.trigger('updateButton', {
+  //       button: 'next',
+  //       enabled: false,
+  //     });
+  //   }
+  // });
   $('#ContentOptions').on('change', (e) => {
     $('#ContentValue').val('');
     checkContent('process');
@@ -153,9 +152,9 @@ function initialize(data) {
       if (key === 'ContentOptions') {
         ContentOptions = value;
       }
-      if (key === 'DEFieldsKey') {
-        DEFieldsKey = value;
-      }
+      // if (key === 'DEFieldsKey') {
+      //   DEFieldsKey = value;
+      // }
     });
   });
   console.log('inArguments After:', inArguments);
@@ -175,8 +174,7 @@ function onGetTokens(tokens) {
  *
  * @param {*} endpoints
  */
-function onGetEndpoints(endpoints) {
-}
+function onGetEndpoints(endpoints) {}
 
 /**
  * Save settings
@@ -284,17 +282,21 @@ const showStep = async (step, stepIndex) => {
       $('#step3').show();
       $('#titleDynamic').empty().append('Data Extension');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
-      if ($('#DEFieldsKey').val()) {
-        connection.trigger('updateButton', {
-          button: 'next',
-          enabled: true,
-        });
-      } else {
-        connection.trigger('updateButton', {
-          button: 'next',
-          enabled: false,
-        });
-      }
+      // if ($('#DEFieldsKey').val()) {
+      //   connection.trigger('updateButton', {
+      //     button: 'next',
+      //     enabled: true,
+      //   });
+      // } else {
+      //   connection.trigger('updateButton', {
+      //     button: 'next',
+      //     enabled: false,
+      //   });
+      // }
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: true,
+      });
       connection.trigger('updateButton', {
         button: 'back',
         enabled: true,
@@ -336,7 +338,6 @@ const showStep = async (step, stepIndex) => {
 };
 
 function checkContent(type) {
-  console.log('type: ' + type);
   let alerts = false;
   //var dataRex = type == 'process' ? value.content : $("#ContentValue").val();
   console.log($('#ContentValue').val());
@@ -356,14 +357,15 @@ function checkContent(type) {
         const regex = /%%([\s\S]*?)%%/gm;
         let message;
         while (
-          (message = regex.exec(type == 'process' ? value.content : $('#ContentValue').val())) !== null
+          (message = regex.exec(type == 'process' ? value.content : $('#ContentValue').val())) !==
+          null
         ) {
           console.log('message', message);
           if (message.index === regex.lastIndex) {
             regex.lastIndex++;
           }
           if (!deFields.includes(message[1])) {
-            console.log('deFields:', deFields)
+            console.log('deFields:', deFields);
             connection.trigger('updateButton', {
               button: 'next',
               enabled: false,
