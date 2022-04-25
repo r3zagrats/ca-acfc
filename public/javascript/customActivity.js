@@ -128,18 +128,22 @@ function initialize(data) {
       switch (key) {
         case 'Channels': {
           channels = value;
+          $('#Channels').val(value)
           break;
         }
         case 'Endpoints': {
           endpoints = value;
+          $('#Endpoints').val(value)
           break;
         }
         case 'ContentOptions': {
           contentOptions = value;
+          $('#ContentOptions').val(value)
           break;
         }
         case 'ContentValue': {
           contentValue = value;
+          $('#ContentValue').val(value)
           break;
         }
       }
