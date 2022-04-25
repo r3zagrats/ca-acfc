@@ -337,7 +337,8 @@ const showStep = async (step, stepIndex) => {
 };
 
 function checkContent(type) {
-  let alerts = false;
+  let error = false;
+  let errorContent = ''
   //var dataRex = type == 'process' ? value.content : $("#ContentValue").val();
   console.log($('#ContentValue').val());
   console.log('tmpCustomContents: ', tmpCustomContents);
@@ -369,7 +370,8 @@ function checkContent(type) {
               button: 'next',
               enabled: false,
             });
-            alerts = true;
+            error = true;
+            errorContent = message[1]
           }
         }
         if (type == 'process') {
@@ -382,8 +384,8 @@ function checkContent(type) {
         }
       }
     });
-    if (alerts == true) {
-      alert('Tồn tại giá trị ( %%<Field DE>%%) trong Content không hợp lệ ! ');
+    if (error == true) {
+      alert(`Tồn tại giá trị (%%${errorContent}%%) trong Content không hợp lệ !`);
     } else {
       connection.trigger('updateButton', {
         button: 'next',
