@@ -371,7 +371,7 @@ function checkContent(type) {
               enabled: false,
             });
             error = true;
-            errorContent.push = message[1]
+            errorContent.push(message[1])
           }
         }
         if (type == 'process') {
