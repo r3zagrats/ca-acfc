@@ -30,6 +30,9 @@ const requestedInteractionHandler = async (settings) => {
       $('#DEFields').append(
         `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
       );
+      $(`#${field.Name}`).val(
+        '{{Event."' + eventDefinitionKey + '"."' + field.Name + '"}}'
+      );
     });
   } catch (error) {
     alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
