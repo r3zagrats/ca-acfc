@@ -31,7 +31,9 @@ const requestedInteractionHandler = async (settings) => {
     $.each(deInfo.deCol, (index, field) => {
       deFields.push(field.Name);
       // $('#DEFieldsKey').append(`<option value=${field.Name}>${field.Name}</option>`);
-      $('#DEFields').append(`<p>${field.Name}</p>`);
+      $('#DEFields').append(
+        `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
+      );
     });
   } catch (error) {
     alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
@@ -171,7 +173,7 @@ function save() {
   ];
   tmpIndexContent = null;
   console.log('payload: ', payload);
-  $('.js-activity-setting').each(function () {
+  $('.js-activity-setting').each(function() {
     const $el = $(this);
     const setting = {
       id: $(this).attr('id'),
