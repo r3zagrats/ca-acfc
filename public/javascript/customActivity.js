@@ -210,7 +210,6 @@ function save() {
   console.dir('payload:', payload);
   connection.trigger('updateActivity', payload);
 }
-
 /**
  * Next settings
  */
@@ -365,16 +364,13 @@ function checkContent(type) {
             regex.lastIndex++;
           }
           if (!deFields.includes(message[1])) {
-            const regex2 = /(?<=:)[^\:\s]*$/gm
-            if (!regex2.test(message[1])) {
-              console.log('deFields:', deFields);
-              connection.trigger('updateButton', {
-                button: 'next',
-                enabled: false,
-              });
-              error = true;
-              errorContent.push(message[0]);
-            }
+            console.log('deFields:', deFields);
+            connection.trigger('updateButton', {
+              button: 'next',
+              enabled: false,
+            });
+            error = true;
+            errorContent.push(message[0]);
           }
         }
         if (type == 'process') {
