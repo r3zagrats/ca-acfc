@@ -46,14 +46,12 @@ connection.on('clickedBack', prev);
 connection.on('gotoStep', onGotoStep);
 connection.on('requestedSchema', function (data) {});
 
-const onRender = async () => {
-  let { r1, r2, r3, r4, r5 } = await Promise.all([
-    connection.trigger('ready'),
-    connection.trigger('requestTokens'),
-    connection.trigger('requestEndpoints'),
-    connection.trigger('requestInteraction'),
-    connection.trigger('requestSchema'),
-  ]);
+const onRender = () => {
+  connection.trigger('ready');
+  connection.trigger('requestTokens');
+  connection.trigger('requestEndpoints');
+  connection.trigger('requestInteraction');
+  connection.trigger('requestSchema');
   $('#Channels').on('change', (e) => {
     if ($('#Channels').val()) {
       connection.trigger('updateButton', {
@@ -128,22 +126,22 @@ function initialize(data) {
       switch (key) {
         case 'Channels': {
           channels = value;
-          $('#Channels').val(value)
+          $('#Channels').val(value);
           break;
         }
         case 'Endpoints': {
           endpoints = value;
-          $('#Endpoints').val(value)
+          $('#Endpoints').val(value);
           break;
         }
         case 'ContentOptions': {
           contentOptions = value;
-          $('#ContentOptions').val(value)
+          $('#ContentOptions').val(value);
           break;
         }
         case 'ContentValue': {
           contentValue = value;
-          $('#ContentValue').val(value)
+          $('#ContentValue').val(value);
           break;
         }
       }
@@ -309,6 +307,7 @@ const showStep = async (step, stepIndex) => {
 function checkContent(type) {
   let error = false;
   let errorContent = [];
+  console.log('tmpCustomContents:', tmpCustomContents)
   if ($('#ContentOptions').val()) {
     tmpCustomContents.forEach((value) => {
       if (value.id == $('#ContentOptions').val()) {
