@@ -18,19 +18,15 @@ var steps = [
 var currentStep = steps[0].key;
 
 const requestedInteractionHandler = async (settings) => {
-  console.log('--debug requestedInteractionHandler:');
   console.log('settings:', settings);
   eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
   try {
     const deInfo = await getEvent(eventDefinitionKey);
     console.log('deInfo: ', deInfo);
     $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
-    // $('#DEFieldsKey').empty();
     $('#DEFields').empty();
-    // $('#DEFieldsKey').append(`<option value=''>--Select one of the following fields--</option>`);
     $.each(deInfo.deCol, (index, field) => {
       deFields.push(field.Name);
-      // $('#DEFieldsKey').append(`<option value=${field.Name}>${field.Name}</option>`);
       $('#DEFields').append(
         `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
       );
@@ -358,7 +354,6 @@ function checkContent(type) {
       }
     });
     if (error == true) {
-      console.log('errorContent:', errorContent);
       alert(`Tồn tại giá trị ${errorContent.join(', ')} trong Content không hợp lệ !`);
     } else {
       connection.trigger('updateButton', {

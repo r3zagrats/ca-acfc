@@ -25,7 +25,7 @@ const redisClient = require('../redis');
 exports.execute = async (req, res) => {
   const data = JWT(req.body);
   console.log('\ndata.inArguments: ', data.inArguments[0]);
-  let Content = data.inArguments[0].ContentBuilder;
+  let Content = data.inArguments[0].ContentValue;
   // Handle Content
   for (const [key, value] of Object.entries(data.inArguments[0])) {
     Content = Content.replaceAll(`%%${key}%%`, value);
