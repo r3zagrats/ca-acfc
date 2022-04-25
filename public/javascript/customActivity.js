@@ -79,6 +79,7 @@ const onRender = () => {
     }
   });
   $('#ContentOptions').on('change', (e) => {
+    contentOptions =  $('#ContentOptions').val();
     checkContent('process');
   });
   $('#refreshButton').on('click', async () => {
