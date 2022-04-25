@@ -46,12 +46,14 @@ connection.on('clickedBack', prev);
 connection.on('gotoStep', onGotoStep);
 connection.on('requestedSchema', function (data) {});
 
-const onRender = () => {
-  connection.trigger('ready');
-  connection.trigger('requestTokens');
-  connection.trigger('requestEndpoints');
-  connection.trigger('requestInteraction');
-  connection.trigger('requestSchema');
+const onRender = async () => {
+  let { r1, r2, r3, r4, r5 } = await Promise.all([
+    connection.trigger('ready'),
+    connection.trigger('requestTokens'),
+    connection.trigger('requestEndpoints'),
+    connection.trigger('requestInteraction'),
+    connection.trigger('requestSchema'),
+  ]);
   $('#Channels').on('change', (e) => {
     if ($('#Channels').val()) {
       connection.trigger('updateButton', {
