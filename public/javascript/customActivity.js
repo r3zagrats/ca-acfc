@@ -21,10 +21,8 @@ const requestedInteractionHandler = async (settings) => {
   console.log('--debug requestedInteractionHandler:');
   console.log('settings:', settings);
   eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
-  //document.getElementById('select-entryevent-defkey').value = eventDefinitionKey;
-  //console.log('eventDefinitionKey:' + JSON.stringify(settings));
   $('#DEFieldsKey').append('<option value="None">Loading...</option>');
-  $('#DEFields').append('<p value="None"></p>Loading............</p>');
+  $('#DEFields').append('<p value="None"></p>Loading...</p>');
   try {
     const deInfo = await getEvent(eventDefinitionKey);
     console.log('deInfo: ', deInfo);
