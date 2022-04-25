@@ -385,6 +385,7 @@ function checkContent(type) {
       }
     });
     if (error == true) {
+      console.log('errorContent:', errorContent)
       alert(`Tồn tại giá trị (%%${errorContent}%%) trong Content không hợp lệ !`);
     } else {
       connection.trigger('updateButton', {
