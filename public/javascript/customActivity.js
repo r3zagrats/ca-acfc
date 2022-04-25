@@ -36,7 +36,6 @@ const requestedInteractionHandler = async (settings) => {
       $('#DEFields').append(
         `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
       );
-      // $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
     });
   } catch (error) {
     alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
@@ -97,7 +96,6 @@ const onRender = () => {
         enabled: false,
       });
     }
-    // $('#DEKeys').val(`{{Event.${eventDefinitionKey}.${$('#DEFieldsKey').val()}}}`);
   });
   $('#ContentOptions').on('change', (e) => {
     $('#ContentValue').val('');
@@ -117,7 +115,6 @@ const onRender = () => {
       $.each(tmpCustomContents, (index, content) => {
         $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
       });
-      $('#ContentOptions').val(ContentOptions);
       checkContent('process');
     } catch (error) {
       alert(`Error on fetching data: ${error.message}`);
@@ -330,7 +327,6 @@ const showStep = async (step, stepIndex) => {
         $.each(tmpCustomContents, (index, content) => {
           $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
         });
-        $('#ContentOptions').val(ContentOptions);
         checkContent('init');
       } catch (error) {
         alert(`Error on fetching data: ${error.message}`);
