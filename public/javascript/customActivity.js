@@ -30,6 +30,7 @@ const requestedInteractionHandler = async (settings) => {
     $('#DEFields').empty();
     $('#DEFieldsKey').append(`<option value=''>--Select one of the following fields--<option>`);
     $.each(selectedField, (index, field) => {
+      console.log('field', field);
       // selectedField = field.Name + ' ' + selectedField;
       // console.log('selectedField: ', selectedField);
       $('#DEFieldsKey').append(`<option value=${field.Name}>${field.Name}</option>`);
