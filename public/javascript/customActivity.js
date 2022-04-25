@@ -4,8 +4,7 @@ let authTokens = {};
 let payload = {};
 var tmpCustomContents = [];
 var tmpIndexContent = null;
-var ContentOptions = '';
-var DEFieldsKey = '';
+var contentOptions = '';
 var deFields = [];
 var eventDefinitionKey = '';
 
@@ -31,7 +30,7 @@ const requestedInteractionHandler = async (settings) => {
         `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
       );
       $(`#${field.Name}`).val(
-        '{{Event."' + eventDefinitionKey + '"."' + field.Name + '"}}'
+        `{{Event.${eventDefinitionKey}.${field.Name}}}`
       );
     });
   } catch (error) {
@@ -135,7 +134,7 @@ function initialize(data) {
         $el.val(value);
       }
       if (key === 'ContentOptions') {
-        ContentOptions = value;
+        contentOptions = value;
       }
     });
   });
