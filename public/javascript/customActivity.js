@@ -223,7 +223,7 @@ const showStep = async (step, stepIndex) => {
       $('#step1').show();
       $('#titleDynamic').empty().append('Channel');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
-      console.log('val:', val);
+      console.log('val:',$('#Channels').val());
       if ($('#Channels').val()) {
         connection.trigger('updateButton', {
           button: 'next',
