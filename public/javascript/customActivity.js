@@ -186,7 +186,7 @@ function save() {
     });
   });
   console.log('payload:', payload);
-  // connection.trigger('updateActivity', payload);
+  connection.trigger('updateActivity', payload);
 }
 /**
  * Next settings
