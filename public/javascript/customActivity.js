@@ -6,7 +6,7 @@ var tmpCustomContents = [];
 var tmpIndexContent = null;
 var ContentOptions = '';
 var DEFieldsKey = '';
-var deFields = '';
+var deFields = [];
 var eventDefinitionKey = '';
 
 var steps = [
@@ -25,12 +25,11 @@ const requestedInteractionHandler = async (settings) => {
     const deInfo = await getEvent(eventDefinitionKey);
     console.log('deInfo: ', deInfo);
     $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
-    deFields = deInfo.deCol;
     // $('#DEFieldsKey').empty();
     $('#DEFields').empty();
     // $('#DEFieldsKey').append(`<option value=''>--Select one of the following fields--</option>`);
-    $.each(deFields, (index, field) => {
-      deFields = field.Name;
+    $.each(deInfo.deCol, (index, field) => {
+      deFields.push(field.Name);
       // $('#DEFieldsKey').append(`<option value=${field.Name}>${field.Name}</option>`);
       $('#DEFields').append(
         `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
