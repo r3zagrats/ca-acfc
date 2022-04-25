@@ -2,8 +2,7 @@
 const connection = new Postmonger.Session();
 let authTokens = {};
 let payload = {};
-var tmpCustomContents = [];
-var tmpIndexContent = null;
+let tmpCustomContents = ''
 var contentOptions = '';
 var deFields = [];
 var eventDefinitionKey = '';
@@ -87,7 +86,6 @@ const onRender = () => {
     try {
       const customContent = await getCustomContent();
       tmpCustomContents = customContent.items;
-      tmpIndexContent = null;
       $('#ContentOptions').append(
         `<option value=''>--Select one of the following contents--</option>`
       );
@@ -119,7 +117,6 @@ function initialize(data) {
   );
   console.log('hasInArguments:', hasInArguments);
   const inArguments = hasInArguments ? payload['arguments'].execute.inArguments : {};
-  if (hasInArguments) tmpIndexContent = payload['arguments'].execute.inArguments[0].tmpIndex;
   console.log('inArguments Before:', inArguments);
   $.each(inArguments, (index, inArgument) => {
     $.each(inArgument, (key, value) => {
@@ -162,10 +159,8 @@ function save() {
   payload['arguments'].execute.inArguments = [
     {
       contactKey: '{{Contact.Key}}',
-      tmpIndex: tmpIndexContent,
     },
   ];
-  tmpIndexContent = null;
   console.log('payload: ', payload);
   $('.js-activity-setting').each(function () {
     const $el = $(this);
@@ -291,7 +286,6 @@ const showStep = async (step, stepIndex) => {
       try {
         const customContent = await getCustomContent();
         tmpCustomContents = customContent.items;
-        tmpIndexContent = null;
         $('#ContentOptions').empty();
         $('#ContentOptions').append(
           `<option value=''>--Select one of the following contents--</option>`
@@ -313,14 +307,6 @@ function checkContent(type) {
   //var dataRex = type == 'process' ? value.content : $("#ContentValue").val();
   console.log($('#ContentValue').val());
   console.log('tmpCustomContents: ', tmpCustomContents);
-  console.log('tmpIndexContent: ' + tmpIndexContent);
-  if (tmpIndexContent !== null) {
-    const payloadData = tmpCustomContents[tmpIndexContent].meta.options.customBlockData;
-    console.log('payloadData', payloadData);
-    $('#ContentValue').val(JSON.stringify(payloadData));
-    $('#DisplayContent').empty();
-    $('#DisplayContent').append(tmpCustomContents[tmpIndexContent].content);
-  }
   if ($('#ContentOptions').val()) {
     console.log($('#ContentValue').val());
     tmpCustomContents.forEach((value) => {
@@ -346,7 +332,6 @@ function checkContent(type) {
           }
         }
         if (type == 'process') {
-          tmpIndexContent = tmpCustomContents.indexOf(value);
           const payloadData = value.meta.options.customBlockData;
           console.log('payloadData', payloadData);
           $('#ContentValue').val(JSON.stringify(payloadData));
