@@ -37,7 +37,7 @@ exports.execute = async (req, res) => {
       case 'Zalo Notification Service': {
         // Query OA Info
         const { rows } = await db.query(
-          `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${data.inArguments[0].Endpoint}'`
+          `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${data.inArguments[0].Endpoints}'`
         );
         const OAInfo = rows[0];
         console.log('\nOAInfo: ', OAInfo);
