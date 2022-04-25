@@ -290,14 +290,10 @@ exports.upsertDE = async (req, res) => {
  * @param res
  *  @returns {Promise<void>}
  */
-exports.getAttEvent = async (req, res) => {
-  console.log('request:', req.body);
+exports.getDEInfo = async (req, res) => {
   try {
     if (req.body.key != '' || req.body.key != null) {
       const data = await RestClient.getJourney(req.body.key);
-      //res.status(200).send(data.body.dataExtensionId);
-      console.log('data: ', data.body);
-
       const props = ['Name', 'CustomerKey', 'ObjectID'];
       RestClient.SDKClient.dataExtension({
         props,
@@ -308,7 +304,6 @@ exports.getAttEvent = async (req, res) => {
           rightOperand: data.body.dataExtensionId,
         },
       }).get((err, dataDE) => {
-        //res.status(200).send(dataDE.body.Results.length > 0 ? dataDE.body.Results[0]: {});
         if (dataDE.body.Results.length > 0) {
           var options = {
             props: [

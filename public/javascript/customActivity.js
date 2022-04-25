@@ -21,7 +21,7 @@ let currentStep = steps[0].key;
 const requestedInteractionHandler = async (settings) => {
   eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
   try {
-    const deInfo = await getEvent(eventDefinitionKey);
+    const deInfo = await getDEInfo(eventDefinitionKey);
     $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
     $('#DEFields').empty();
     $.each(deInfo.deCol, (index, field) => {
@@ -362,9 +362,9 @@ const getCustomContent = async () => {
   }
 };
 
-const getEvent = async (key) => {
+const getDeInfo = async (key) => {
   try {
-    const response = await superagent.post('/api/getevent').send({ key });
+    const response = await superagent.post('/api/getdeinfo').send({ key });
     return response.body;
   } catch (error) {
     throw new Error(error.message);
