@@ -362,7 +362,7 @@ const getCustomContent = async () => {
   }
 };
 
-const getDeInfo = async (key) => {
+const getDEInfo = async (key) => {
   try {
     const response = await superagent.post('/api/getdeinfo').send({ key });
     return response.body;
