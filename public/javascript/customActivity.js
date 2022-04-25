@@ -6,7 +6,7 @@ var tmpCustomContents = [];
 var tmpIndexContent = null;
 var ContentOptions = '';
 var DEFieldsKey = '';
-var selectedField = '';
+var deFields = '';
 var eventDefinitionKey = '';
 
 var steps = [
@@ -25,13 +25,13 @@ const requestedInteractionHandler = async (settings) => {
     const deInfo = await getEvent(eventDefinitionKey);
     console.log('deInfo: ', deInfo);
     $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
-    selectedField = deInfo.deCol;
+    deFields = deInfo.deCol;
     $('#DEFieldsKey').empty();
     $('#DEFields').empty();
     $('#DEFieldsKey').append(`<option value=''>--Select one of the following fields--</option>`);
-    $.each(selectedField, (index, field) => {
-      // selectedField = field.Name + ' ' + selectedField;
-      // console.log('selectedField: ', selectedField);
+    $.each(deFields, (index, field) => {
+      deFields = field.Name;
+      // console.log('deFields: ', deFields);
       $('#DEFieldsKey').append(`<option value=${field.Name}>${field.Name}</option>`);
       $('#DEFields').append(
         `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
@@ -366,8 +366,8 @@ function checkContent(type) {
           if (message.index === regex.lastIndex) {
             regex.lastIndex++;
           }
-          if (!selectedField.includes(message[1])) {
-            console.log('selectedField:', selectedField)
+          if (!deFields.includes(message[1])) {
+            console.log('deFields:', deFields)
             connection.trigger('updateButton', {
               button: 'next',
               enabled: false,
