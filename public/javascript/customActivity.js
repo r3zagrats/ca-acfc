@@ -79,7 +79,6 @@ const onRender = () => {
     }
   });
   $('#ContentOptions').on('change', (e) => {
-    $('#ContentValue').val('');
     checkContent('process');
   });
   $('#refreshButton').on('click', async () => {
@@ -290,10 +289,9 @@ const showStep = async (step, stepIndex) => {
       try {
         const customContent = await getCustomContent();
         tmpCustomContents = customContent.items;
-        $('#ContentOptions').empty();
-        $('#ContentOptions').append(
-          `<option value=''>--Select one of the following contents--</option>`
-        );
+        $('#ContentOptions')
+          .empty()
+          .append(`<option value=''>--Select one of the following contents--</option>`);
         $.each(tmpCustomContents, (index, content) => {
           $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
         });
@@ -307,7 +305,7 @@ const showStep = async (step, stepIndex) => {
 function checkContent(type) {
   let error = false;
   let errorContent = [];
-  console.log('tmpCustomContents:', tmpCustomContents)
+  console.log('tmpCustomContents:', tmpCustomContents);
   if ($('#ContentOptions').val()) {
     tmpCustomContents.forEach((value) => {
       if (value.id == $('#ContentOptions').val()) {
@@ -326,11 +324,10 @@ function checkContent(type) {
           }
         }
         // if (type == 'process') {
-          const payloadData = value.meta.options.customBlockData;
-          console.log('payloadData', payloadData);
-          $('#ContentValue').val(JSON.stringify(payloadData));
-          $('#DisplayContent').empty();
-          $('#DisplayContent').append(value.content);
+        const payloadData = value.meta.options.customBlockData;
+        console.log('payloadData', payloadData);
+        $('#ContentValue').val(JSON.stringify(payloadData));
+        $('#DisplayContent').empty().append(value.content);
         // }
       }
     });
