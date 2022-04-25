@@ -95,7 +95,7 @@ const onRender = () => {
       $.each(tmpCustomContents, (index, content) => {
         $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
       });
-      checkContent('process');
+      checkContent('refresh');
     } catch (error) {
       alert(`Error on fetching data: ${error.message}`);
     }
@@ -307,7 +307,7 @@ function checkContent(type) {
   let error = false;
   let errorContent = [];
   console.log('tmpCustomContents:', tmpCustomContents);
-  $('#ContentOptions').val(contentOptions);
+  if (type !== 'refresh') $('#ContentOptions').val(contentOptions);
   if ($('#ContentOptions').val()) {
     tmpCustomContents.forEach((value) => {
       if (value.id == $('#ContentOptions').val()) {
