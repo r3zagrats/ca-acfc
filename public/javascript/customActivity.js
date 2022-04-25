@@ -126,7 +126,7 @@ function initialize(data) {
       switch (key) {
         case 'Channels': {
           channels = value;
-          $('#Channels').val(value);
+          // $('#Channels').val(value);
           break;
         }
         case 'Endpoints': {
