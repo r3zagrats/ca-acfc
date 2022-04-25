@@ -310,7 +310,6 @@ const showStep = async (step, stepIndex) => {
         'xlink:href',
         '/icons/standard-sprite/svg/symbols.svg#code_playground'
       );
-      $('#ContentOptions').append('<option value="None">Loading...</option>');
       connection.trigger('updateButton', {
         button: 'back',
         enabled: true,
