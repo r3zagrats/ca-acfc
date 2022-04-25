@@ -163,14 +163,14 @@ function save() {
   ];
   console.log('payload: ', payload);
   $('.js-activity-setting').each(function () {
-    // const $el = $(this);
+    const $el = $(this);
     const setting = {
       id: $(this).attr('id'),
       value: $(this).val(),
     };
     console.log('setting', setting);
     $.each(payload['arguments'].execute.inArguments, (index, value) => {
-      console.log('value', value)
+      console.log('value before', value)
       if ($el.attr('type') === 'checkbox') {
         console.log('checked')
         if ($el.is(':checked')) {
@@ -182,6 +182,7 @@ function save() {
         console.log('not checked')
         value[setting.id] = setting.value;
       }
+      console.log('value after', value)
     });
   });
   console.log('payload:', payload);
