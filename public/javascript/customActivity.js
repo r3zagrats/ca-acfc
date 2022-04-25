@@ -50,7 +50,6 @@ const onRender = () => {
   connection.trigger('requestInteraction');
   connection.trigger('requestSchema');
   $('#Channels').on('change', (e) => {
-    console.log('channels val:', $('#Channels').val())
     if ($('#Channels').val()) {
       connection.trigger('updateButton', {
         button: 'next',
@@ -64,7 +63,6 @@ const onRender = () => {
     }
   });
   $('#Endpoints').on('change', (e) => {
-    console.log('endpoints val:', $('#Endpoints').val())
     if ($('#Endpoints').val()) {
       connection.trigger('updateButton', {
         button: 'next',
@@ -223,7 +221,7 @@ const showStep = async (step, stepIndex) => {
       $('#step1').show();
       $('#titleDynamic').empty().append('Channel');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
-      console.log('val:',$('#Channels').val());
+      console.log('channels val:',$('#Channels').val());
       if ($('#Channels').val()) {
         connection.trigger('updateButton', {
           button: 'next',
@@ -240,6 +238,7 @@ const showStep = async (step, stepIndex) => {
       $('#step2').show();
       $('#titleDynamic').empty().append('Endpoint');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
+      console.log('Endpoints val:',$('#Endpoints').val());
       if ($('#Endpoints').val()) {
         connection.trigger('updateButton', {
           button: 'next',
