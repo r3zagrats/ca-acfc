@@ -179,7 +179,6 @@ function save() {
   ];
   console.log('payload: ', payload);
   $('.js-activity-setting').each(function () {
-    const $el = $(this);
     const setting = {
       id: $(this).attr('id'),
       value: $(this).val(),
@@ -306,9 +305,7 @@ const showStep = async (step, stepIndex) => {
 function checkContent(type) {
   let error = false;
   let errorContent = [];
-  console.log($('#ContentValue').val());
   if ($('#ContentOptions').val()) {
-    console.log($('#ContentValue').val());
     tmpCustomContents.forEach((value) => {
       if (value.id == $('#ContentOptions').val()) {
         const regex = /%%([\s\S]*?)%%/gm;
