@@ -17,11 +17,9 @@ var steps = [
 var currentStep = steps[0].key;
 
 const requestedInteractionHandler = async (settings) => {
-  console.log('settings:', settings);
   eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
   try {
     const deInfo = await getEvent(eventDefinitionKey);
-    console.log('deInfo: ', deInfo);
     $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
     $('#DEFields').empty();
     $.each(deInfo.deCol, (index, field) => {
@@ -29,9 +27,7 @@ const requestedInteractionHandler = async (settings) => {
       $('#DEFields').append(
         `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
       );
-      $(`#${field.Name}`).val(
-        `{{Event.${eventDefinitionKey}.${field.Name}}}`
-      );
+      $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
     });
   } catch (error) {
     alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
@@ -171,7 +167,7 @@ function save() {
   ];
   tmpIndexContent = null;
   console.log('payload: ', payload);
-  $('.js-activity-setting').each(function() {
+  $('.js-activity-setting').each(function () {
     const $el = $(this);
     const setting = {
       id: $(this).attr('id'),
@@ -227,6 +223,7 @@ const showStep = async (step, stepIndex) => {
       $('#step1').show();
       $('#titleDynamic').empty().append('Channel');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
+      console.log('val:', val);
       if ($('#Channels').val()) {
         connection.trigger('updateButton', {
           button: 'next',
