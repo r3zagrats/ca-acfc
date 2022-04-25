@@ -3,9 +3,10 @@ const connection = new Postmonger.Session();
 let authTokens = {};
 let payload = {};
 let channels = '';
-let tmpCustomContents = '';
-let contentOptions = '';
 let endpoints = '';
+let contentOptions = '';
+let contentValue = '';
+let tmpCustomContents = '';
 let deFields = [];
 let eventDefinitionKey = '';
 
@@ -123,10 +124,6 @@ function initialize(data) {
   $.each(inArguments, (index, inArgument) => {
     $.each(inArgument, (key, value) => {
       switch (key) {
-        case 'ContentOptions': {
-          contentOptions = value;
-          break;
-        }
         case 'Channels': {
           channels = value;
           break;
@@ -135,10 +132,21 @@ function initialize(data) {
           endpoints = value;
           break;
         }
+        case 'ContentOptions': {
+          contentOptions = value;
+          break;
+        }
+        case 'ContentValue': {
+          contentValue = value;
+          break;
+        }
       }
     });
   });
-  console.log()
+  console.log('channels', channels);
+  console.log('endpoints', endpoints);
+  console.log('contentOptions', contentOptions);
+  console.log('contentValue', contentValue);
 }
 
 /**
