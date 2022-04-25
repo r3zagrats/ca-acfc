@@ -28,7 +28,7 @@ const requestedInteractionHandler = async (settings) => {
     selectedField = deInfo.deCol;
     $('#DEFieldsKey').empty();
     $('#DEFields').empty();
-    $('#DEFieldsKey').append(`<option value=''>--Select one of the following fields--<option>`);
+    $('#DEFieldsKey').append(`<option value=''>--Select one of the following fields--</option>`);
     $.each(selectedField, (index, field) => {
       console.log('field', field);
       // selectedField = field.Name + ' ' + selectedField;
