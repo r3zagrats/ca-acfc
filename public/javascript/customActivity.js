@@ -37,7 +37,7 @@ const requestedInteractionHandler = async (settings) => {
     });
   } catch (error) {
     alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
-    // connection.trigger('destroy');
+    connection.trigger('destroy');
   }
 };
 
