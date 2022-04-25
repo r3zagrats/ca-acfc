@@ -31,9 +31,7 @@ const requestedInteractionHandler = async (settings) => {
     $.each(deInfo.deCol, (index, field) => {
       deFields.push(field.Name);
       // $('#DEFieldsKey').append(`<option value=${field.Name}>${field.Name}</option>`);
-      $('#DEFields').append(
-        `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
-      );
+      $('#DEFields').append(`<p>${field.Name}</p>`);
     });
   } catch (error) {
     alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
@@ -82,19 +80,6 @@ const onRender = () => {
       });
     }
   });
-  // $('#DEFieldsKey').on('change', (e) => {
-  //   if ($('#DEFieldsKey').val()) {
-  //     connection.trigger('updateButton', {
-  //       button: 'next',
-  //       enabled: true,
-  //     });
-  //   } else {
-  //     connection.trigger('updateButton', {
-  //       button: 'next',
-  //       enabled: false,
-  //     });
-  //   }
-  // });
   $('#ContentOptions').on('change', (e) => {
     $('#ContentValue').val('');
     checkContent('process');
@@ -151,9 +136,6 @@ function initialize(data) {
       if (key === 'ContentOptions') {
         ContentOptions = value;
       }
-      // if (key === 'DEFieldsKey') {
-      //   DEFieldsKey = value;
-      // }
     });
   });
   console.log('inArguments After:', inArguments);
@@ -189,7 +171,7 @@ function save() {
   ];
   tmpIndexContent = null;
   console.log('payload: ', payload);
-  $('.js-activity-setting').each(function() {
+  $('.js-activity-setting').each(function () {
     const $el = $(this);
     const setting = {
       id: $(this).attr('id'),
@@ -281,17 +263,6 @@ const showStep = async (step, stepIndex) => {
       $('#step3').show();
       $('#titleDynamic').empty().append('Data Extension');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
-      // if ($('#DEFieldsKey').val()) {
-      //   connection.trigger('updateButton', {
-      //     button: 'next',
-      //     enabled: true,
-      //   });
-      // } else {
-      //   connection.trigger('updateButton', {
-      //     button: 'next',
-      //     enabled: false,
-      //   });
-      // }
       connection.trigger('updateButton', {
         button: 'next',
         enabled: true,
