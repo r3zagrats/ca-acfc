@@ -28,7 +28,7 @@ const requestedInteractionHandler = async (settings) => {
     selectedField = deInfo.deCol;
     $('#DEFieldsKey').empty();
     $('#DEFields').empty();
-    // $('#DEFieldsKey').append(`<option value=''>--Select one of the following fields--<option>`);
+    $('#DEFieldsKey').append(`<option value=''>--Select one of the following fields--<option>`);
     $.each(selectedField, (index, field) => {
       // selectedField = field.Name + ' ' + selectedField;
       // console.log('selectedField: ', selectedField);
@@ -36,7 +36,7 @@ const requestedInteractionHandler = async (settings) => {
       $('#DEFields').append(
         `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
       );
-      $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
+      // $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
     });
   } catch (error) {
     alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
@@ -97,7 +97,7 @@ const onRender = () => {
         enabled: false,
       });
     }
-    $('#DEKeys').val(`{{Event.${eventDefinitionKey}.${$('#DEFieldsKey').val()}}}`);
+    // $('#DEKeys').val(`{{Event.${eventDefinitionKey}.${$('#DEFieldsKey').val()}}}`);
   });
   $('#ContentOption').on('change', (e) => {
     $('#ContentBuilder').val('');
