@@ -303,6 +303,7 @@ const showStep = async (step, stepIndex) => {
   }
 };
 function checkContent(type) {
+  console.log('type: ', type)
   let error = false;
   let errorContent = [];
   console.log('tmpCustomContents:', tmpCustomContents);
