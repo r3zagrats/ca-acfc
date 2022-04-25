@@ -32,8 +32,8 @@ const requestedInteractionHandler = async (settings) => {
     $('#DEFields').empty();
     $('#DEFieldsKey').append(`<option value=''>--Select one of the following fields--<option>`);
     $.each(selectedField, (index, field) => {
-      selectedField = field.Name + ' ' + selectedField;
-      console.log('selectedField: ', selectedField);
+      // selectedField = field.Name + ' ' + selectedField;
+      // console.log('selectedField: ', selectedField);
       $('#DEFieldsKey').append(`<option value=${field.Name}>${field.Name}</option>`);
       $('#DEFields').append(
         `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
