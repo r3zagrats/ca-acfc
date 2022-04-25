@@ -25,7 +25,6 @@ const requestedInteractionHandler = async (settings) => {
   //console.log('eventDefinitionKey:' + JSON.stringify(settings));
   $('#DEFieldsKey').append('<option value="None">Loading...</option>');
   $('#DEFields').append('<p value="None"></p>Loading............</p>');
-
   try {
     const eventInfo = await getEvent(eventDefinitionKey);
     console.log('eventInfo: ', eventInfo);
@@ -91,6 +90,11 @@ const onRender = () => {
         button: 'next',
         enabled: true,
       });
+    } else {
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: false,
+      });
     }
   });
 
@@ -99,6 +103,11 @@ const onRender = () => {
       connection.trigger('updateButton', {
         button: 'next',
         enabled: true,
+      });
+    } else {
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: false,
       });
     }
     $('#DEKeys').val(`{{Event.${eventDefinitionKey}.${$('#DEFieldsKey').val()}}}`);
@@ -177,7 +186,7 @@ function initialize(data) {
  * @param {*} tokens
  */
 function onGetTokens(tokens) {
-  //console.log(tokens);
+  console.log('tokens:', tokens);
   authTokens = tokens;
 }
 
@@ -194,7 +203,6 @@ function onGetEndpoints(endpoints) {
  * Save settings
  */
 function save() {
-  //payload.name = 'trung test';
   payload['metaData'].isConfigured = true;
   console.dir('payload: ', payload);
   payload['arguments'].execute.inArguments = [
