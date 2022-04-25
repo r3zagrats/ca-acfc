@@ -180,7 +180,7 @@ function onGetEndpoints(endpoints) {}
  */
 function save() {
   payload['metaData'].isConfigured = true;
-  console.dir('payload: ', payload);
+  console.log('payload: ', payload);
   payload['arguments'].execute.inArguments = [
     {
       contactKey: '{{Contact.Key}}',
@@ -188,13 +188,14 @@ function save() {
     },
   ];
   tmpIndexContent = null;
-  console.dir('payload: ', payload);
+  console.log('payload: ', payload);
   $('.js-activity-setting').each(() => {
     const $el = $(this);
     const setting = {
       id: $(this).attr('id'),
       value: $(this).val(),
     };
+    console.log('setting', setting);
     $.each(payload['arguments'].execute.inArguments, (index, value) => {
       if ($el.attr('type') === 'checkbox') {
         if ($el.is(':checked')) {
@@ -207,8 +208,8 @@ function save() {
       }
     });
   });
-  console.dir('payload:', payload);
-  connection.trigger('updateActivity', payload);
+  console.log('payload:', payload);
+  // connection.trigger('updateActivity', payload);
 }
 /**
  * Next settings
