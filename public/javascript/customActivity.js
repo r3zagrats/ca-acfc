@@ -135,7 +135,6 @@ function initialize(data) {
         }
         case 'ContentOptions': {
           contentOptions = value;
-          $('#ContentOptions').val(value);
           break;
         }
         case 'ContentValue': {
@@ -307,6 +306,7 @@ function checkContent(type) {
   let error = false;
   let errorContent = [];
   console.log('tmpCustomContents:', tmpCustomContents);
+  $('#ContentOptions').val(contentOptions);
   if ($('#ContentOptions').val()) {
     tmpCustomContents.forEach((value) => {
       if (value.id == $('#ContentOptions').val()) {
