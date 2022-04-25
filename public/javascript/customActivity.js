@@ -170,18 +170,18 @@ function save() {
     };
     console.log('setting', setting);
     $.each(payload['arguments'].execute.inArguments, (index, value) => {
-      console.log('value before', value)
-      if ($el.attr('type') === 'checkbox') {
-        console.log('checked')
-        if ($el.is(':checked')) {
-          value[setting.id] = setting.value;
-        } else {
-          value[setting.id] = 'false';
-        }
-      } else {
-        console.log('not checked')
+      // console.log('value before', value)
+      // if ($el.attr('type') === 'checkbox') {
+      //   console.log('checked')
+      //   if ($el.is(':checked')) {
+      //     value[setting.id] = setting.value;
+      //   } else {
+      //     value[setting.id] = 'false';
+      //   }
+      // } else {
+      //   console.log('not checked')
         value[setting.id] = setting.value;
-      }
+      // }
       console.log('value after', value)
     });
   });
@@ -301,11 +301,9 @@ const showStep = async (step, stepIndex) => {
       break;
   }
 };
-
 function checkContent(type) {
   let error = false;
   let errorContent = [];
-  //var dataRex = type == 'process' ? value.content : $("#ContentValue").val();
   console.log($('#ContentValue').val());
   if ($('#ContentOptions').val()) {
     console.log($('#ContentValue').val());
