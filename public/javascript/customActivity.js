@@ -2,18 +2,20 @@
 const connection = new Postmonger.Session();
 let authTokens = {};
 let payload = {};
-let tmpCustomContents = ''
-var contentOptions = '';
-var deFields = [];
-var eventDefinitionKey = '';
+let channels = '';
+let tmpCustomContents = '';
+let contentOptions = '';
+let endpoints = '';
+let deFields = [];
+let eventDefinitionKey = '';
 
-var steps = [
-  { label: 'Channel', key: 'step1' },
-  { label: 'Endpoint', key: 'step2' },
+let steps = [
+  { label: 'Channels', key: 'step1' },
+  { label: 'Endpoints', key: 'step2' },
   { label: 'Data', key: 'step3' },
-  { label: 'Content', key: 'step4' },
+  { label: 'Contents', key: 'step4' },
 ];
-var currentStep = steps[0].key;
+let currentStep = steps[0].key;
 
 const requestedInteractionHandler = async (settings) => {
   eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
@@ -120,18 +122,23 @@ function initialize(data) {
   console.log('inArguments Before:', inArguments);
   $.each(inArguments, (index, inArgument) => {
     $.each(inArgument, (key, value) => {
-      const $el = $('#' + key);
-      if ($el.attr('type') === 'checkbox') {
-        $el.prop('checked', value === 'true');
-      } else {
-        $el.val(value);
-      }
-      if (key === 'ContentOptions') {
-        contentOptions = value;
+      switch (key) {
+        case 'ContentOptions': {
+          contentOptions = value;
+          break;
+        }
+        case 'Channels': {
+          channels = value;
+          break;
+        }
+        case 'Endpoints': {
+          endpoints = value;
+          break;
+        }
       }
     });
   });
-  console.log('inArguments After:', inArguments);
+  console.log()
 }
 
 /**
@@ -155,7 +162,6 @@ function onGetEndpoints(endpoints) {}
  */
 function save() {
   payload['metaData'].isConfigured = true;
-  console.log('payload: ', payload);
   payload['arguments'].execute.inArguments = [
     {
       contactKey: '{{Contact.Key}}',
@@ -168,24 +174,10 @@ function save() {
       id: $(this).attr('id'),
       value: $(this).val(),
     };
-    console.log('setting', setting);
     $.each(payload['arguments'].execute.inArguments, (index, value) => {
-      // console.log('value before', value)
-      // if ($el.attr('type') === 'checkbox') {
-      //   console.log('checked')
-      //   if ($el.is(':checked')) {
-      //     value[setting.id] = setting.value;
-      //   } else {
-      //     value[setting.id] = 'false';
-      //   }
-      // } else {
-      //   console.log('not checked')
-        value[setting.id] = setting.value;
-      // }
-      console.log('value after', value)
+      value[setting.id] = setting.value;
     });
   });
-  console.log('payload:', payload);
   connection.trigger('updateActivity', payload);
 }
 /**
@@ -221,7 +213,7 @@ const showStep = async (step, stepIndex) => {
       $('#step1').show();
       $('#titleDynamic').empty().append('Channels');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
-      console.log('channels val:',$('#Channels').val());
+      console.log('channels val:', $('#Channels').val());
       if ($('#Channels').val()) {
         connection.trigger('updateButton', {
           button: 'next',
@@ -238,7 +230,7 @@ const showStep = async (step, stepIndex) => {
       $('#step2').show();
       $('#titleDynamic').empty().append('Endpoints');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
-      console.log('Endpoints val:',$('#Endpoints').val());
+      console.log('Endpoints val:', $('#Endpoints').val());
       if ($('#Endpoints').val()) {
         connection.trigger('updateButton', {
           button: 'next',

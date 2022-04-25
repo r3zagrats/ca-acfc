@@ -45,10 +45,10 @@
     }
   },
   "wizardSteps":[
-    { "label": "Channel", "key": "step1", "active": true },
-    { "label": "Endpoint", "key": "step2", "active": true },
+    { "label": "Channels", "key": "step1", "active": true },
+    { "label": "Endpoints", "key": "step2", "active": true },
     { "label": "Data", "key": "step3", "active": true },
-    { "label": "Content", "key": "step4", "active": true }
+    { "label": "Contents", "key": "step4", "active": true }
   ],
   "userInterfaces": {
     "configModal": {
