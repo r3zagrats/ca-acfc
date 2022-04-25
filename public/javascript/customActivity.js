@@ -79,7 +79,7 @@ const onRender = () => {
     }
   });
   $('#ContentOptions').on('change', (e) => {
-    contentOptions =  $('#ContentOptions').val();
+    contentOptions = $('#ContentOptions').val();
     checkContent('process');
   });
   $('#refreshButton').on('click', async () => {
@@ -118,15 +118,17 @@ function initialize(data) {
       payload['arguments'].execute.inArguments &&
       payload['arguments'].execute.inArguments.length > 0
   );
-  console.log('hasInArguments:', hasInArguments);
   const inArguments = hasInArguments ? payload['arguments'].execute.inArguments : {};
-  console.log('inArguments Before:', inArguments);
   $.each(inArguments, (index, inArgument) => {
     $.each(inArgument, (key, value) => {
       switch (key) {
         case 'Channels': {
           channels = value;
           $('#Channels').val(value);
+          connection.trigger('updateButton', {
+            button: 'next',
+            enabled: true,
+          });
           break;
         }
         case 'Endpoints': {
@@ -223,7 +225,6 @@ const showStep = async (step, stepIndex) => {
       $('#step1').show();
       $('#titleDynamic').empty().append('Channels');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
-      console.log('channels val:', $('#Channels').val());
       if ($('#Channels').val()) {
         connection.trigger('updateButton', {
           button: 'next',
@@ -240,7 +241,6 @@ const showStep = async (step, stepIndex) => {
       $('#step2').show();
       $('#titleDynamic').empty().append('Endpoints');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
-      console.log('Endpoints val:', $('#Endpoints').val());
       if ($('#Endpoints').val()) {
         connection.trigger('updateButton', {
           button: 'next',
@@ -303,7 +303,7 @@ const showStep = async (step, stepIndex) => {
   }
 };
 function checkContent(type) {
-  console.log('type: ', type)
+  console.log('type: ', type);
   let error = false;
   let errorContent = [];
   console.log('tmpCustomContents:', tmpCustomContents);
