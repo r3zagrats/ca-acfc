@@ -40,13 +40,6 @@ const requestedInteractionHandler = async (settings) => {
         `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
       );
       $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
-      if (DEFieldsKey) {
-        $('#DEFieldsKey').val(DEFieldsKey);
-        connection.trigger('updateButton', {
-          button: 'next',
-          enabled: true,
-        });
-      }
     });
   } catch (error) {
     alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
