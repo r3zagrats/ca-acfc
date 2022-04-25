@@ -123,10 +123,10 @@ function initialize(data) {
       payload['arguments'].execute.inArguments &&
       payload['arguments'].execute.inArguments.length > 0
   );
-  console.log('hasInArguments: ', hasInArguments);
+  console.log('hasInArguments:', hasInArguments);
   const inArguments = hasInArguments ? payload['arguments'].execute.inArguments : {};
   if (hasInArguments) tmpIndexContent = payload['arguments'].execute.inArguments[0].tmpIndex;
-  console.log('inArguments Before: ', inArguments);
+  console.log('inArguments Before:', inArguments);
   $.each(inArguments, (index, inArgument) => {
     $.each(inArgument, (key, value) => {
       const $el = $('#' + key);
@@ -193,7 +193,7 @@ function save() {
     });
   });
   console.log('payload:', payload);
-  // connection.trigger('updateActivity', payload);
+  connection.trigger('updateActivity', payload);
 }
 /**
  * Next settings
