@@ -220,7 +220,7 @@ const showStep = async (step, stepIndex) => {
   switch (currentStep.key) {
     case 'step1':
       $('#step1').show();
-      $('#titleDynamic').empty().append('Channel');
+      $('#titleDynamic').empty().append('Channels');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
       console.log('channels val:',$('#Channels').val());
       if ($('#Channels').val()) {
@@ -237,7 +237,7 @@ const showStep = async (step, stepIndex) => {
       break;
     case 'step2':
       $('#step2').show();
-      $('#titleDynamic').empty().append('Endpoint');
+      $('#titleDynamic').empty().append('Endpoints');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
       console.log('Endpoints val:',$('#Endpoints').val());
       if ($('#Endpoints').val()) {
@@ -271,7 +271,7 @@ const showStep = async (step, stepIndex) => {
       break;
     case 'step4':
       $('#step4').show();
-      $('#titleDynamic').empty().append('Content');
+      $('#titleDynamic').empty().append('Contents');
       $('#iconDynamic').attr(
         'xlink:href',
         '/icons/standard-sprite/svg/symbols.svg#code_playground'
@@ -308,7 +308,6 @@ function checkContent(type) {
   let errorContent = [];
   //var dataRex = type == 'process' ? value.content : $("#ContentValue").val();
   console.log($('#ContentValue').val());
-  console.log('tmpCustomContents: ', tmpCustomContents);
   if ($('#ContentOptions').val()) {
     console.log($('#ContentValue').val());
     tmpCustomContents.forEach((value) => {
@@ -319,12 +318,10 @@ function checkContent(type) {
           (message = regex.exec(type == 'process' ? value.content : $('#ContentValue').val())) !==
           null
         ) {
-          console.log('message', message);
           if (message.index === regex.lastIndex) {
             regex.lastIndex++;
           }
           if (!deFields.includes(message[1])) {
-            console.log('deFields:', deFields);
             connection.trigger('updateButton', {
               button: 'next',
               enabled: false,
