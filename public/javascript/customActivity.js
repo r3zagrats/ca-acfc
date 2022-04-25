@@ -28,7 +28,7 @@ const requestedInteractionHandler = async (settings) => {
     selectedField = deInfo.deCol;
     $('#DEFieldsKey').empty();
     $('#DEFields').empty();
-    $('#DEFieldsKey').append(`<option value=''>--Select one of the following fields--<option>`);
+    // $('#DEFieldsKey').append(`<option value=''>--Select one of the following fields--<option>`);
     $.each(selectedField, (index, field) => {
       // selectedField = field.Name + ' ' + selectedField;
       // console.log('selectedField: ', selectedField);
@@ -100,7 +100,6 @@ const onRender = () => {
     $('#DEKeys').val(`{{Event.${eventDefinitionKey}.${$('#DEFieldsKey').val()}}}`);
   });
   $('#ContentOption').on('change', (e) => {
-    console.log(e.target.value);
     $('#ContentBuilder').val('');
     checkContent('process');
   });
@@ -171,7 +170,6 @@ function initialize(data) {
  * @param {*} tokens
  */
 function onGetTokens(tokens) {
-  console.log('tokens:', tokens);
   authTokens = tokens;
 }
 
@@ -181,7 +179,7 @@ function onGetTokens(tokens) {
  * @param {*} endpoints
  */
 function onGetEndpoints(endpoints) {
-  //console.log(endpoints);
+  console.log('endpoints', endpoints);
 }
 
 /**
