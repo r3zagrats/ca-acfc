@@ -126,7 +126,7 @@ function initialize(data) {
       switch (key) {
         case 'Channels': {
           channels = value;
-          // $('#Channels').val(value);
+          $('#Channels').val(value);
           break;
         }
         case 'Endpoints': {
@@ -321,25 +321,25 @@ function checkContent(type) {
             regex.lastIndex++;
           }
           if (!deFields.includes(message[1])) {
-            connection.trigger('updateButton', {
-              button: 'next',
-              enabled: false,
-            });
             error = true;
             errorContent.push(message[0]);
           }
         }
-        if (type == 'process') {
+        // if (type == 'process') {
           const payloadData = value.meta.options.customBlockData;
           console.log('payloadData', payloadData);
           $('#ContentValue').val(JSON.stringify(payloadData));
           $('#DisplayContent').empty();
           $('#DisplayContent').append(value.content);
-        }
+        // }
       }
     });
     if (error == true) {
       alert(`Tồn tại giá trị ${errorContent.join(', ')} trong Content không hợp lệ !`);
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: false,
+      });
     } else {
       connection.trigger('updateButton', {
         button: 'next',
