@@ -50,6 +50,7 @@ const onRender = () => {
   connection.trigger('requestInteraction');
   connection.trigger('requestSchema');
   $('#Channels').on('change', (e) => {
+    console.log('channels val:', $('#Channels').val())
     if ($('#Channels').val()) {
       connection.trigger('updateButton', {
         button: 'next',
@@ -63,6 +64,7 @@ const onRender = () => {
     }
   });
   $('#Endpoints').on('change', (e) => {
+    console.log('endpoints val:', $('#Endpoints').val())
     if ($('#Endpoints').val()) {
       connection.trigger('updateButton', {
         button: 'next',
