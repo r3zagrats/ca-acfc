@@ -47,17 +47,16 @@ block content
         .slds-form-element
           .slds-form-element__control
             .slds-select_container
-              select#ContentOption.slds-select.js-activity-setting(name='ContentOption')
+              select#ContentOptions.slds-select.js-activity-setting(name='ContentOptions')
           br
           div
             label.slds-form-element__label.slds-p-top_medium(for='Text')
               abbr.slds-required(title='required')
               | Content |
-              span#errorText
             button#refreshButton(type="button") Refresh
           br
           .slds-form-element__control
-            textarea#ContentBuilder.slds-input.js-activity-setting( rows = '20' required='', placeholder='', name='text', disabled)
+            textarea#ContentValue.slds-input.js-activity-setting( rows = '20' required='', placeholder='', name='text', disabled)
             #DisplayContent
 
     footer.slds-card__footer

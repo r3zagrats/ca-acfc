@@ -4,7 +4,7 @@ let authTokens = {};
 let payload = {};
 var tmpCustomContents = [];
 var tmpIndexContent = null;
-var contentOption = '';
+var ContentOptions = '';
 var DEFieldsKey = '';
 var selectedField = '';
 var eventDefinitionKey = '';
@@ -30,7 +30,6 @@ const requestedInteractionHandler = async (settings) => {
     $('#DEFields').empty();
     $('#DEFieldsKey').append(`<option value=''>--Select one of the following fields--</option>`);
     $.each(selectedField, (index, field) => {
-      console.log('field', field);
       // selectedField = field.Name + ' ' + selectedField;
       // console.log('selectedField: ', selectedField);
       $('#DEFieldsKey').append(`<option value=${field.Name}>${field.Name}</option>`);
@@ -100,25 +99,25 @@ const onRender = () => {
     }
     // $('#DEKeys').val(`{{Event.${eventDefinitionKey}.${$('#DEFieldsKey').val()}}}`);
   });
-  $('#ContentOption').on('change', (e) => {
-    $('#ContentBuilder').val('');
+  $('#ContentOptions').on('change', (e) => {
+    $('#ContentValue').val('');
     checkContent('process');
   });
   $('#refreshButton').on('click', async () => {
-    $('#ContentBuilder').val('');
-    $('#ContentOption').empty();
+    $('#ContentValue').val('');
+    $('#ContentOptions').empty();
     $('#DisplayContent').empty();
     try {
       const customContent = await getCustomContent();
       tmpCustomContents = customContent.items;
       tmpIndexContent = null;
-      $('#ContentOption').append(
+      $('#ContentOptions').append(
         `<option value=''>--Select one of the following contents--</option>`
       );
       $.each(tmpCustomContents, (index, content) => {
-        $('#ContentOption').append(`<option value=${content.id}>${content.name}</option>`);
+        $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
       });
-      $('#ContentOption').val(contentOption);
+      $('#ContentOptions').val(ContentOptions);
       checkContent('process');
     } catch (error) {
       alert(`Error on fetching data: ${error.message}`);
@@ -154,8 +153,8 @@ function initialize(data) {
       } else {
         $el.val(value);
       }
-      if (key === 'ContentOption') {
-        contentOption = value;
+      if (key === 'ContentOptions') {
+        ContentOptions = value;
       }
       if (key === 'DEFieldsKey') {
         DEFieldsKey = value;
@@ -180,7 +179,6 @@ function onGetTokens(tokens) {
  * @param {*} endpoints
  */
 function onGetEndpoints(endpoints) {
-  console.log('endpoints', endpoints);
 }
 
 /**
@@ -312,7 +310,7 @@ const showStep = async (step, stepIndex) => {
         'xlink:href',
         '/icons/standard-sprite/svg/symbols.svg#code_playground'
       );
-      $('#ContentOption').append('<option value="None">Loading...</option>');
+      $('#ContentOptions').append('<option value="None">Loading...</option>');
       connection.trigger('updateButton', {
         button: 'back',
         enabled: true,
@@ -326,14 +324,14 @@ const showStep = async (step, stepIndex) => {
         const customContent = await getCustomContent();
         tmpCustomContents = customContent.items;
         tmpIndexContent = null;
-        $('#ContentOption').empty();
-        $('#ContentOption').append(
+        $('#ContentOptions').empty();
+        $('#ContentOptions').append(
           `<option value=''>--Select one of the following contents--</option>`
         );
         $.each(tmpCustomContents, (index, content) => {
-          $('#ContentOption').append(`<option value=${content.id}>${content.name}</option>`);
+          $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
         });
-        $('#ContentOption').val(contentOption);
+        $('#ContentOptions').val(ContentOptions);
         checkContent('init');
       } catch (error) {
         alert(`Error on fetching data: ${error.message}`);
@@ -344,32 +342,33 @@ const showStep = async (step, stepIndex) => {
 
 function checkContent(type) {
   console.log('type: ' + type);
-  var alerts = false;
-  //var dataRex = type == 'process' ? value.content : $("#ContentBuilder").val();
-  console.log($('#ContentBuilder').val());
+  let alerts = false;
+  //var dataRex = type == 'process' ? value.content : $("#ContentValue").val();
+  console.log($('#ContentValue').val());
   console.log('tmpCustomContents: ', tmpCustomContents);
   console.log('tmpIndexContent: ' + tmpIndexContent);
   if (tmpIndexContent !== null) {
     const payloadData = tmpCustomContents[tmpIndexContent].meta.options.customBlockData;
     console.log('payloadData', payloadData);
-    $('#ContentBuilder').val(JSON.stringify(payloadData));
+    $('#ContentValue').val(JSON.stringify(payloadData));
     $('#DisplayContent').empty();
     $('#DisplayContent').append(tmpCustomContents[tmpIndexContent].content);
   }
-  if ($('#ContentOption').val()) {
-    console.log('ContentOption khong rong~:', $('#ContentOption').val());
-    console.log($('#ContentBuilder').val());
+  if ($('#ContentOptions').val()) {
+    console.log($('#ContentValue').val());
     tmpCustomContents.forEach((value) => {
-      if (value.id == $('#ContentOption').val()) {
+      if (value.id == $('#ContentOptions').val()) {
         const regex = /%%([\s\S]*?)%%/gm;
-        let m;
+        let message;
         while (
-          (m = regex.exec(type == 'process' ? value.content : $('#ContentBuilder').val())) !== null
+          (message = regex.exec(type == 'process' ? value.content : $('#ContentValue').val())) !== null
         ) {
-          if (m.index === regex.lastIndex) {
+          console.log('message', message);
+          if (message.index === regex.lastIndex) {
             regex.lastIndex++;
           }
-          if (!selectedField.includes(m[1])) {
+          if (!selectedField.includes(message[1])) {
+            console.log('selectedField:', selectedField)
             connection.trigger('updateButton', {
               button: 'next',
               enabled: false,
@@ -381,7 +380,7 @@ function checkContent(type) {
           tmpIndexContent = tmpCustomContents.indexOf(value);
           const payloadData = value.meta.options.customBlockData;
           console.log('payloadData', payloadData);
-          $('#ContentBuilder').val(JSON.stringify(payloadData));
+          $('#ContentValue').val(JSON.stringify(payloadData));
           $('#DisplayContent').empty();
           $('#DisplayContent').append(value.content);
         }
