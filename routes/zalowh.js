@@ -154,7 +154,7 @@ exports.zaloWebhook = async (req, res) => {
                 UTCTime: new Date(Number(userTrackingInfo.timestamp)).toUTCString(),
                 Timestamp: userTrackingInfo.timestamp,
                 EventName: userTrackingInfo.event_name,
-                Message: userTrackingInfo.text
+                Message: userTrackingInfo.message.text
               },
             ],
           })
