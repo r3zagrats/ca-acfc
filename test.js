@@ -1,4 +1,8 @@
-const regex = /(?<=:)[^\:\s]*$/gm
+const redisClient = require('./db/redis')
 
-const test = regex.exec('Contact:MasterRecord:Birthday__c');
-console.log(test);
+;(async () => {
+  await redisClient.connect();
+  const result = await redisClient.get('key');
+  console.log(result);
+  await redisClient.quit()
+})()

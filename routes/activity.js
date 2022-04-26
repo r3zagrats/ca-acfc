@@ -83,14 +83,9 @@ exports.execute = async (req, res) => {
           // Check if file exists
           await redisClient.connect();
           let fileInfo = await redisClient.get(Content.value.name);
-          fileInfo = JSON.parse(fileInfo);
-          console.log('\nfileInfo: ', fileInfo);
-          let tmpToken = fileInfo.token || '';
-          if (
-            fileInfo === null ||
-            IsExpiredToken(fileInfo.expires_in) === true ||
-            !fileInfo.token
-          ) {
+          let tmpToken = '';
+          if (fileInfo === null || IsExpiredToken(fileInfo.expires_in) === true) {
+            console.log('\nfileInfo: ', fileInfo);
             const result = await asyncGet(Content.value.url, Content.value.name);
             console.log('\nresult: ', result);
             const file = fs.createReadStream(`./public/data/${Content.value.name}`);
@@ -116,6 +111,10 @@ exports.execute = async (req, res) => {
                 expires_in: Date.now() + 604800000,
               })
             );
+          } else {
+            console.log('\nfileInfo: ', fileInfo);
+            fileInfo = JSON.parse(fileInfo);
+            tmpToken = fileInfo.token;
           }
           console.log('\ntmpToken:', tmpToken);
           if (Content.value.extension === 'gif') {
@@ -144,7 +143,7 @@ exports.execute = async (req, res) => {
           Timestamp: new Date().getTime(),
           Error: znsSendLog.error,
           Message: znsSendLog.message,
-          Content: JSON.stringify(znsContent)
+          Content: JSON.stringify(znsContent),
         };
         const firstStep = await RestClient.insertZaloSendLog(
           JSON.stringify({
