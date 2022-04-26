@@ -2,7 +2,7 @@ require('dotenv').config();
 const { createClient } = require('redis');
 
 const client = createClient({
-  url: process.env.PSQL_HEROKU_HEROKU_CONNECTION_URL,
+  url: process.env.PSQL_HEROKU_REDIS_CONNECTION_URL,
   socket: {
     tls: true,
     rejectUnauthorized: false,
