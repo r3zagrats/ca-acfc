@@ -53,7 +53,13 @@ const onRender = () => {
   connection.trigger('requestInteraction');
   connection.trigger('requestSchema');
   $('#Channels').on('change', (e) => {
-    if ($('#Channels').val()) {
+    if ($('#Channels').val() === 'SMS') {
+      alert('This channel is not supported yet. Please select another channel!')
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: false,
+      });
+    } else if ($('#Channels').val()) {
       connection.trigger('updateButton', {
         button: 'next',
         enabled: true,
@@ -231,7 +237,6 @@ const showStep = async (step, stepIndex) => {
           enabled: true,
         });
       } else {
-        alert('This channel is not supported yet. Please select another channel!')
         connection.trigger('updateButton', {
           button: 'next',
           enabled: false,
