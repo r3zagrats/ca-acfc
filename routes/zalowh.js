@@ -165,6 +165,7 @@ exports.zaloWebhook = async (req, res) => {
           status: error,
         });
       }
+      break;
     }
     default: {
       res.status(200).send({ status: 'ok' });
