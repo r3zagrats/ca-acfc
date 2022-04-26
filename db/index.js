@@ -12,7 +12,7 @@ const { Pool } = require('pg')
 // };
 
 const connectionConfig = {
-  connectionString: 'postgres://rapqbqahxaswrn:2e38b6814f132cd2f3759083ad3562bee686d7397a900d69f86ee352edd57ddb@ec2-34-194-158-176.compute-1.amazonaws.com:5432/d3n23rch2pqkre',
+  connectionString: process.env.PSQL_HEROKU_POSTGRESQL_CONNECTION_URL,
   ssl: {
     rejectUnauthorized: false
   }
