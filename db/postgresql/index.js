@@ -1,22 +1,25 @@
 require('dotenv').config();
 const { Pool } = require('pg')
  
-// const connectionConfig = {
-//   user: process.env.PSQL_HEROKU_USERNAME,
-//   // host: 'localhost',
-//   // host: `/cloudsql/${process.env.PSQL_INSTANCE_CONNECTION_NAME}`,
-//   host: process.env.PSQL_HEROKU_INSTANCE_CONNECTION_NAME,
-//   port: process.env.PSQL_HEROKU_PORT,
-//   password: process.env.PSQL_HEROKU_PASSWORD,
-//   database: process.env.PSQL_HEROKU_DATABASE
-// };
-
 const connectionConfig = {
-  connectionString: process.env.PSQL_HEROKU_POSTGRESQL_CONNECTION_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-}
+  // user: process.env.PSQL_HEROKU_USERNAME,
+  user: process.env.PSQL_USERNAME,
+  // host: 'localhost',
+  host: `/cloudsql/${process.env.PSQL_INSTANCE_CONNECTION_NAME}`,
+  // host: process.env.PSQL_HEROKU_INSTANCE_CONNECTION_NAME,
+  port: process.env.PSQL_HEROKU_PORT,
+  // password: process.env.PSQL_HEROKU_PASSWORD,
+  password: process.env.PSQL_PASSWORD,
+  // database: process.env.PSQL_HEROKU_DATABASE
+  database: process.env.PSQL_DATABASE
+};
+
+// const connectionConfig = {
+//   connectionString: process.env.PSQL_HEROKU_POSTGRESQL_CONNECTION_URL,
+//   ssl: {
+//     rejectUnauthorized: false
+//   }
+// }
 
 const pool = new Pool(connectionConfig)
 

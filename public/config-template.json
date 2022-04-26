@@ -51,8 +51,9 @@
     { "label": "Contents", "key": "step4", "active": true }
   ],
   "userInterfaces": {
-    "configModal": {
-			"fullscreen": true
-		}
+    "configInspector": {
+      "hideHeader": true,
+      "size": "scm-sm"
+    }
   }
 }

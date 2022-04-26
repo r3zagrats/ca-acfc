@@ -12,10 +12,10 @@ const bucketName = 'crucial-zodiac-341510.appspot.com';
 const filePath = './log/ZNSsent.txt';
 const destFileName = 'ZNSsent.txt';
 const storage = new Storage();
-const db = require('../db');
+const pgdb = require('../db/postgresql');
 const asyncGet = require('../utils/async-http-get');
 const fs = require('fs');
-const redisClient = require('../redis');
+const redisClient = require('../db/redis');
 /**
  * The Journey Builder calls this method for each contact processed by the journey.
  * @param req
@@ -36,7 +36,7 @@ exports.execute = async (req, res) => {
     switch (data.inArguments[0].Channels) {
       case 'Zalo Notification Service': {
         // Query OA Info
-        const { rows } = await db.query(
+        const { rows } = await pgdb.query(
           `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${data.inArguments[0].Endpoints}'`
         );
         const OAInfo = rows[0];
@@ -68,7 +68,7 @@ exports.execute = async (req, res) => {
             for (const [key, value] of Object.entries(updateInfo)) {
               valueList.push(`"${key}" = '${value}'`);
             }
-            const result = await db.query(
+            const result = await pgdb.query(
               `UPDATE "${process.env.PSQL_ZALOOA_TABLE}" SET ${valueList} WHERE "OAId" = '${OAInfo.OAId}'`
             );
             console.log(`\nCap nhat db thanh cong cho OA ${OAInfo.OAName}:`);

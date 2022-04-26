@@ -1,6 +1,5 @@
 require('dotenv').config();
-const db = require('../db');
-const superagent = require('superagent');
+const pgdb = require('../db/postgresql');
 
 // Zalo OA Table methods
 
@@ -11,7 +10,7 @@ const superagent = require('superagent');
  */
 exports.getAllOA = async (req, res) => {
   try {
-    const { rows } = await db.query(`SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" ORDER BY "OAId"`);
+    const { rows } = await pgdb.query(`SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" ORDER BY "OAId"`);
     res.status(200).send({
       status: 'OK',
       data: rows,
@@ -29,7 +28,7 @@ exports.getAllOA = async (req, res) => {
  */
 exports.getOAById = async (req, res) => {
   try {
-    const { rows } = await db.query(
+    const { rows } = await pgdb.query(
       `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${req.params.id}' ORDER BY "OAId"`
     );
     console.log(rows);
@@ -50,7 +49,7 @@ exports.getOAById = async (req, res) => {
  */
 exports.deleteOA = async (req, res) => {
   try {
-    const result = await db.query(
+    const result = await pgdb.query(
       `DELETE FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${req.body.id}'`
     );
     res.status(200).send({
@@ -82,7 +81,7 @@ exports.createOA = async (req, res) => {
     valueList.push(`'${value}'`);
   }
   try {
-    const result = await db.query(
+    const result = await pgdb.query(
       `INSERT INTO "${process.env.PSQL_ZALOOA_TABLE}"(${columnList}) VALUES(${valueList})`
     );
     res.status(200).send({
@@ -111,7 +110,7 @@ exports.updateOA = async (req, res) => {
   }
   console.log(valueList)
   try {
-    const result = await db.query(
+    const result = await pgdb.query(
       `UPDATE "${process.env.PSQL_ZALOOA_TABLE}" SET ${valueList} WHERE "OAId" = '${data.OAId}'`
     );
     res.status(200).send({
@@ -133,7 +132,7 @@ exports.updateOA = async (req, res) => {
  */
 const getUserPassword = async (username) => {
   try {
-    const { rows } = await db.query(
+    const { rows } = await pgdb.query(
       `SELECT "Password" FROM "${process.env.PSQL_USER_TABLE}" WHERE "Username" = '${username}' ORDER BY "Id"`
     );
     return rows;
@@ -154,7 +153,7 @@ exports.updateUser = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const result = await db.query(
+    const result = await pgdb.query(
       `UPDATE "${process.env.PSQL_USER_TABLE}" SET "Password" = '${password}'  WHERE "Username" = '${username}'`
     );
     res.status(200).send({
@@ -173,7 +172,7 @@ exports.updateUser = async (req, res) => {
  */
 exports.getAllUser = async (req, res) => {
   try {
-    const { rows } = await db.query(`SELECT * FROM "${process.env.PSQL_USER_TABLE}" ORDER BY "Id"`);
+    const { rows } = await pgdb.query(`SELECT * FROM "${process.env.PSQL_USER_TABLE}" ORDER BY "Id"`);
     res.status(200).send({
       status: 'OK',
       data: rows,
@@ -199,7 +198,7 @@ exports.authen = async (req, res) => {
   const { username, password } = req.body;
   try {
     if (username === 'Admin' && password === result[0].Password) {
-      const { rows } = await db.query(`SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" ORDER BY "OAId"`);
+      const { rows } = await pgdb.query(`SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" ORDER BY "OAId"`);
       res.status(200).render('user', { error: false, selectOpt: rows });
     } else
       res.status(500).render('login', {
