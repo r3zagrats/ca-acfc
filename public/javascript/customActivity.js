@@ -225,12 +225,13 @@ const showStep = async (step, stepIndex) => {
       $('#step1').show();
       $('#titleDynamic').empty().append('Channels');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
-      if ($('#Channels').val()) {
+      if ($('#Channels').val() === 'Zalo Notification Service') {
         connection.trigger('updateButton', {
           button: 'next',
           enabled: true,
         });
       } else {
+        alert('This channel is not supported yet. Please select another channel!')
         connection.trigger('updateButton', {
           button: 'next',
           enabled: false,
