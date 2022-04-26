@@ -105,6 +105,11 @@ async function onRender() {
       }
       case 'AttachedFile': {
         renderZNSAttachedFile();
+        break;
+      }
+      case 'RequestUserInfo': {
+        renderZNSRequestUserInfo();
+        break;
       }
     }
   });
@@ -127,7 +132,7 @@ async function onRender() {
     const formData = new FormData(myForm);
     const formProps = Object.fromEntries(formData);
     console.log('formProps: ', formProps);
-    let { znsOptions, msgText, imageUrl, imageOption, attachedFile } = formProps;
+    let { znsOptions, msgText, imageUrl, imageOption, attachedFile, title, subTitle } = formProps;
     switch (znsOptions) {
       case 'Text': {
         $('#ccb-form-msgText-element').removeClass('slds-has-error');
@@ -155,7 +160,7 @@ async function onRender() {
         $('#ccb-form-imageUrl-element-text-error').remove();
         if (imageUrl === '') {
           hasError = true;
-          errorMsh = 'This field is required';
+          errorMsg = 'This field is required';
           $('#ccb-form-imageUrl-element').addClass('slds-has-error');
           $('#ccb-form-imageUrl-element').append(
             `<div class="slds-form-element__help ccb-form__error" id="ccb-form-imageUrl-element-text-error">${errorMsg}</div>`
@@ -166,7 +171,7 @@ async function onRender() {
           });
         } else if (imageOption === '') {
           hasError = true;
-          errorMsh = 'This field is required';
+          errorMsg = 'This field is required';
           $('#ccb-form-imageOption-element').addClass('slds-has-error');
           $('#ccb-form-imageOption-element').append(
             `<div class="slds-form-element__help ccb-form__error" id="ccb-form-imageOption-element-text-error">${errorMsg}</div>`
@@ -231,7 +236,6 @@ async function onRender() {
             }
           }
         }
-
         if (hasError) {
           $('#ccb-form-attachedFile-element').addClass('slds-has-error');
           $('#ccb-form-attachedFile-element').append(
@@ -241,6 +245,83 @@ async function onRender() {
             $('#ccb-form-attachedFile-element').removeClass('slds-has-error');
             $('#ccb-form-attachedFile-element-text-error').remove();
           });
+        }
+        break;
+      }
+      case 'RequestUserInfo': {
+        $('#ccb-form-title-element').removeClass('slds-has-error');
+        $('#ccb-form-title-element-text-error').remove();
+        $('#ccb-form-subTitle-element').removeClass('slds-has-error');
+        $('#ccb-form-subTitle-element-text-error').remove();
+        $('#ccb-form-imageOption-element').removeClass('slds-has-error');
+        $('#ccb-form-imageOption-element-text-error').remove();
+        $('#ccb-form-imageUrl-element').removeClass('slds-has-error');
+        $('#ccb-form-imageUrl-element-text-error').remove();
+        if (title === '') {
+          errorMsg = 'This field is required';
+          hasError = true;
+          $('#ccb-form-title-element').addClass('slds-has-error');
+          $('#ccb-form-title-element').append(
+            `<div class="slds-form-element__help ccb-form__error" id="ccb-form-title-element-text-error">${errorMsg}</div>`
+          );
+          $('#title').on('keydown', (e) => {
+            $('#ccb-form-title-element').removeClass('slds-has-error');
+            $('#ccb-form-title-element-text-error').remove();
+          });
+        }
+        if (subTitle === '') {
+          errorMsg = 'This field is required';
+          hasError = true;
+          $('#ccb-form-subTitle-element').addClass('slds-has-error');
+          $('#ccb-form-subTitle-element').append(
+            `<div class="slds-form-element__help ccb-form__error" id="ccb-form-subTitle-element-text-error">${errorMsg}</div>`
+          );
+          $('#subTitle').on('keydown', (e) => {
+            $('#ccb-form-subTitle-element').removeClass('slds-has-error');
+            $('#ccb-form-subTitle-element-text-error').remove();
+          });
+        }
+        if (imageUrl === '') {
+          hasError = true;
+          errorMsg = 'This field is required';
+          $('#ccb-form-imageUrl-element').addClass('slds-has-error');
+          $('#ccb-form-imageUrl-element').append(
+            `<div class="slds-form-element__help ccb-form__error" id="ccb-form-imageUrl-element-text-error">${errorMsg}</div>`
+          );
+          $('#imageUrl').on('keydown change', (e) => {
+            $('#ccb-form-imageUrl-element').removeClass('slds-has-error');
+            $('#ccb-form-imageUrl-element-text-error').remove();
+          });
+        } else if (imageOption === '') {
+          hasError = true;
+          errorMsg = 'This field is required';
+          $('#ccb-form-imageOption-element').addClass('slds-has-error');
+          $('#ccb-form-imageOption-element').append(
+            `<div class="slds-form-element__help ccb-form__error" id="ccb-form-imageOption-element-text-error">${errorMsg}</div>`
+          );
+          $('#imageOption').on('change', (e) => {
+            $('#ccb-form-imageOption-element').removeClass('slds-has-error');
+            $('#ccb-form-imageOption-element-text-error').remove();
+          });
+        } else {
+          let tmpSize;
+          $.each(contentBuilderImages, (i, item) => {
+            if (item.fileProperties.publishedURL === imageUrl) {
+              tmpSize = item.fileProperties.fileSize;
+            }
+          });
+          if (tmpSize > 1048576) {
+            errorMsg = 'File size must be less than 1MB';
+            hasError = true;
+            $('#ccb-form-imageUrl-element').addClass('slds-has-error');
+            $('#ccb-form-imageUrl-element').append(
+              `<div class="slds-form-element__help ccb-form__error" id="ccb-form-imageUrl-element-text-error">${errorMsg}</div>`
+            );
+            $('#imageUrl').on('change', (e) => {
+              $('#ccb-form-imageUrl-element').removeClass('slds-has-error');
+              $('#ccb-form-imageUrl-element-text-error').remove();
+            });
+          }
         }
         break;
       }
@@ -347,7 +428,7 @@ const restoreData = () => {
         $('#imageOption').val(data.imageOption);
         if (data.imageOption === 'imageFile') {
           renderImageFiles();
-        } else {
+        } else if (data.imageOption === 'imageUrl') {
           renderImageUrlInput();
         }
         $('#imageUrl').val(data.imageUrl);
@@ -394,6 +475,21 @@ const restoreData = () => {
         $('#ccb-znsOptions-select').val(data.type);
         renderZNSAttachedFile();
         $('#attachedFile').val(JSON.stringify(data.value));
+        break;
+      }
+      case 'RequestUserInfo': {
+        renderZNSRequestUserInfo();
+        $('#ccb-znsOptions-select').val(data.type);
+        $('#title').val(data.title);
+        $('#subTitle').val(data.subTitle);
+        $('#imageOption').val(data.imageOption);
+        if (data.imageOption === 'imageFile') {
+          renderImageFiles();
+        } else if (data.imageOption === 'imageUrl') {
+          renderImageUrlInput();
+        }
+        $('#imageUrl').val(data.imageUrl);
+        break;
       }
     }
   });
@@ -585,7 +681,7 @@ const reRenderUI = () => {
   const formProps = Object.fromEntries(formData);
   sdk.getContent((content) => {
     content = formProps;
-    const { znsOptions, msgText, imageUrl, imageOption, attachedFile } = content;
+    const { znsOptions, msgText, imageUrl, imageOption, attachedFile, title, subTitle } = content;
     switch (znsOptions) {
       case 'Text': {
         const payloadData = {
@@ -1033,6 +1129,94 @@ const reRenderUI = () => {
         sdk.setData({ type: 'AttachedFile', value: data, payloadData });
         break;
       }
+      case 'RequestUserInfo': {
+        console.log('RequestUserInfo: ', {
+          title,
+          subTitle,
+          imageUrl,
+          imageOption,
+        });
+        const payloadData = {
+          recipient: {
+            user_id: '%%ZaloId%%',
+          },
+          message: {
+            attachment: {
+              type: 'template',
+              payload: {
+                template_type: 'request_user_info',
+                elements: [
+                  {
+                    title: title,
+                    subtitle: subTitle,
+                    image_url: imageUrl,
+                  },
+                ],
+              },
+            },
+          },
+        };
+        let htmlScript = `
+          <div style="background-color: #b0c4df; min-height: 96vh; display: flex; padding: 10px; margin: -11px 0 ">
+            <div id="msgBlock" style="
+              width: 380px;
+              margin: auto;
+              border-radius: 5px;
+              border-top-right-radius: 5px;
+              border-top-left-radius: 5px;
+            ">
+              <img
+                src=${imageUrl}
+                alt="msgImage"
+                style="
+                  width:100%; 
+                  height: 232px;
+                  border-top-right-radius: 5px;
+                  border-top-left-radius: 5px;
+                "
+              />
+              <pre
+                style="
+                  padding: 10px;
+                  margin: 0;
+                  margin-bottom: 2px;
+                  background-color: white;
+                  font-size: 18.2px;
+                  margin-top: -4px;
+                  word-wrap: break-word;
+                  font-family: none;
+                  white-space: break-spaces;
+                "
+              >${title}</pre>
+              <pre
+                style="
+                  padding: 0 10px 10px;
+                  font-size: 18.2px;
+                  margin: 0;
+                  background-color: white;
+                  color: #666;
+                  margin-top: -4px;
+                  word-wrap: break-word;
+                  font-family: none;
+                  white-space: break-spaces;
+                  border-bottom-right-radius: 5px;
+                  border-bottom-left-radius: 5px;
+                "
+              >${subTitle}</pre>
+            </div>
+          </div>
+        `;
+        sdk.setContent(htmlScript);
+        sdk.setData({
+          type: 'RequestUserInfo',
+          title,
+          subTitle,
+          imageUrl,
+          imageOption,
+          payloadData,
+        });
+        break;
+      }
     }
   });
 };
@@ -1406,22 +1590,49 @@ const renderZNSAttachedFile = () => {
   $('#addButtonList').hide();
 };
 
+const renderZNSRequestUserInfo = () => {
+  $('.ccb-form__znsContent-wrapper').append(
+    '<div id="ccb-form__Group" class="ccb-form__Group"></div>'
+  );
+  $('.ccb-form__Group').append(`
+    <div class="slds-form-element" id="ccb-form-title-element">
+      <label class="slds-form-element__label ccb-label" for="title"><abbr class="slds-required" title="required">* </abbr>Title:</label>
+      <div class="slds-form-element__control">
+        <textarea class="slds-textarea ccb-textarea" type="text" id="title" name="title" maxlength="2000" placeholder="Enter your message. Maximum length: 2000"></textarea>
+      </div>
+    </div>
+    <div class="slds-form-element" id="ccb-form-subTitle-element">
+      <label class="slds-form-element__label ccb-label" for="subTitle"><abbr class="slds-required" title="required">* </abbr>Subtitle:</label>
+      <div class="slds-form-element__control">
+        <textarea class="slds-textarea ccb-textarea" type="text" id="subTitle" name="subTitle" maxlength="2000" placeholder="Enter your message. Maximum length: 2000"></textarea>
+      </div>
+    </div>
+  `);
+  renderImageOptions();
+  $('#ccb-form__Group').append(`
+    <div id="ccb-form-imageUrl-wrapper"></div>
+  `);
+  $('#submitBtn').show();
+  $('#addNormalList').hide();
+  $('#addButtonList').hide();
+};
+
 const getImageContent = async () => {
   try {
     const result = await superagent.get('/api/getimagecontent');
-    return result.body
+    return result.body;
   } catch (error) {
     console.log('error: ', error);
-    return { status: error }
+    return { status: error };
   }
 };
 
 const getMetaDataContent = async () => {
   try {
     const result = await superagent.get('/api/getmetadatacontent');
-    return result.body
+    return result.body;
   } catch (error) {
     console.log('error: ', error);
-    return { status: error }
+    return { status: error };
   }
 };

@@ -37,7 +37,7 @@ const znsOptions = [
   { value: 'NormalList', name: 'ZNS Normal List' },
   { value: 'ButtonList', name: 'ZNS Button List' },
   { value: 'AttachedFile', name: 'ZNS Attached File' },
-  { value: 'RequestInfo', name: 'ZNS Request Info' },
+  { value: 'RequestUserInfo', name: 'ZNS Request User Info' },
 ];
 
 exports.customContent = async (req, res) => {
