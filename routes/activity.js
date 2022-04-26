@@ -144,6 +144,7 @@ exports.execute = async (req, res) => {
           Timestamp: new Date().getTime(),
           Error: znsSendLog.error,
           Message: znsSendLog.message,
+          Content: JSON.stringify(znsContent)
         };
         const firstStep = await RestClient.insertZaloSendLog(
           JSON.stringify({
