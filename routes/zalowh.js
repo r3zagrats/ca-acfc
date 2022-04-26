@@ -140,6 +140,32 @@ exports.zaloWebhook = async (req, res) => {
       }
       break;
     }
+    case 'user_send_text': {
+      console.log('User send text message')
+      try {
+        const data = await RestClient.insertZaloUserActionTracking(
+          JSON.stringify({
+            items: [
+              {
+                AppId: userTrackingInfo.app_id,
+                OAId: userTrackingInfo.recipient.id,
+                ZaloId: userTrackingInfo.sender.id,
+                MsgId: userTrackingInfo.message.msg_id,
+                UTCTime: new Date(Number(userTrackingInfo.timestamp)).toUTCString(),
+                Timestamp: userTrackingInfo.timestamp,
+                EventName: userTrackingInfo.event_name,
+                Message: userTrackingInfo.text
+              },
+            ],
+          })
+        );
+        res.status(200).send(data.body);
+      } catch (error) {
+        res.status(500).send({
+          status: error,
+        });
+      }
+    }
     default: {
       res.status(200).send({ status: 'ok' });
     }
