@@ -8,7 +8,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const routes = require('./routes/index');
 const activityRouter = require('./routes/activity');
-const pgdbRouter = require('./routes/pgdb')
+const pgDBRouter = require('./routes/pgdb')
 const api = require('./routes/api');
 const zalo = require('./routes/zalowh');
 // const cors = require('cors')
@@ -43,7 +43,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // serve config
 app.use('/config.json', routes.config);
 app.get('/login', routes.login);
-app.post('/login', pgdbRouter.authen);
+app.post('/login', pgDBRouter.authen);
 app.get('/favicon.ico', (req, res) => res.status(204));
 // custom activity routes
 app.use('/journey/execute/', activityRouter.execute);
@@ -53,13 +53,13 @@ app.use('/journey/validate/', activityRouter.validate);
 app.use('/journey/stop/', activityRouter.stop);
 
 //pgDB
-app.get('/pgdb/zalooa/', pgdbRouter.getAllOA)
-app.post('/pgdb/zalooa/', pgdbRouter.createOA)
-app.patch('/pgdb/zalooa/', pgdbRouter.updateOA)
-app.get('/pgdb/zalooa/:id', pgdbRouter.getOAById)
-app.delete('/pgdb/zalooa/', pgdbRouter.deleteOA);
-app.get('/pgdb/user/', pgdbRouter.getAllUser);
-app.post('/pgdb/user/', pgdbRouter.updateUser);
+app.get('/pgdb/zalooa/', pgDBRouter.getAllOA)
+app.post('/pgdb/zalooa/', pgDBRouter.createOA)
+app.patch('/pgdb/zalooa/', pgDBRouter.updateOA)
+app.get('/pgdb/zalooa/:id', pgDBRouter.getOAById)
+app.delete('/pgdb/zalooa/', pgDBRouter.deleteOA);
+app.get('/pgdb/user/', pgDBRouter.getAllUser);
+app.post('/pgdb/user/', pgDBRouter.updateUser);
 // api
 app.use('/api/getde/', api.getDe);
 app.use('/api/getdecol/', api.getDeColumn);

@@ -1,7 +1,6 @@
 const RestClient = require('../utils/sfmc-client');
 const superagent = require('superagent');
 require('dotenv').config();
-const { Client } = require('pg');
 const { createClient } = require('redis');
 
 /**
