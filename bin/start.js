@@ -9,7 +9,6 @@ const fs = require("fs");
 const http = require("http");
 const https = require("https");
 const app = require("../app");
-const redisClient = require('../redis');
 
 // const at = require("../utils/atHandler");
 // const privateKey = fs.readFileSync("certificates/localhost-key.pem");

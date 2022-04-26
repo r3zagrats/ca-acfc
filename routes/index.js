@@ -1,7 +1,7 @@
 require('dotenv').config();
 const path = require('path');
 const fs = require('fs');
-const db = require('../db');
+const pgdb = require('../db/postgresql');
 /**
  * Render Config
  * @param req
@@ -22,8 +22,8 @@ exports.config = (req, res) => {
  */
 exports.customActivity = async (req, res) => {
   if ((req.headers['referer'] ?? 'no end').includes('marketingcloudapps')) {
-    const { rows:Channels } = await db.query(`SELECT * FROM "${process.env.PSQL_CHANNELS_TABLE}" ORDER BY "Id"`);
-    const { rows:Endpoints } = await db.query(`SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" ORDER BY "OAId"`);
+    const { rows:Channels } = await pgdb.query(`SELECT * FROM "${process.env.PSQL_CHANNELS_TABLE}" ORDER BY "Id"`);
+    const { rows:Endpoints } = await pgdb.query(`SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" ORDER BY "OAId"`);
     res.render('customActivity', { Channels, Endpoints });
   } else {
     res.status(500).send({ Status: 'Access is not allowed' });
@@ -37,6 +37,7 @@ const znsOptions = [
   { value: 'NormalList', name: 'ZNS Normal List' },
   { value: 'ButtonList', name: 'ZNS Button List' },
   { value: 'AttachedFile', name: 'ZNS Attached File' },
+  { value: 'RequestInfo', name: 'ZNS Request Info' },
 ];
 
 exports.customContent = async (req, res) => {
