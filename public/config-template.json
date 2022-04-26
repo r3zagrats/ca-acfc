@@ -18,8 +18,8 @@
       "format": "json",
       "useJwt": true,
       "retryCount": 2,
-      "retryDelay ": 10000,
-      "timeout": 100000
+      "retryDelay": 1000,
+      "timeout": 10000
     }
   },
   "configurationArguments": {
@@ -45,14 +45,14 @@
     }
   },
   "wizardSteps":[
-    { "label": "Message Type", "key": "step1", "active": true },
-    { "label": "Data", "key": "step2", "active": true },
-    { "label": "Content", "key": "step3", "active": true }
+    { "label": "Channels", "key": "step1", "active": true },
+    { "label": "Endpoints", "key": "step2", "active": true },
+    { "label": "Data", "key": "step3", "active": true },
+    { "label": "Contents", "key": "step4", "active": true }
   ],
   "userInterfaces": {
-    "configInspector": {
-      "hideHeader": true,
-      "size": "scm-sm"
-    }
+    "configModal": {
+			"fullscreen": true
+		}
   }
 }

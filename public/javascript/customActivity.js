@@ -1,26 +1,41 @@
 'use strict';
-
-// const validateForm = function (cb) {
-//     $form = $('.js-settings-form');
-//     $form.validate({
-//         submitHandler: function (form) {
-//         },
-//         errorPlacement: function () { },
-//     });
-
-//     cb($form);
-// };
 const connection = new Postmonger.Session();
 let authTokens = {};
 let payload = {};
-let $form;
-$(window).ready(onRender);
-var tmpContent = [];
-var tmpIndexContent = null;
-var ContentOption = '';
-var DEkeyField = '';
-var fieldSelected = '';
-var eventDefinitionKey = '';
+let channels = '';
+let endpoints = '';
+let contentOptions = '';
+let contentValue = '';
+let tmpCustomContents = '';
+let deFields = [];
+let eventDefinitionKey = '';
+
+let steps = [
+  { label: 'Channels', key: 'step1' },
+  { label: 'Endpoints', key: 'step2' },
+  { label: 'Data', key: 'step3' },
+  { label: 'Contents', key: 'step4' },
+];
+let currentStep = steps[0].key;
+
+const requestedInteractionHandler = async (settings) => {
+  eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
+  try {
+    const deInfo = await getDEInfo(eventDefinitionKey);
+    $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
+    $('#DEFields').empty();
+    $.each(deInfo.deCol, (index, field) => {
+      deFields.push(field.Name);
+      $('#DEFields').append(
+        `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
+      );
+      $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
+    });
+  } catch (error) {
+    alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
+    connection.trigger('destroy');
+  }
+};
 
 connection.on('initActivity', initialize);
 connection.on('requestedTokens', onGetTokens);
@@ -29,89 +44,65 @@ connection.on('requestedInteraction', requestedInteractionHandler);
 connection.on('clickedNext', next);
 connection.on('clickedBack', prev);
 connection.on('gotoStep', onGotoStep);
-connection.on('requestedSchema', function (data) {
-  // save schema
-  //console.log('*** Schema ***', JSON.stringify(data['schema']));
-});
-//connection.on('clickedNext', save);
+connection.on('requestedSchema', function (data) {});
 
-var steps = [
-  // initialize to the same value as what's set in config.json for consistency
-  { label: 'Message Type', key: 'step1' },
-  { label: 'Data', key: 'step2' },
-  { label: 'Content', key: 'step3' },
-];
-var currentStep = steps[0].key;
-
-const buttonSettings = {
-  button: 'next',
-  enabled: false,
-};
-
-function onRender() {
+const onRender = () => {
   connection.trigger('ready');
   connection.trigger('requestTokens');
   connection.trigger('requestEndpoints');
   connection.trigger('requestInteraction');
   connection.trigger('requestSchema');
-  //trigger change value
-  $('#ContentOption').change(function () {
-    $('#ContentBuilder').val('Loading...');
+  $('#Channels').on('change', (e) => {
+    if ($('#Channels').val()) {
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: true,
+      });
+    } else {
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: false,
+      });
+    }
+  });
+  $('#Endpoints').on('change', (e) => {
+    if ($('#Endpoints').val()) {
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: true,
+      });
+    } else {
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: false,
+      });
+    }
+  });
+  $('#ContentOptions').on('change', (e) => {
+    contentOptions = $('#ContentOptions').val();
     checkContent('process');
   });
-
-  $('#DEkeyField').change(function () {
-    if (
-      $('#DEkeyField').val() != '' &&
-      $('#DEkeyField').val() != 'None' &&
-      $('#DEkeyField').val() != null
-    ) {
-      buttonSettings.enabled = true;
-    } else {
-      buttonSettings.enabled = false;
-    }
-    connection.trigger('updateButton', buttonSettings);
-    $('#DataExKey').val('{{Event."' + eventDefinitionKey + '"."' + $('#DEkeyField').val() + '"}}');
-  });
-
-  $('#buttonRefresh').on('click', function () {
-    // console.log(tmpContent.find(cont => cont.id == $("#ContentOption").val()));
-    $('#ContentBuilder').val('Loading...');
-    $('#ContentOption').empty();
-    $('#ContentOption').append('<option value="None">Loading ...</option>');
+  $('#refreshButton').on('click', async () => {
+    $('#ContentValue').val('');
+    $('#ContentOptions').empty();
     $('#DisplayContent').empty();
-    $.ajax({
-      url: `/api/getcontent/`,
-      type: 'GET',
-      beforeSend: function (xhr) {
-        xhr.setRequestHeader('X-Test-Header', 'SetHereYourValueForTheHeader');
-      },
-      success: function (data) {
-        tmpContent = data.items;
-        tmpIndexContent = null;
-        $('#ContentOption').empty();
-        tmpContent.forEach((value) => {
-          if ($('#ContentOption').find('option[value="' + value.id + '"]').length == 0) {
-            $('#ContentOption').append(
-              '<option value="' + value.id + '">' + value.name + '</option>'
-            );
-          }
-        });
-        $('#ContentOption').val(ContentOption);
-        checkContent('process');
-      },
-    });
+    try {
+      const customContent = await getCustomContent();
+      tmpCustomContents = customContent.items;
+      $('#ContentOptions').append(
+        `<option value=''>--Select one of the following contents--</option>`
+      );
+      $.each(tmpCustomContents, (index, content) => {
+        $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
+      });
+      checkContent('refresh');
+    } catch (error) {
+      alert(`Error on fetching data: ${error.message}`);
+    }
   });
-  // validation
-  // validateForm(function ($form) {
-  //     // /change click keyup input paste
-  //     $form.on('change paste', 'select, input, textarea', function () {
-  //         buttonSettings.enabled = $form.valid();
-  //         connection.trigger('updateButton', buttonSettings);
-  //     });
-  // });
-}
+};
 
+$(window).ready(onRender);
 /**
  * Initialization
  * @param data
@@ -127,27 +118,40 @@ function initialize(data) {
       payload['arguments'].execute.inArguments &&
       payload['arguments'].execute.inArguments.length > 0
   );
-  console.log('hasInArguments: ', hasInArguments);
   const inArguments = hasInArguments ? payload['arguments'].execute.inArguments : {};
-  if (hasInArguments) tmpIndexContent = payload['arguments'].execute.inArguments[0].tmpIndex;
-  console.log('inArguments Before: ', inArguments);
-  $.each(inArguments, function (index, inArgument) {
-    $.each(inArgument, function (key, value) {
-      const $el = $('#' + key);
-      if ($el.attr('type') === 'checkbox') {
-        $el.prop('checked', value === 'true');
-      } else {
-        $el.val(value);
-      }
-      if (key === 'ContentOption') {
-        ContentOption = value;
-      }
-      if (key === 'DEkeyField') {
-        DEkeyField = value;
+  $.each(inArguments, (index, inArgument) => {
+    $.each(inArgument, (key, value) => {
+      switch (key) {
+        case 'Channels': {
+          channels = value;
+          $('#Channels').val(value);
+          connection.trigger('updateButton', {
+            button: 'next',
+            enabled: true,
+          });
+          break;
+        }
+        case 'Endpoints': {
+          endpoints = value;
+          $('#Endpoints').val(value);
+          break;
+        }
+        case 'ContentOptions': {
+          contentOptions = value;
+          break;
+        }
+        case 'ContentValue': {
+          contentValue = value;
+          $('#ContentValue').val(value);
+          break;
+        }
       }
     });
   });
-  console.log('inArguments After: ', inArguments);
+  console.log('channels', channels);
+  console.log('endpoints', endpoints);
+  console.log('contentOptions', contentOptions);
+  console.log('contentValue', contentValue);
 }
 
 /**
@@ -156,7 +160,6 @@ function initialize(data) {
  * @param {*} tokens
  */
 function onGetTokens(tokens) {
-  //console.log(tokens);
   authTokens = tokens;
 }
 
@@ -165,58 +168,40 @@ function onGetTokens(tokens) {
  *
  * @param {*} endpoints
  */
-function onGetEndpoints(endpoints) {
-  //console.log(endpoints);
-}
+function onGetEndpoints(endpoints) {}
 
 /**
  * Save settings
  */
 function save() {
-  //payload.name = 'trung test';
   payload['metaData'].isConfigured = true;
-  console.dir('payload: ', payload);
   payload['arguments'].execute.inArguments = [
     {
       contactKey: '{{Contact.Key}}',
-      tmpIndex: tmpIndexContent,
     },
   ];
-  tmpIndexContent = null;
-  console.dir('payload: ', payload);
+  console.log('payload: ', payload);
   $('.js-activity-setting').each(function () {
-    const $el = $(this);
     const setting = {
       id: $(this).attr('id'),
       value: $(this).val(),
     };
-    $.each(payload['arguments'].execute.inArguments, function (index, value) {
-      if ($el.attr('type') === 'checkbox') {
-        if ($el.is(':checked')) {
-          value[setting.id] = setting.value;
-        } else {
-          value[setting.id] = 'false';
-        }
-      } else {
-        value[setting.id] = setting.value;
-      }
+    $.each(payload['arguments'].execute.inArguments, (index, value) => {
+      value[setting.id] = setting.value;
     });
   });
-  console.dir('payload: ', payload);
   connection.trigger('updateActivity', payload);
 }
-
 /**
  * Next settings
  */
 function next() {
-  if (currentStep.key === 'step3') {
+  if (currentStep.key === 'step4') {
     save();
   } else {
     connection.trigger('nextStep');
   }
 }
-
 /**
  * Back settings
  */
@@ -229,141 +214,131 @@ function onGotoStep(step) {
   connection.trigger('ready');
 }
 
-function showStep(step, stepIndex) {
+const showStep = async (step, stepIndex) => {
   if (stepIndex && !step) {
     step = steps[stepIndex - 1];
   }
   currentStep = step;
   $('.step').hide();
-
   switch (currentStep.key) {
     case 'step1':
       $('#step1').show();
-      $('#titleDynamic').empty().append('Message Type');
+      $('#titleDynamic').empty().append('Channels');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
-      connection.trigger('updateButton', {
-        button: 'next',
-        visible: true,
-      });
-      connection.trigger('updateButton', {
-        button: 'back',
-        visible: false,
-      });
+      if ($('#Channels').val()) {
+        connection.trigger('updateButton', {
+          button: 'next',
+          enabled: true,
+        });
+      } else {
+        connection.trigger('updateButton', {
+          button: 'next',
+          enabled: false,
+        });
+      }
       break;
     case 'step2':
       $('#step2').show();
-      $('#titleDynamic').empty().append('Data Extention');
+      $('#titleDynamic').empty().append('Endpoints');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
-      if (
-        $('#DEkeyField').val() != '' &&
-        $('#DEkeyField').val() != 'None' &&
-        $('#DEkeyField').val() != null
-      ) {
-        buttonSettings.enabled = true;
+      if ($('#Endpoints').val()) {
+        connection.trigger('updateButton', {
+          button: 'next',
+          enabled: true,
+        });
       } else {
-        buttonSettings.enabled = false;
+        connection.trigger('updateButton', {
+          button: 'next',
+          enabled: false,
+        });
       }
-      connection.trigger('updateButton', buttonSettings);
       connection.trigger('updateButton', {
         button: 'back',
-        visible: false,
+        enabled: true,
       });
       break;
     case 'step3':
       $('#step3').show();
-      $('#titleDynamic').empty().append('Content');
+      $('#titleDynamic').empty().append('Data Extension');
+      $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: true,
+      });
+      connection.trigger('updateButton', {
+        button: 'back',
+        enabled: true,
+      });
+      break;
+    case 'step4':
+      $('#step4').show();
+      $('#titleDynamic').empty().append('Contents');
       $('#iconDynamic').attr(
         'xlink:href',
         '/icons/standard-sprite/svg/symbols.svg#code_playground'
       );
-      $('#ContentOption').append('<option value="None">Loading ...</option>');
       connection.trigger('updateButton', {
         button: 'back',
-        visible: true,
+        enabled: true,
       });
       connection.trigger('updateButton', {
         button: 'next',
         text: 'done',
-        visible: true,
         enabled: false,
       });
-      $.ajax({
-        url: `/api/getcontent/`,
-        type: 'GET',
-        beforeSend: function (xhr) {
-          xhr.setRequestHeader('X-Test-Header', 'SetHereYourValueForTheHeader');
-        },
-        success: function (data) {
-          console.log(data);
-          tmpContent = data.items;
-          $('#ContentOption').empty();
-          tmpContent.forEach((value) => {
-            if ($('#ContentOption').find('option[value="' + value.id + '"]').length == 0) {
-              $('#ContentOption').append(
-                '<option value="' + value.id + '">' + value.name + '</option>'
-              );
-            }
-          });
-          $('#ContentOption').val(ContentOption);
-          checkContent('init');
-        },
-      });
+      try {
+        const customContent = await getCustomContent();
+        tmpCustomContents = customContent.items;
+        $('#ContentOptions')
+          .empty()
+          .append(`<option value=''>--Select one of the following contents--</option>`);
+        $.each(tmpCustomContents, (index, content) => {
+          $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
+        });
+        checkContent('init');
+      } catch (error) {
+        alert(`Error on fetching data: ${error.message}`);
+      }
       break;
   }
-}
-
+};
 function checkContent(type) {
-  console.log('type: ' + type);
-  var alerts = false;
-  //var dataRex = type == 'process' ? value.content : $("#ContentBuilder").val();
-  console.log($('#ContentBuilder').val());
-  console.log('tmpContent: ', tmpContent);
-  console.log('tmpIndexContent: ' + tmpIndexContent);
-  if (tmpIndexContent !== null) {
-    console.log('tempContentIndex: ', tmpContent[tmpIndexContent].content);
-    const regex = /(?<=<!--Payload)[\s\S]*(?=Payload-->)/gm;
-    const payloadData = regex.exec(tmpContent[tmpIndexContent].content)[0];
-    console.log('payloadData', payloadData);
-    $('#ContentBuilder').val(payloadData);
-    $('#DisplayContent').empty();
-    $('#DisplayContent').append(tmpContent[tmpIndexContent].content);
-  }
-  if ($('#ContentOption').val() != '' && $('#ContentOption').val() != 'None') {
-    console.log('ContentOption khong rong~: ', $('#ContentOption').val());
-    console.log($('#ContentBuilder').val());
-    tmpContent.forEach((value) => {
-      if (value.id == $('#ContentOption').val()) {
+  console.log('type: ', type);
+  let error = false;
+  let errorContent = [];
+  console.log('tmpCustomContents:', tmpCustomContents);
+  if (type !== 'refresh') $('#ContentOptions').val(contentOptions);
+  if ($('#ContentOptions').val()) {
+    tmpCustomContents.forEach((value) => {
+      if (value.id == $('#ContentOptions').val()) {
         const regex = /%%([\s\S]*?)%%/gm;
-        let m;
+        let message;
         while (
-          (m = regex.exec(type == 'process' ? value.content : $('#ContentBuilder').val())) !== null
+          (message = regex.exec(type == 'process' ? value.content : $('#ContentValue').val())) !==
+          null
         ) {
-          if (m.index === regex.lastIndex) {
+          if (message.index === regex.lastIndex) {
             regex.lastIndex++;
           }
-          if (!fieldSelected.includes(m[1])) {
-            connection.trigger('updateButton', {
-              button: 'next',
-              enabled: false,
-            });
-            alerts = true;
+          if (!deFields.includes(message[1])) {
+            error = true;
+            errorContent.push(message[0]);
           }
         }
-        if (type == 'process') {
-          tmpIndexContent = tmpContent.indexOf(value);
-          console.log('value.content: ', value.content);
-          const regex = /(?<=<!--Payload)[\s\S]*(?=Payload-->)/gm;
-          const payloadData = regex.exec(value.content)[0];
-          console.log('payloadData', payloadData);
-          $('#ContentBuilder').val(payloadData);
-          $('#DisplayContent').empty();
-          $('#DisplayContent').append(value.content);
-        }
+        // if (type == 'process') {
+        const payloadData = value.meta.options.customBlockData;
+        console.log('payloadData', payloadData);
+        $('#ContentValue').val(JSON.stringify(payloadData));
+        $('#DisplayContent').empty().append(value.content);
+        // }
       }
     });
-    if (alerts == true) {
-      //$("#errorText").val("Giá trị ( %%<Field DE>%%) trong Content không hợp lệ ! ");
-      alert('Tồn tại giá trị ( %%<Field DE>%%) trong Content không hợp lệ ! ');
+    if (error == true) {
+      alert(`Tồn tại giá trị ${errorContent.join(', ')} trong Content không hợp lệ !`);
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: false,
+      });
     } else {
       connection.trigger('updateButton', {
         button: 'next',
@@ -378,62 +353,20 @@ function checkContent(type) {
   }
 }
 
-function requestedInteractionHandler(settings) {
-  //console.log('--debug requestedInteractionHandler:');
-  //what they are doig on this
+const getCustomContent = async () => {
   try {
-    eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
-    //document.getElementById('select-entryevent-defkey').value = eventDefinitionKey;
-    //console.log('eventDefinitionKey:' + JSON.stringify(settings));
-    $('#DEkeyField').append('<option value="None">Loading...</option>');
-    $('#DEFields').append('<p value="None" >Loading............</p>');
-    $.ajax({
-      url: `/api/getevent/`,
-      data: { key: eventDefinitionKey },
-      type: 'GET',
-      // beforeSend: function (xhr) { xhr.setRequestHeader('X-Test-Header', 'SetHereYourValueForTheHeader'); },
-      success: function (data) {
-        //$(".js_de_lst").append('<h2 value="' +CustomerKey + '">' + data.dataExtention.Name + '</option>');
-        $('.js_de_lst').append('<p>' + data.dataExtention.Name + '</p>');
-        fieldSelected = data.deCol;
-        $('#DEFields').empty();
-        $('#DEkeyField').empty();
-        $('#DEkeyField').append('<option value=""></option>');
-        // DEkeyField
-        fieldSelected.forEach((value) => {
-          fieldSelected = value.Name + ' ' + fieldSelected;
-          if ($('#DEkeyField').find('option[value="' + value.Name + '"]').length == 0) {
-            $('#DEkeyField').append(
-              '<option value="' + value.Name + '">' + value.Name + '</option>'
-            );
-          }
-          if ($('#DEFields').find('p[value="' + value.CustomerKey + '"]').length == 0) {
-            $('#DEFields').append(
-              '<p value="' +
-                value.CustomerKey +
-                '" id = "' +
-                value.Name +
-                '" class = "js-activity-setting">' +
-                value.Name +
-                '</p>'
-            );
-          }
-          $('#' + value.Name).val('{{Event."' + eventDefinitionKey + '"."' + value.Name + '"}}');
-          if (DEkeyField != '' && DEkeyField != 'None' && DEkeyField != null) {
-            $('#DEkeyField').val(DEkeyField);
-            connection.trigger('updateButton', {
-              button: 'next',
-              enabled: true,
-            });
-          }
-        });
-      },
-      error: function (XMLHttpRequest, textStatus, errorThrown) {
-        alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
-        connection.trigger('destroy');
-      },
-    });
-  } catch (err) {
-    console.error(err);
+    const response = await superagent.get('/api/getcustomcontent');
+    return response.body;
+  } catch (error) {
+    throw new Error(error.message);
   }
-}
+};
+
+const getDEInfo = async (key) => {
+  try {
+    const response = await superagent.post('/api/getdeinfo').send({ key });
+    return response.body;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};

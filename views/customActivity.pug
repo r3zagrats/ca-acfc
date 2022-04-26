@@ -1,11 +1,11 @@
 extends layout
 
 block content
-  article.slds-card
+  article.slds-card.ca-container
     .slds-card__header.slds-grid
       header.slds-media.slds-media_center.slds-has-flexi-truncate
         .slds-media__figure
-          span.slds-icon_container.slds-icon-standard-contact(title="OTT Custom Activity")
+          span.slds-icon_container.slds-icon-standard-contact(title="Custom Activity")
             svg.slds-icon.slds-icon_small(aria-hidden="true")
               use#iconDynamic(xlink:href="")
             span.slds-assistive-text contact
@@ -18,39 +18,38 @@ block content
         .slds-form-element
           .slds-form-element__control  
             .slds-select_container
-              select#messType.slds-select.js-activity-setting(name='messTypes')
-                each messType in messTypes
-                  option(value=messType._id)= messType.name
-
+              select#Channels.slds-select.js-activity-setting(name='Channels')
+                option(value='')= '--Select one of the following channels--'
+                each Channel in Channels
+                  option(value=Channel.Name)= Channel.Name
       form#step2.step.js-settings-form
         .slds-form-element
-          .slds-form-element__control.js_de_lst        
-          br
-          label.slds-form-element__label(for="DEFields") Key Data Extention Field
-          div#DataExKey.js-activity-setting(name='DataExKey')
-          .slds-form-element__control
+          .slds-form-element__control  
             .slds-select_container
-              select#DEkeyField.slds-select.js-activity-setting(name='DEkeyField')
-          br
-          label.slds-form-element__label(for="DEFields") Data Extention Fields
+              select#Endpoints.slds-select.js-activity-setting(name='Endpoints')
+                option(value='')= '--Select one of the following endpoints--'
+                each Endpoint in Endpoints
+                  option(value=Endpoint.OAId)= Endpoint.OAName
+      form#step3.step.js-settings-form
+        .slds-form-element
+          .slds-form-element__control.js_de_lst        
+          label.slds-form-element__label(for="DEFields") Data Extension Fields
           div#DEFields(name='DEFields')
 
-      form#step3.step.js-settings-form
-        
+      form#step4.step.js-settings-form
         .slds-form-element
           .slds-form-element__control
             .slds-select_container
-              select#ContentOption.slds-select.js-activity-setting(name='ContentOption')
+              select#ContentOptions.slds-select.js-activity-setting(name='ContentOptions')
           br
           div
             label.slds-form-element__label.slds-p-top_medium(for='Text')
               abbr.slds-required(title='required')
               | Content |
-              span#errorText
-            button#buttonRefresh(type="button") Refresh
+            button#refreshButton(type="button") Refresh
           br
           .slds-form-element__control
-            textarea#ContentBuilder.slds-input.js-activity-setting( rows = '20' required='', placeholder='', name='text', disabled)
+            textarea#ContentValue.slds-input.js-activity-setting( rows = '20' required='', placeholder='', name='text', disabled)
             #DisplayContent
 
     footer.slds-card__footer

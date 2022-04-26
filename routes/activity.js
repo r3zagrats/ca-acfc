@@ -1,9 +1,5 @@
 require('dotenv').config();
-const { v1: Uuidv1 } = require('uuid');
 const JWT = require('../utils/jwtDecoder');
-const logger = require('../utils/logger');
-var request = require('../utils/await-request');
-const neDB = require('./neDB');
 const SFClient = require('../utils/sfmc-client');
 //const queue = require('../routes/queue');
 const api = require('../routes/api');
@@ -16,6 +12,10 @@ const bucketName = 'crucial-zodiac-341510.appspot.com';
 const filePath = './log/ZNSsent.txt';
 const destFileName = 'ZNSsent.txt';
 const storage = new Storage();
+const db = require('../db');
+const asyncGet = require('../utils/async-http-get');
+const fs = require('fs');
+const redisClient = require('../redis');
 /**
  * The Journey Builder calls this method for each contact processed by the journey.
  * @param req
@@ -23,143 +23,188 @@ const storage = new Storage();
  * @returns {Promise<void>}
  */
 exports.execute = async (req, res) => {
+  const data = JWT(req.body);
+  console.log('\ndata.inArguments: ', data.inArguments[0]);
+  let Content = data.inArguments[0].ContentValue;
+  // Handle Content
+  for (const [key, value] of Object.entries(data.inArguments[0])) {
+    Content = Content.replaceAll(`%%${key}%%`, value);
+  }
+  console.log('\nContent', Content);
+  Content = JSON.parse(Content);
   try {
-    const data = JWT(req.body);
-    console.log('data.inArguments: ', data.inArguments[0]);
-    // const msgTypes = await neDB.getDB(data.inArguments[0].messType);
-    let msgTypes
-    msgTypes = await superagent
-    .post(`${req.headers.host || req.headers.origin}/db/selectone/`)
-    .set('Authorization', `JWT ${process.env.JWT}`)
-    .set('Content-Type', 'application/json')
-    .send({ id: data.inArguments[0].messType })
-    msgTypes = JSON.parse(msgTypes.text)
-    console.log('msgTypes: ',msgTypes[0])
-    let Content = data.inArguments[0].ContentBuilder;
-    for (const [key, value] of Object.entries(data.inArguments[0])) {
-      Content = Content.replaceAll(`%%${key}%%`, value);
-    }
-    switch (msgTypes[0].method) {
-      case 'Zalo': {
-        console.log('Gui tin nhan ZNS');
-        let tmpAccessToken
-        if (checkIsExpiredAccessToken(Number(msgTypes[0].expiresTime))) {
-          console.log(`Access Token cua  ${msgTypes[0].name} het han`);
+    switch (data.inArguments[0].Channels) {
+      case 'Zalo Notification Service': {
+        // Query OA Info
+        const { rows } = await db.query(
+          `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${data.inArguments[0].Endpoints}'`
+        );
+        const OAInfo = rows[0];
+        console.log('\nOAInfo: ', OAInfo);
+        let tmpAccessToken = OAInfo.AccessToken || '';
+        // Check if the access token is valid
+        if (IsExpiredToken(Number(OAInfo.Timestamp))) {
+          console.log(`\nAccess Token cua ${OAInfo.OAName} het han`);
+          // Refresh Token
           let response = await superagent
-            .post(`${msgTypes[0].authUrl}`)
-            .set('secret_key', msgTypes[0].appSecretKey)
-            .send(`refresh_token=${msgTypes[0].refreshToken}`)
-            .send(`app_id=${msgTypes[0].appId}`)
+            .post(process.env.ZALO_OAUTH_URL)
+            .set('secret_key', process.env.ZALO_APP_SECRET_KEY)
+            .send(`refresh_token=${OAInfo.RefreshToken}`)
+            .send(`app_id=${process.env.ZALO_APP_ID}`)
             .send('grant_type=refresh_token');
           response = JSON.parse(response.text);
-          console.log(`AccessToken Response cua ${msgTypes[0].name}: "`, response);
+          console.log(`\nAccessToken Response cua ${OAInfo.OAName}: "`, response);
           if (response && response.access_token) {
             tmpAccessToken = response.access_token;
             let updateInfo = {
-              ...msgTypes[0],
-              expiresTime: Date.now() + response.expires_in * 1000,
-              accessToken: response.access_token,
-              refreshToken: response.refresh_token,
+              ...OAInfo,
+              AccessToken: response.access_token,
+              RefreshToken: response.refresh_token,
+              Timestamp: Date.now() + response.expires_in * 1000,
+              ExpiryDate: new Date(Date.now() + response.expires_in * 1000).toUTCString(),
             };
-            console.log(`updateInfo cua OA ${msgTypes[0].name}: `, updateInfo);
-            const result = await superagent
-              .put(`${req.headers.host || req.headers.origin}/db/service/`)
-              .set('Authorization', `JWT ${process.env.JWT}`)
-              .set('Content-Type', 'application/json')
-              .send(JSON.stringify(updateInfo));
-            console.log(`Cap nhat db thanh cong cho OA ${msgTypes[0].name}: `, result.text);
+            console.log(`\nupdateInfo cua OA ${OAInfo.OAName}: `, updateInfo);
+            let valueList = [];
+            for (const [key, value] of Object.entries(updateInfo)) {
+              valueList.push(`"${key}" = '${value}'`);
+            }
+            const result = await db.query(
+              `UPDATE "${process.env.PSQL_ZALOOA_TABLE}" SET ${valueList} WHERE "OAId" = '${OAInfo.OAId}'`
+            );
+            console.log(`\nCap nhat db thanh cong cho OA ${OAInfo.OAName}:`);
+          } else {
+            throw response;
           }
         } else {
-          tmpAccessToken = msgTypes[0].accessToken;
-          console.log(`Access Token cua ${msgTypes[0].name} con han`);
+          console.log(`\nAccess Token cua ${OAInfo.OAName} con han`);
         }
-        console.log('Noi dung can gui: ', Content);
-        console.log('tmpAccessToken: ', tmpAccessToken);
+        console.log('\ntmpAccessToken: ', tmpAccessToken);
+        if (Content.type === 'AttachedFile') {
+          // Check if file exists
+          await redisClient.connect();
+          let fileInfo = await redisClient.get(Content.value.name);
+          fileInfo = JSON.parse(fileInfo);
+          console.log('\nfileInfo: ', fileInfo);
+          let tmpToken = fileInfo.token || '';
+          if (
+            fileInfo === null ||
+            IsExpiredToken(fileInfo.expires_in) === true ||
+            !fileInfo.token
+          ) {
+            const result = await asyncGet(Content.value.url, Content.value.name);
+            console.log('\nresult: ', result);
+            const file = fs.createReadStream(`./public/data/${Content.value.name}`);
+            const response = await superagent
+              .post(
+                `${process.env.ZALO_UPLOAD_URL}${
+                  Content.value.extension === 'gif' ? 'gif' : 'file'
+                }`
+              )
+              .set('access_token', tmpAccessToken)
+              .set('content-type', 'multipart/form-data')
+              .field('file', file);
+            console.log('\nresponse', response.body);
+            if (response.body.error === 0) {
+              tmpToken = response.body.data.token || response.body.data.attachment_id;
+            } else {
+              throw response.body.message;
+            }
+            await redisClient.set(
+              Content.value.name,
+              JSON.stringify({
+                token: tmpToken,
+                expires_in: Date.now() + 604800000,
+              })
+            );
+          }
+          console.log('\ntmpToken:', tmpToken);
+          if (Content.value.extension === 'gif') {
+            Content.payloadData.message.attachment.payload.elements[0].attachment_id = tmpToken;
+          } else {
+            Content.payloadData.message.attachment.payload.token = tmpToken;
+          }
+          await redisClient.quit();
+        }
+        let znsContent = Content.payloadData;
+        console.log('\nznsContent:', JSON.stringify(znsContent));
+        // Send Message
         const response = await superagent
           .post('https://openapi.zalo.me/v2.0/oa/message')
           .set('Content-Type', 'application/json')
           .set('access_token', tmpAccessToken)
-          .send(Content);
-        console.log('Response data: ', response.text);
-        const znsSentTracking = JSON.parse(response.text);
+          .send(JSON.stringify(znsContent));
+        console.log('\nResponse data:', response.body);
+        const znsSendLog = response.body;
+        console.log('\nznsSendLog:', znsSendLog);
+        if (znsSendLog.error !== 0) throw znsSendLog.message;
         const temp = {
-          MsgId: znsSentTracking.error === 0 ? znsSentTracking.data.message_id : '',
-          ZaloId: znsSentTracking.error === 0 ? znsSentTracking.data.user_id : '',
+          MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
+          ZaloId: znsSendLog.error === 0 ? znsSendLog.data.user_id : '',
           UTCTime: new Date().toUTCString(),
           Timestamp: new Date().getTime(),
-          Error: znsSentTracking.error,
-          Message: znsSentTracking.message,
+          Error: znsSendLog.error,
+          Message: znsSendLog.message,
+          Content: JSON.stringify(znsContent)
         };
         const firstStep = await RestClient.insertZaloSendLog(
           JSON.stringify({
             items: [temp],
           })
         );
-        // const secondStep = fsPromises.appendFile(
-        //   './public/ZNSsent.txt',
-        //   `, ${JSON.stringify(temp)} \n`
-        // );
-        // const thirdStep = storage.bucket(bucketName).upload(filePath, {
-        //   destination: destFileName,
-        // });
-        // const finalResult = await Promise.all([firstStep, secondStep, thirdStep]);
-        // console.log('final result: ', finalResult)
-        // console.log(`${filePath} uploaded to ${bucketName}`);
-        if (znsSentTracking.error === 0) {
-          res.status(200).send({ Status: 'Accept' });
-        } else {
-          res.status(500).send({ Status: 'Error' });
-        }
-        // }
+        res.status(200).send({ Status: 'Successfull' });
         break;
       }
-      case 'Webpush': {
-        console.log('Webpush method');
-        let FirebaseToken = data.inArguments[0].FirebaseToken;
-        if (FirebaseToken !== '') {
-          for (const [key, value] of Object.entries(data.inArguments[0])) {
-            Content = Content.replaceAll(`%%${key}%%`, value);
-          }
-          var payload = {
-            notification: JSON.parse(Content),
-          };
-          admin
-            .messaging()
-            .sendToDevice(FirebaseToken, payload)
-            .then((response) => {
-              console.log('Sent successfully.\n');
-              console.log(response);
-            })
-            .catch((error) => {
-              console.log('Sent failed.\n');
-              console.log(error);
-            });
-        }
-        res.status(200).send({ Status: 'Accept' });
+      case 'Web Push Notification': {
+        // console.log('\nWebpush method');
+        // let FirebaseToken = data.inArguments[0].FirebaseToken;
+        // if (FirebaseToken !== '') {
+        //   var payload = {
+        //     notification: JSON.parse(Content),
+        //   };
+        //   admin
+        //     .messaging()
+        //     .sendToDevice(FirebaseToken, payload)
+        //     .then((response) => {
+        //       console.log('\nSent successfully.\n');
+        //       console.log(response);
+        //     })
+        //     .catch((error) => {
+        //       console.log('\nSent failed.\n');
+        //       console.log(error);
+        //     });
+        // }
+        console.log('\nThis is Web Push Notification Channel.');
+        res.status(200).send({ Status: 'Successful' });
         break;
+      }
+      case 'SMS': {
+        console.log('\nThis is SMS Channel.');
+        res.status(200).send({ Status: 'Successful' });
+        break;
+      }
+      default: {
+        throw 'This Channel is not supported';
       }
     }
   } catch (error) {
-    console.log('error: ' + error);
-    res.status(500).send({ Status: 'Error' });
+    res.status(500).send({ status: 'Error', message: error });
   }
 };
 
 /**
- * msgTypes[0] that receives a notification when a user saves the journey.
+ * OAInfo that receives a notification when a user saves the journey.
  * @param req
  * @param res
  * @returns {Promise<void>}
  */
 exports.save = async (req, res) => {
-  //console.log(req.body.toString());
   res.status(200).send({
     status: 'ok',
   });
 };
 
 /**
- *  msgTypes[0] that receives a notification when a user publishes the journey.
+ *  OAInfo that receives a notification when a user publishes the journey.
  * @param req
  * @param res
  */
@@ -170,7 +215,7 @@ exports.publish = async (req, res) => {
 };
 
 /**
- *  msgTypes[0] that receives a notification when a user publishes the journey.
+ *  OAInfo that receives a notification when a user publishes the journey.
  * @param req
  * @param res
  */
@@ -181,7 +226,7 @@ exports.stop = async (req, res) => {
 };
 
 /**
- * msgTypes[0] that receives a notification when a user performs
+ * OAInfo that receives a notification when a user performs
  * some validation as part of the publishing process.
  * @param req
  * @param res
@@ -192,10 +237,10 @@ exports.validate = async (req, res) => {
   });
 };
 
-const checkIsExpiredAccessToken = (tokenExpiresTime) => {
-  console.log('Current Time: ', new Date(Date.now()));
-  console.log('Expired Time: ', new Date(tokenExpiresTime));
-  console.log(tokenExpiresTime - Date.now());
-  if (tokenExpiresTime - Date.now() < 600000) return true;
+const IsExpiredToken = (timestamp) => {
+  console.log('\nCurrent Time: ', new Date(Date.now()).toUTCString());
+  console.log('Expired Time: ', new Date(timestamp).toUTCString());
+  console.log(timestamp - Date.now());
+  if (timestamp - Date.now() < 600000) return true;
   else return false;
 };

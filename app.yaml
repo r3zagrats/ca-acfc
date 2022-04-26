@@ -2,6 +2,11 @@ runtime: nodejs
 env: flex
 beta_settings:
   cloud_sql_instances: crucial-zodiac-341510:asia-southeast1:ws-intecom-dev-db
+
+handlers:
+  - url: /public
+    static_dir: public
+
 # This sample incurs costs to run on the App Engine flexible environment.
 # The settings below are to reduce costs during testing and are not appropriate
 # for production use. For more information, see:
@@ -25,4 +30,14 @@ env_variables:
   DE_ZALO_USER_ACTION_TRACKING: 554F206C-B34F-42DF-BA1B-851F89C4DBB0
   DE_ZALO_SEND_LOG: 60D97E17-CF44-4EC1-BF43-4175B927DF48
   FIREBASE_GOOGLE_APPLICATION_CREDENTIALS: ../certificates/fcm-webpush-demo-eba2a-firebase-adminsdk-wgnhy-a8e96e3b60.json
-  ZALO_ACCESS_TOKEN: 2nsVbz_Bva8mEQQjqj6fBXTs_wQPWhqwMtgAxVojm6qQIQ6ni9ZVLr5vxiMjvRXA6sZ7xjcGyafITxt6luJsC5f1WU6ecubpKWN0_jtud6CG1B3DagJfQ5iwtyJOaiHw9NxiwSZvt3yTKC7achoD9mXVnBtijxrB5cpyeF-LWZK64yNBpQxR0cu7kzwreUrVKaMQkewXnIuKBDp0bQ-R4qS9Z9_qeErZALkqb9NwWYyQ4Sp9vlZaNXDZj-Y6c_Ha8JQGak6DIHCrNp2mtwi7gWL1DJhxss2yTITI0O7VS8Co3GqNvPvOmGTwA1syu1_SKKbuOwWwpzjSzirCptNqhpZZYIltSw2j0_-CH-OVmgWCakSdlNgtbLlsbmUAP_nKlS7c8m
+  PSQL_USERNAME: postgres
+  PSQL_PASSWORD: postgres
+  PSQL_INSTANCE_CONNECTION_NAME: crucial-zodiac-341510:asia-southeast1:ws-intecom-dev-db
+  PSQL_PORT: 5432
+  PSQL_DATABASE: ws-intecom-dev-db
+  PSQL_ZALOOA_TABLE: ZaloOA
+  PSQL_USER_TABLE: User
+  ZALO_OAUTH_URL: https://oauth.zaloapp.com/v4/oa/access_token
+  ZALO_UPLOAD_URL: https://openapi.zalo.me/v2.0/oa/upload/
+  ZALO_APP_SECRET_KEY: 3NISUOi1kXG8SE6DL3WX
+  ZALO_APP_ID: 2062444021659192573

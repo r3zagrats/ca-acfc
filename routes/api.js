@@ -1,42 +1,64 @@
 const RestClient = require('../utils/sfmc-client');
 const superagent = require('superagent');
-const neDB = require('./neDB');
 require('dotenv').config();
 const { Client } = require('pg');
+const { createClient } = require('redis');
+
 /**
  * @param req
  * @param res
  *  @returns {Promise<void>}
  */
 exports.getDe = async (req, res) => {
-  try {
-    var DEOptions = [];
-    const props = ['Name', 'CustomerKey', 'ObjectID'];
-    RestClient.SDKClient.dataExtension({
-      props,
-      filter: {
-        //remove filter for all.
-        leftOperand: 'ObjectID',
-        operator: 'equals',
-        rightOperand: '9f991e28-a590-ec11-b834-48df37dc15d4',
-      },
-    }).get((err, data) => {
-      data.body.Results.forEach((opt) => {
-        if (opt.Name.charAt(0) != '_') {
-          DEOptions.push({
-            name: opt.Name,
-            CustomerKey: opt.CustomerKey + '||' + opt.Name,
-            ID: opt.ObjectID,
-          });
-        }
-      });
-      res.status(200).send(DEOptions);
-    });
-  } catch (e) {
-    res.status(500).send({
-      status: 'Fail',
-    });
-  }
+  // try {
+  //   var DEOptions = [];
+  //   const props = ['Name', 'CustomerKey', 'ObjectID'];
+  //   RestClient.SDKClient.dataExtension({
+  //     props,
+  //     filter: {
+  //       //remove filter for all.
+  //       leftOperand: 'ObjectID',
+  //       operator: 'equals',
+  //       rightOperand: 'A7B622D8-35E6-4A12-8043-658AA817DD0B',
+  //     },
+  //   }).get((err, data) => {
+  //     data.body.Results.forEach((opt) => {
+  //       if (opt.Name.charAt(0) != '_') {
+  //         DEOptions.push({
+  //           name: opt.Name,
+  //           CustomerKey: opt.CustomerKey + '||' + opt.Name,
+  //           ID: opt.ObjectID,
+  //         });
+  //       }
+  //     });
+  //     res.status(200).send(DEOptions);
+  //   });
+  // } catch (e) {
+  //   res.status(500).send({
+  //     status: 'Fail',
+  //   });
+  // }
+  var options = {
+    props: ['Name', 'CustomerKey', 'ObjectID', 'Status', 'Description'], //required
+    filter: {
+      //remove filter for all.
+      leftOperand: 'CustomerKey',
+      operator: 'equals',
+      rightOperand: 'CC67F80E-EA7F-429E-89DE-B9D48C0F51C6',
+    },
+  };
+  var de = RestClient.SDKClient.dataExtension(options);
+
+  de.get(function (err, response) {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      var statusCode =
+        response && response.res && response.res.statusCode ? response.res.statusCode : 200;
+      var result = response && response.body ? response.body : response;
+      response && res.status(statusCode).send(result);
+    }
+  });
 };
 
 /**
@@ -115,15 +137,14 @@ exports.getDeRow = async (req, res) => {
  * @param res
  *  @returns {Promise<void>}
  */
-exports.getContent = async (req, res) => {
+exports.getCustomContent = async (req, res) => {
   try {
     const data = await RestClient.getContent(
       JSON.stringify({
         page: {
           page: 1,
-          pageSize: 50,
+          pageSize: 100,
         },
-
         query: {
           leftOperand: {
             property: 'assetType.displayName',
@@ -136,31 +157,73 @@ exports.getContent = async (req, res) => {
             simpleOperator: 'equal',
             value: 'customblock',
           },
-
-          // leftOperand: {
-          //   property: "assetType.displayName",
-          //   simpleOperator: "contains",
-          //   value: "Snippet",
-          // },
-          // logicalOperator: "OR",
-          // rightOperand: {
-          //   property: "assetType.name",
-          //   simpleOperator: "equal",
-          //   value: "codesnippetblock",
-          // },
         },
-
         sort: [{ property: 'name', direction: 'ASC' }],
+      })
+    );
+    res.status(200).send(data.body);
+  } catch (error) {
+    res.status(500).send({
+      status: 'error',
+      message: error,
+    });
+  }
+};
 
-        fields: [
-          'enterpriseId',
-          'memberId',
-          'thumbnail',
-          'category',
-          'content',
-          'data',
-          // "fileProperties"
-        ],
+exports.getImageContent = async (req, res) => {
+  try {
+    const data = await RestClient.getContent(
+      JSON.stringify({
+        page: {
+          page: 1,
+          pageSize: 100,
+        },
+        query: {
+          leftOperand: {
+            property: 'assetType.name',
+            simpleOperator: 'equal',
+            value: 'png',
+          },
+          logicalOperator: 'OR',
+          rightOperand: {
+            property: 'assetType.name',
+            simpleOperator: 'equal',
+            value: 'jpg',
+          },
+        },
+        sort: [{ property: 'name', direction: 'ASC' }],
+      })
+    );
+    res.status(200).send(data.body);
+  } catch (error) {
+    res.status(500).send({
+      status: error,
+    });
+  }
+};
+
+exports.getMetaDataContent = async (req, res) => {
+  try {
+    const data = await RestClient.getContent(
+      JSON.stringify({
+        page: {
+          page: 1,
+          pageSize: 100,
+        },
+        query: {
+          leftOperand: {
+            property: 'assetType.name',
+            simpleOperator: 'contains',
+            value: 'gif',
+          },
+          logicalOperator: 'OR',
+          rightOperand: {
+            property: 'assetType.displayName',
+            simpleOperator: 'contains',
+            value: 'Document',
+          },
+        },
+        sort: [{ property: 'name', direction: 'ASC' }],
       })
     );
     res.status(200).send(data.body);
@@ -227,12 +290,10 @@ exports.upsertDE = async (req, res) => {
  * @param res
  *  @returns {Promise<void>}
  */
-exports.getAttEvent = async (req, res) => {
+exports.getDEInfo = async (req, res) => {
   try {
-    if (req.query.key != '' || req.query.key != null) {
-      const data = await RestClient.getJourney(req.query.key);
-      //res.status(200).send(data.body.dataExtensionId);
-
+    if (req.body.key != '' || req.body.key != null) {
+      const data = await RestClient.getJourney(req.body.key);
       const props = ['Name', 'CustomerKey', 'ObjectID'];
       RestClient.SDKClient.dataExtension({
         props,
@@ -243,7 +304,6 @@ exports.getAttEvent = async (req, res) => {
           rightOperand: data.body.dataExtensionId,
         },
       }).get((err, dataDE) => {
-        //res.status(200).send(dataDE.body.Results.length > 0 ? dataDE.body.Results[0]: {});
         if (dataDE.body.Results.length > 0) {
           var options = {
             props: [
@@ -276,15 +336,17 @@ exports.getAttEvent = async (req, res) => {
             _data.sort(dynamicSort('Name'));
             res.status(200).send({
               deCol: _data,
-              dataExtention: dataDE.body.Results[0],
+              dataExtension: dataDE.body.Results[0],
             });
           });
-        } else res.status(500).send({ Status: 'No Data Extension Found' });
+        } else res.status(500).send({ status: 'No Data Extension Found', message: error });
       });
-    } else res.status(500).send({ Status: 'Key Required' });
+    } else res.status(500).send({ status: 'Key Required', message: error });
   } catch (error) {
+    console.log('error:', error);
     res.status(500).send({
-      Status: 'Journey Invalid',
+      status: 'Journey Invalid',
+      message: error,
     });
   }
 };
@@ -320,22 +382,19 @@ function dynamicSort(property) {
 
 exports.test = async (req, res) => {
   try {
-    const client = new Client({
-      user: 'postgres',
-      password: 'postgres',
-      port: 5432,
-      host: `/cloudsql/crucial-zodiac-341510:asia-southeast1:ws-intecom-dev-db`,
-      database: 'mydb',
+    const client = createClient({
+      url: 'redis://:ped7fa24fe4f7138a5db1b0a6c682e38348d31d120b01754a7168aa1c6f996375@ec2-54-227-24-175.compute-1.amazonaws.com:29620',
+      socket: {
+        tls: true,
+        rejectUnauthorized: false,
+      },
     });
-    console.log(client);
-    client.connect()
-    let data
-    client.query('SELECT * FROM "myTable"', (err, res) => {
-      console.log(err, res);
-      data = res;
-      client.end()
-    });
-    res.status(200).send({ status: 'OK', data });
+    client.on('error', (err) => console.log('Redis Client Error', err));
+    await client.connect();
+    await client.set('key', 'value');
+    const value = await client.get('key');
+    console.log('value: ', value);
+    res.status(200).send({ status: 'OK' });
   } catch (error) {
     console.log(error);
     res.status(500).send({ status: 'error' });

@@ -8,6 +8,11 @@ font-weight: 600;
 }
 #DEFields{ font-size: 0.75rem;}
 
+.ca-container {
+  min-height: 100vh;
+}
+
+
 #okia{ padding-right: 10px;}
 
 .loading-indicator {
@@ -24,6 +29,6 @@ font-weight: 600;
   filter: alpha(opacity =60);
 }
 
-#ContentBuilder { 
+#ContentValue { 
   display:none;
 }

@@ -8,7 +8,6 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const routes = require('./routes/index');
 const activityRouter = require('./routes/activity');
-const neDbRouter = require('./routes/neDB');
 const pgDBRouter = require('./routes/pgDB')
 const api = require('./routes/api');
 const zalo = require('./routes/zalowh');
@@ -44,7 +43,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // serve config
 app.use('/config.json', routes.config);
 app.get('/login', routes.login);
-app.post('/login', neDbRouter.authen);
+app.post('/login', pgDBRouter.authen);
 app.get('/favicon.ico', (req, res) => res.status(204));
 // custom activity routes
 app.use('/journey/execute/', activityRouter.execute);
@@ -52,34 +51,31 @@ app.use('/journey/save/', activityRouter.save);
 app.use('/journey/publish/', activityRouter.publish);
 app.use('/journey/validate/', activityRouter.validate);
 app.use('/journey/stop/', activityRouter.stop);
-//neDB 
-app.get('/db/service/', neDbRouter.select);
-app.post('/db/selectone/', neDbRouter.selectone);
-app.post('/db/service/', neDbRouter.insert);
-app.put('/db/service/', neDbRouter.update);
-app.delete('/db/service/', neDbRouter.delete);
-app.get('/db/user/', neDbRouter.selectUser);
-app.put('/db/user/', neDbRouter.updateUser);
+
 //pgDB
-app.get('/db/zalooa/', pgDBRouter.GetAllOA)
-app.post('/db/zalooa/', pgDBRouter.Create)
-app.patch('/db/zalooa/:id', pgDBRouter.Update)
-app.get('/db/zalooa/:id', pgDBRouter.GetOAById)
-app.delete('/db/zalooa/:id', pgDBRouter.Delete);
+app.get('/pgdb/zalooa/', pgDBRouter.getAllOA)
+app.post('/pgdb/zalooa/', pgDBRouter.createOA)
+app.patch('/pgdb/zalooa/', pgDBRouter.updateOA)
+app.get('/pgdb/zalooa/:id', pgDBRouter.getOAById)
+app.delete('/pgdb/zalooa/', pgDBRouter.deleteOA);
+app.get('/pgdb/user/', pgDBRouter.getAllUser);
+app.post('/pgdb/user/', pgDBRouter.updateUser);
 // api
-app.post('/api/getde/', api.getDe);
+app.use('/api/getde/', api.getDe);
 app.use('/api/getdecol/', api.getDeColumn);
 app.use('/api/getderow/', api.getDeRow);
-app.use('/api/getcontent/', api.getContent);
+app.use('/api/getcustomcontent/', api.getCustomContent);
+app.use('/api/getimagecontent/', api.getImageContent);
+app.use('/api/getmetadatacontent/', api.getMetaDataContent);
 app.post('/api/insertde/', api.insertDE);
-app.use('/api/getevent/', api.getAttEvent);
+app.post('/api/getdeinfo/', api.getDEInfo);
 app.use('/api/zaloauth/', api.zaloAuth)
 app.use('/api/test/', api.test);
 // zalo webhook
 app.post('/zalo/', zalo.zaloWebhook)
 
 // serve Custom Content Block
-app.use('/customContent', routes.customContent);
+app.use('/customcontent', routes.customContent);
 
 // serve Custom Activity
 app.use('/', routes.customActivity);
