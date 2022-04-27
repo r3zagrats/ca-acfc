@@ -113,9 +113,9 @@ exports.getDeColumn = async (req, res) => {
 exports.getDeRow = async (req, res) => {
   try {
     var options = {
-      props: ['Id', 'Name', 'Email', 'Phone', 'FirebaseToken'], //required
+      props: ['OAId', 'Name', 'ZaloId', 'Status'], //required
       ///*
-      Name: 'Quan DE Test',
+      Name: 'OA Followers',
       filter: null,
       //*/
     };
@@ -125,6 +125,7 @@ exports.getDeRow = async (req, res) => {
       res.status(200).send(_data);
     });
   } catch (e) {
+    console.log(e);
     res.status(500).send({
       status: 'Fail',
     });
@@ -381,21 +382,15 @@ function dynamicSort(property) {
 
 exports.test = async (req, res) => {
   try {
-    const client = createClient({
-      url: 'redis://:ped7fa24fe4f7138a5db1b0a6c682e38348d31d120b01754a7168aa1c6f996375@ec2-54-227-24-175.compute-1.amazonaws.com:29620',
-      socket: {
-        tls: true,
-        rejectUnauthorized: false,
-      },
-    });
-    client.on('error', (err) => console.log('Redis Client Error', err));
-    await client.connect();
-    await client.set('key', 'value');
-    const value = await client.get('key');
-    console.log('value: ', value);
-    res.status(200).send({ status: 'OK' });
+    const result = await RestClient.triggerJourneyBuilder(
+      JSON.stringify({
+        ContactKey: '1087338975254803129',
+        EventDefinitionKey: 'APIEvent-53488ae9-5fb9-afba-a05e-47f555c16009',
+      })
+    );
+    res.status(200).send({ status: 'OK', result });
   } catch (error) {
-    console.log(error);
+    console.log('error', error);
     res.status(500).send({ status: 'error' });
   }
 };

@@ -105,6 +105,17 @@ const insertZaloRequestUserInfoLog = async (data) =>
     body: data,
   });
 
+const triggerJourneyBuilder = async (data) => {
+  console.log('data', data);
+  RestClient.post({
+    uri: `/interaction/v1/events`,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: data,
+  });
+};
+
 const insertTest = async (data) =>
   RestClient.post({
     uri: `data/v1/async/dataextensions/key:${process.env.DE_TEST}/rows`,
@@ -165,4 +176,5 @@ module.exports = {
   insertZaloRequestUserInfoLog,
   insertTest,
   upsertDE,
+  triggerJourneyBuilder
 };

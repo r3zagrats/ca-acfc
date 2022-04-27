@@ -132,7 +132,6 @@ exports.execute = async (req, res) => {
           .set('Content-Type', 'application/json')
           .set('access_token', tmpAccessToken)
           .send(JSON.stringify(znsContent));
-        console.log('\nResponse data:', response.body);
         const znsSendLog = response.body;
         console.log('\nznsSendLog:', znsSendLog);
         if (znsSendLog.error !== 0) throw znsSendLog.message;
