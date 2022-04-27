@@ -164,12 +164,12 @@ exports.zaloWebhook = async (req, res) => {
             ],
           })
         );
-        const input = userTrackingInfo.message.text;
+        let input = userTrackingInfo.message.text;
         const nameRegex = /(?<=Họ và Tên: ).*/gm;
         const phoneRegex = /(?<=Điện thoại: ).*/gm;
         const addressRegex = /(?<=Địa chỉ: ).*/gm;
         if (nameRegex.exec(input) && phoneRegex.exec(input) && addressRegex.exec(input)) {
-          console.log('User send Request User Info Message')
+          console.log('User send Request User Info Message');
           nameRegex.lastIndex = 0;
           phoneRegex.lastIndex = 0;
           addressRegex.lastIndex = 0;
@@ -185,11 +185,26 @@ exports.zaloWebhook = async (req, res) => {
                   Timestamp: userTrackingInfo.timestamp,
                   Name: nameRegex.exec(input)[0],
                   PhoneNumber: phoneRegex.exec(input)[0],
-                  Address: addressRegex.exec(input)[0]
+                  Address: addressRegex.exec(input)[0],
                 },
               ],
             })
           );
+        }
+        input = JSON.parse(input);
+        if (input.EventDefinitionKey) {
+          console.log('User triggered journey')
+          const result = await RestClient.triggerJourneyBuilder(
+            JSON.stringify({
+              ContactKey: userTrackingInfo.sender.id,
+              EventDefinitionKey: input.EventDefinitionKey,
+              Data: {
+                OAId: userTrackingInfo.recipient.id,
+                ZaloId: userTrackingInfo.sender.id,
+              },
+            })
+          );
+          console.log('result:', result);
         }
         const { rows } = await pgdb.query(
           `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${userTrackingInfo.recipient.id}'`
@@ -234,15 +249,15 @@ exports.zaloWebhook = async (req, res) => {
           console.log(`\nAccess Token cua ${OAInfo.OAName} con han`);
         }
         console.log('\ntmpAccessToken: ', tmpAccessToken);
-       
-        let znsContent = { 
-          recipient:{
-            user_id: userTrackingInfo.sender.id
+
+        let znsContent = {
+          recipient: {
+            user_id: userTrackingInfo.sender.id,
           },
-          message:{
-            text:"Cảm ơn bạn đã nhắn tin cho White Space JSC, yêu cầu của bạn đang được quản trị viên xử lý"
-          }
-        }
+          message: {
+            text: 'Cảm ơn bạn đã nhắn tin cho White Space JSC, yêu cầu của bạn đang được quản trị viên xử lý',
+          },
+        };
         console.log('\nznsContent:', JSON.stringify(znsContent));
         // Send Message
         const response = await superagent
@@ -250,22 +265,23 @@ exports.zaloWebhook = async (req, res) => {
           .set('Content-Type', 'application/json')
           .set('access_token', tmpAccessToken)
           .send(JSON.stringify(znsContent));
-        console.log('\nResponse data:', response.body);
         const znsSendLog = response.body;
         console.log('\nznsSendLog:', znsSendLog);
         if (znsSendLog.error !== 0) throw znsSendLog.message;
         const firstStep = await RestClient.insertZaloOASendLog(
           JSON.stringify({
-            items: [{
-              OAId: OAInfo.OAInfo,
-              ZaloId: znsSendLog.error === 0 ? znsSendLog.data.user_id : '',
-              MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
-              UTCTime: new Date().toUTCString(),
-              Timestamp: new Date().getTime(),
-              StatusCode: znsSendLog.error,
-              ErrorMessage: znsSendLog.message,
-              Message: JSON.stringify(znsContent.message)
-            }],
+            items: [
+              {
+                OAId: OAInfo.OAInfo,
+                ZaloId: znsSendLog.error === 0 ? znsSendLog.data.user_id : '',
+                MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
+                UTCTime: new Date().toUTCString(),
+                Timestamp: new Date().getTime(),
+                StatusCode: znsSendLog.error,
+                ErrorMessage: znsSendLog.message,
+                Message: JSON.stringify(znsContent.message),
+              },
+            ],
           })
         );
         res.status(200).send(data.body);
