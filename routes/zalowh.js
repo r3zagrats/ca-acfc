@@ -165,6 +165,7 @@ exports.zaloWebhook = async (req, res) => {
         const addressRegex = /(?<=Địa chỉ: ).*/gm;
 
         if (nameRegex.exec(input) && phoneRegex.exec(input) && addressRegex.exec(input)) {
+          console.log('User send Reques User Info Message')
           nameRegex.lastIndex = 0;
           phoneRegex.lastIndex = 0;
           addressRegex.lastIndex = 0;
