@@ -3,27 +3,27 @@ html
   head
     title Login
     link(rel="icon" type="image/x-icon" href="/images/icon.png")
-    link(rel='stylesheet', href='/styles/salesforce-lightning-design-system.min.css')
-    link(rel='stylesheet', href='/styles/login.css')
-    link(rel='stylesheet', href='/styles/font-awesome.min.css')
+    link(rel='stylesheet' href='/styles/salesforce-lightning-design-system.min.css')
+    link(rel='stylesheet' href='/styles/login.css')
+    link(rel='stylesheet' href='/styles/font-awesome.min.css')
     script(src="javascript/login.js")
     script(src="javascript/libs/jquery.min.js")
     script(src="javascript/libs/jquery.validate.min.js")
     script(src="javascript/libs/jquery.json-viewer.js")
-    link(rel='stylesheet', href='/styles/jquery.json-viewer.css')
-    
+    link(rel='stylesheet' href='/styles/jquery.json-viewer.css')
+
   body
     block content
-        form(action='/login' method='post')
+        form(action='/login' class="login-form" method='post')
           if error
             p.text-danger Password or User Incorrect!!!
           .imgcontainer
-              img.avatar(src='images/icon.png' alt='Avatar')
+            img.avatar(src='images/icon.png' alt='Avatar')
           .container
-              label(for='uname')
-              b Username
-              input(type='text' placeholder='Enter Username' name='username' required='')
-              label(for='psw')
-              b Password
-              input(type='password' placeholder='Enter Password' name='password' required='')
-              button(type='submit') Login
+            label(for='username')
+            b Username
+            input(type='text' placeholder='Enter Username' id='username' name='username' required='')
+            label(for='password')
+            b Password
+            input(type='password' placeholder='Enter Password' id='password' name='password' required='')
+            button(type='submit') Login

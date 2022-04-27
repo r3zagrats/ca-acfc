@@ -19,7 +19,7 @@
       "useJwt": true,
       "retryCount": 2,
       "retryDelay": 1000,
-      "timeout": 1000
+      "timeout": 10000
     }
   },
   "configurationArguments": {
