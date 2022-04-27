@@ -169,7 +169,6 @@ exports.zaloWebhook = async (req, res) => {
           nameRegex.lastIndex = 0;
           phoneRegex.lastIndex = 0;
           addressRegex.lastIndex = 0;
-x
           const data = await RestClient.insertZaloRequestUserInfoLog(
             JSON.stringify({
               items: [
