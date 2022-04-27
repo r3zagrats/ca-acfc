@@ -24,6 +24,10 @@ input[type='password'] {
   box-sizing: border-box;
 }
 
+.input-label {
+  font-weight: 500;
+}
+
 /* Set a style for all buttons */
 button {
   background-color: #04aa6d;
@@ -55,7 +59,7 @@ button:hover {
 
 /* Avatar image */
 img.avatar {
-  width: 17%;
+  width: 40%;
 }
 
 /* Add padding to containers */

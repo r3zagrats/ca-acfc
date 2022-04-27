@@ -1598,13 +1598,13 @@ const renderZNSRequestUserInfo = () => {
     <div class="slds-form-element" id="ccb-form-title-element">
       <label class="slds-form-element__label ccb-label" for="title"><abbr class="slds-required" title="required">* </abbr>Title:</label>
       <div class="slds-form-element__control">
-        <textarea class="slds-textarea ccb-textarea" type="text" id="title" name="title" maxlength="2000" placeholder="Enter your message. Maximum length: 2000"></textarea>
+        <textarea class="slds-textarea ccb-textarea" type="text" id="title" name="title" maxlength="100" placeholder="Enter your title. Maximum length: 100"></textarea>
       </div>
     </div>
     <div class="slds-form-element" id="ccb-form-subTitle-element">
       <label class="slds-form-element__label ccb-label" for="subTitle"><abbr class="slds-required" title="required">* </abbr>Subtitle:</label>
       <div class="slds-form-element__control">
-        <textarea class="slds-textarea ccb-textarea" type="text" id="subTitle" name="subTitle" maxlength="2000" placeholder="Enter your message. Maximum length: 2000"></textarea>
+        <textarea class="slds-textarea ccb-textarea" type="text" id="subTitle" name="subTitle" maxlength="500" placeholder="Enter your subtitle. Maximum length: 500"></textarea>
       </div>
     </div>
   `);
