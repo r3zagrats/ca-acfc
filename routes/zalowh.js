@@ -1,6 +1,7 @@
 require('dotenv').config();
 const RestClient = require('../utils/sfmc-client');
 const pgdb = require('../db/postgresql');
+const superagent = require('superagent');
 
 exports.zaloWebhook = async (req, res) => {
   const userTrackingInfo = req.body;
