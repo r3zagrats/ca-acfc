@@ -240,7 +240,7 @@ exports.zaloWebhook = async (req, res) => {
             user_id: userTrackingInfo.sender.id
           },
           message:{
-            text:"Cảm ơn bạn đã nhắn tin cho White Space, yêu cầu của bạn sẽ được quản trị viên xử lý"
+            text:"Cảm ơn bạn đã nhắn tin cho White Space JSC, yêu cầu của bạn đang được quản trị viên xử lý"
           }
         }
         console.log('\nznsContent:', JSON.stringify(znsContent));
