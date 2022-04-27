@@ -191,21 +191,26 @@ exports.zaloWebhook = async (req, res) => {
             })
           );
         }
-        input = JSON.parse(input);
-        if (input.EventDefinitionKey) {
-          console.log('User triggered journey')
-          const result = await RestClient.triggerJourneyBuilder(
-            JSON.stringify({
-              ContactKey: userTrackingInfo.sender.id,
-              EventDefinitionKey: input.EventDefinitionKey,
-              Data: {
-                OAId: userTrackingInfo.recipient.id,
-                ZaloId: userTrackingInfo.sender.id,
-              },
-            })
-          );
-          console.log('result:', result);
-        }
+
+        try {
+          input = JSON.parse(input);
+
+          if (input.EventDefinitionKey) {
+            console.log('User triggered journey');
+            const result = await RestClient.triggerJourneyBuilder(
+              JSON.stringify({
+                ContactKey: userTrackingInfo.sender.id,
+                EventDefinitionKey: input.EventDefinitionKey,
+                Data: {
+                  OAId: userTrackingInfo.recipient.id,
+                  ZaloId: userTrackingInfo.sender.id,
+                },
+              })
+            );
+            console.log('result:', result);
+          }
+        } catch (error) {}
+
         const { rows } = await pgdb.query(
           `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${userTrackingInfo.recipient.id}'`
         );
