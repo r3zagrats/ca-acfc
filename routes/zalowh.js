@@ -24,6 +24,7 @@ exports.zaloWebhook = async (req, res) => {
         );
         res.status(200).send(data.body);
       } catch (error) {
+        console.log(error);
         res.status(500).send({
           status: error,
         });
@@ -56,6 +57,7 @@ exports.zaloWebhook = async (req, res) => {
         }
         res.status(200).send({ status: 'ok' });
       } catch (error) {
+        console.log(error);
         res.status(500).send({
           status: error,
         });
@@ -165,7 +167,7 @@ exports.zaloWebhook = async (req, res) => {
         const addressRegex = /(?<=Địa chỉ: ).*/gm;
 
         if (nameRegex.exec(input) && phoneRegex.exec(input) && addressRegex.exec(input)) {
-          console.log('User send Reques User Info Message')
+          console.log('User send Request User Info Message')
           nameRegex.lastIndex = 0;
           phoneRegex.lastIndex = 0;
           addressRegex.lastIndex = 0;
@@ -179,7 +181,6 @@ exports.zaloWebhook = async (req, res) => {
                   MsgId: userTrackingInfo.message.msg_id,
                   UTCTime: new Date(Number(userTrackingInfo.timestamp)).toUTCString(),
                   Timestamp: userTrackingInfo.timestamp,
-                  EventName: userTrackingInfo.event_name,
                   Name: nameRegex.exec(input)[0],
                   PhoneNumber: phoneRegex.exec(input)[0],
                   Address: addressRegex.exec(input)[0]
@@ -188,9 +189,9 @@ exports.zaloWebhook = async (req, res) => {
             })
           );
         }
-
         res.status(200).send(data.body);
       } catch (error) {
+        console.log(error);
         res.status(500).send({
           status: error,
         });
