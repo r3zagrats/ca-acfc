@@ -385,9 +385,10 @@ exports.test = async (req, res) => {
     const result = await RestClient.triggerJourneyBuilder(
       JSON.stringify({
         ContactKey: '1087338975254803129',
-        EventDefinitionKey: 'APIEvent-53488ae9-5fb9-afba-a05e-47f555c16009',
+        EventDefinitionKey: 'APIEvent-fb677898-8693-da87-a2a9-805f2f8fce13',
       })
     );
+    console.log('result', result);
     res.status(200).send({ status: 'OK', result });
   } catch (error) {
     console.log('error', error);
