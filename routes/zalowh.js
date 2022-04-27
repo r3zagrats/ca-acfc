@@ -141,7 +141,7 @@ exports.zaloWebhook = async (req, res) => {
       break;
     }
     case 'user_send_text': {
-      console.log('User send text message')
+      console.log('User send text message');
       try {
         const data = await RestClient.insertZaloUserActionTracking(
           JSON.stringify({
@@ -154,11 +154,41 @@ exports.zaloWebhook = async (req, res) => {
                 UTCTime: new Date(Number(userTrackingInfo.timestamp)).toUTCString(),
                 Timestamp: userTrackingInfo.timestamp,
                 EventName: userTrackingInfo.event_name,
-                Message: userTrackingInfo.message.text
+                Message: userTrackingInfo.message.text,
               },
             ],
           })
         );
+        const input = userTrackingInfo.message.text;
+        const nameRegex = /(?<=Họ và Tên: ).*/gm;
+        const phoneRegex = /(?<=Điện thoại: ).*/gm;
+        const addressRegex = /(?<=Địa chỉ: ).*/gm;
+
+        if (nameRegex.exec(input) && phoneRegex.exec(input) && addressRegex.exec(input)) {
+          nameRegex.lastIndex = 0;
+          phoneRegex.lastIndex = 0;
+          addressRegex.lastIndex = 0;
+x
+          const data = await RestClient.insertZaloRequestUserInfoLog(
+            JSON.stringify({
+              items: [
+                {
+                  AppId: userTrackingInfo.app_id,
+                  OAId: userTrackingInfo.recipient.id,
+                  ZaloId: userTrackingInfo.sender.id,
+                  MsgId: userTrackingInfo.message.msg_id,
+                  UTCTime: new Date(Number(userTrackingInfo.timestamp)).toUTCString(),
+                  Timestamp: userTrackingInfo.timestamp,
+                  EventName: userTrackingInfo.event_name,
+                  Name: nameRegex.exec(input)[0],
+                  PhoneNumber: phoneRegex.exec(input)[0],
+                  Address: addressRegex.exec(input)[0]
+                },
+              ],
+            })
+          );
+        }
+
         res.status(200).send(data.body);
       } catch (error) {
         res.status(500).send({

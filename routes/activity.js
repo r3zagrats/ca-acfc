@@ -137,15 +137,16 @@ exports.execute = async (req, res) => {
         console.log('\nznsSendLog:', znsSendLog);
         if (znsSendLog.error !== 0) throw znsSendLog.message;
         const temp = {
-          MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
+          OAId: OAInfo.OAInfo,
           ZaloId: znsSendLog.error === 0 ? znsSendLog.data.user_id : '',
+          MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
           UTCTime: new Date().toUTCString(),
           Timestamp: new Date().getTime(),
-          Error: znsSendLog.error,
-          Message: znsSendLog.message,
-          Content: JSON.stringify(znsContent.message),
+          StatusCode: znsSendLog.error,
+          ErrorMessage: znsSendLog.message,
+          Message: JSON.stringify(znsContent.message)
         };
-        const firstStep = await RestClient.insertZaloSendLog(
+        const firstStep = await RestClient.insertZaloOASendLog(
           JSON.stringify({
             items: [temp],
           })

@@ -87,9 +87,18 @@ const insertZaloUserActionTracking = async (data) =>
  * @param data
  * @returns {?Promise}
  */
-const insertZaloSendLog = async (data) =>
+const insertZaloOASendLog = async (data) =>
   RestClient.post({
-    uri: `data/v1/async/dataextensions/key:${process.env.DE_ZALO_SEND_LOG}/rows`,
+    uri: `data/v1/async/dataextensions/key:${process.env.DE_ZALO_OA_SEND_LOG}/rows`,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: data,
+  });
+
+const insertZaloRequestUserInfoLog = async (data) =>
+  RestClient.post({
+    uri: `data/v1/async/dataextensions/key:${process.env.DE_ZALO_REQUEST_USER_INFO_LOG}/rows`,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -152,7 +161,8 @@ module.exports = {
   saveData,
   upsertOAFollowers,
   insertZaloUserActionTracking,
-  insertZaloSendLog,
+  insertZaloOASendLog,
+  insertZaloRequestUserInfoLog,
   insertTest,
   upsertDE,
 };
