@@ -328,6 +328,8 @@ async function onRender() {
     }
     if (!hasError) {
       alert('Submit successfully');
+    } else {
+      alert('An error occurred')
     }
   });
 
@@ -558,6 +560,7 @@ const removeListElement = (elementList, id) => {
  * @returns {string}
  */
 const validateZNSList = (formProps, hasError, errorMsg) => {
+  console.log({ formProps, hasError, errorMsg });
   for (const [key, value] of Object.entries(formProps)) {
     $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
     $(`#ccb-form-${key}-element-text-error`).remove();
@@ -576,6 +579,25 @@ const validateZNSList = (formProps, hasError, errorMsg) => {
         $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
         $(`#ccb-form-${key}-element-text-error`).remove();
       });
+    } else if (key.includes('imageUrl')) {
+      let tmpSize;
+      $.each(contentBuilderImages, (i, item) => {
+        if (item.fileProperties.publishedURL === formProps[`${key}`]) {
+          tmpSize = item.fileProperties.fileSize;
+        }
+      });
+      if (tmpSize > 1048576) {
+        errorMsg = 'File size must be less than 1MB';
+        hasError = true;
+        $(`#ccb-form-${key}-element`).addClass('slds-has-error');
+        $(`#ccb-form-${key}-element`).append(
+          `<div class="slds-form-element__help ccb-form__error" id="ccb-form-${key}-element-text-error">${errorMsg}</div>`
+        );
+        $(`#${key}`).on('change', (e) => {
+          $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
+          $(`#ccb-form-${key}-element-text-error`).remove();
+        });
+      }
     } else {
       $(`#${key}`).on('keydown', (e) => {
         $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
