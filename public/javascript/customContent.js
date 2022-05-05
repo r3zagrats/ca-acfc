@@ -44,9 +44,7 @@ let contentBuilderMetaData = [];
 async function onRender() {
   // App running
   $('.ccb-modal').show();
-  $('.ccb-modal__submitResult.success').show();
-  $('.ccb-modal__submitResult.failed').hide();
-  $('.ccb-modal__submitResult.success').show();
+  $('.ccb-modal__submitResult.success').hide();
   $('.ccb-modal__submitResult.failed').hide();
   try {
     const result = await fetchData();
