@@ -86,11 +86,11 @@ html {
   float: right;
 }
 
-.ccb-modal__submitResult.success .ccb-modal__submitResult-icon {
+.ccb-modal__submitResult-icon .success {
   color: #45c65a;
 }
 
-.ccb-modal__submitResult.error .ccb-modal__submitResult-icon {
+.ccb-modal__submitResult-icon .error {
   color: #ba0517;
 }
 
