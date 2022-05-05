@@ -11,7 +11,7 @@ html {
 
 .ccb-textarea {
   font-size: 1.8rem;
-  font-family: none;
+  font-family: serif;
   color: var(--text-color);
   padding: 10px;
   max-width: 380px;
@@ -19,7 +19,7 @@ html {
 
 .ccb-input {
   font-size: 1.8rem;
-  font-family: none;
+  font-family: serif;
   color: var(--text-color);
   padding: 10px;
 }

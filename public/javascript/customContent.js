@@ -739,10 +739,10 @@ const reRenderUI = () => {
                 padding: 10px;
                 background-color: white;
                 border-radius: 5px;
-                font-size: 18.2px;
+                font-size: 18px;
                 margin: auto;
                 word-wrap: break-word;
-                font-family: none;
+                font-family: serif;
                 white-space: break-spaces;
                 "
               >${msgText}</pre>
@@ -803,10 +803,10 @@ const reRenderUI = () => {
                   background-color: white;
                   border-bottom-right-radius: 5px;
                   border-bottom-left-radius: 5px;
-                  font-size: 18.2px;
+                  font-size: 18px;
                   margin-top: -4px;
                   word-wrap: break-word;
-                  font-family: none;
+                  font-family: serif;
                   white-space: break-spaces;
                 "
               >${msgText}</pre>
@@ -869,23 +869,23 @@ const reRenderUI = () => {
                     padding: 10px;
                     margin: 0;
                     background-color: white;
-                    font-size: 18.2px;
+                    font-size: 18px;
                     margin-top: -4px;
                     word-wrap: break-word;
-                    font-family: none;
+                    font-family: serif;
                     white-space: break-spaces;
                   "
                 >${title1}</pre>
                 <pre
                   style="
                     padding: 0 10px 10px;
-                    font-size: 18.2px;
+                    font-size: 18px;
                     margin: 0;
                     background-color: white;
                     color: #666;
                     margin-top: -4px;
                     word-wrap: break-word;
-                    font-family: none;
+                    font-family: serif;
                     white-space: break-spaces;
                   "
                 >${subTitle1}</pre>
@@ -910,7 +910,7 @@ const reRenderUI = () => {
               style="
                 flex: 1;
                 font-size:16px;
-                font-family: none;
+                font-family: serif;
                 padding-left: 10px;
                 word-wrap: break-word;
                 margin: 0;
@@ -984,10 +984,10 @@ const reRenderUI = () => {
                   margin: 0;
                   margin-bottom: 2px;
                   background-color: white;
-                  font-size: 18.2px;
+                  font-size: 18px;
                   border-radius: 5px;
                   word-wrap: break-word;
-                  font-family: none;
+                  font-family: serif;
                   white-space: break-spaces;
                 "
               >${msgText}</pre>
@@ -1006,7 +1006,7 @@ const reRenderUI = () => {
                 "
                 ><pre 
                   style="
-                    font-family: none;
+                    font-family: serif;
                     margin: 0; white-space:
                     break-spaces;
                     word-wrap:break-word;
@@ -1220,23 +1220,23 @@ const reRenderUI = () => {
                   margin: 0;
                   margin-bottom: 2px;
                   background-color: white;
-                  font-size: 18.2px;
+                  font-size: 18px;
                   margin-top: -4px;
                   word-wrap: break-word;
-                  font-family: none;
+                  font-family: serif;
                   white-space: break-spaces;
                 "
               >${title}</pre>
               <pre
                 style="
                   padding: 0 10px 10px;
-                  font-size: 18.2px;
+                  font-size: 18px;
                   margin: 0;
                   background-color: white;
                   color: #666;
                   margin-top: -4px;
                   word-wrap: break-word;
-                  font-family: none;
+                  font-family: serif;
                   white-space: break-spaces;
                   border-bottom-right-radius: 5px;
                   border-bottom-left-radius: 5px;
