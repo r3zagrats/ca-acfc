@@ -7,9 +7,8 @@ head
   link(href='styles/normalize.css' rel='stylesheet')
   title Document
   link(rel='stylesheet' href='/styles/salesforce-lightning-design-system.min.css')
-  //- link(href='/styles/font-awesome.min.css' rel='stylesheet')
+  link(href='/styles/all.min.css' rel='stylesheet')
   link(rel='stylesheet' href='/styles/customContent.css' )
-  link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css' integrity='sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==' crossorigin='anonymous' referrerpolicy='no-referrer')
 body
   script(src='javascript/libs/blocksdk.js')
   script(src="javascript/libs/superagent.min.js")
@@ -29,13 +28,9 @@ body
               circle.path(cx='25' cy='25' r='20' fill='none' stroke-width='5')
             p.ccb-modal__text Loading data...
           .ccb-modal__submitResult
-            p.ccb-modal__submitResult-title
-            .ccb-modal__submitResult-desparatebar
-            .ccb-modal__submitResult-icon
-              <i class="fa-solid fa-heart"></i>
-              i.fas.fa-ad
-            p.ccb-modal__submitResult-desc
-            .ccb-modal__submitResult-desparatebar
-            button.ccb-modal__submitResult-button OK
-            a(href='#')
-              i.fa.fa-arrow-up
+            .ccb-modal__submitResult-title
+              p
+            .ccb-modal__submitResult-desc
+              .ccb-modal__submitResult-icon
+              p
+            button.slds-button.slds-button_brand.ccb-modal__submitResult-button OK
