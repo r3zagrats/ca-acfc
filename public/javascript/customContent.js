@@ -327,9 +327,17 @@ async function onRender() {
       }
     }
     if (!hasError) {
-      alert('Submit successfully');
+      $('.ccb-modal').show();
+      $('.ccb-modal__loading').hide();
+      $('.ccb-modal__submitResult-title').text('Congratulations')
+      $('.ccb-modal__submitResult-icon').append('<i class="fa-solid fa-check"></i>')
+
+      $('.ccb-modal__submitResult-desc').text('Your changes have been submitted successfully')      
     } else {
-      alert('An error occurred')
+      $('.ccb-modal').show();
+      $('.ccb-modal__loading').hide();
+      $('.ccb-modal__submitResult-title').text('Congratulations')
+      $('.ccb-modal__submitResult-desc').text('Your changes have been submitted successfully')   
     }
   });
 

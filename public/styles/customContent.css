@@ -9,6 +9,10 @@ html {
   font-size: 62.5%;
 }
 
+* {
+  font-family: sans-serif !important;
+}
+
 .ccb-textarea {
   font-size: 1.8rem;
   font-family: none;
@@ -46,7 +50,7 @@ html {
   width: 200px;
   top: 50%;
   left: 50%;
-  transform:translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -55,6 +59,30 @@ html {
 .ccb-modal__text {
   font-size: 2rem;
   color: white;
+}
+
+.ccb-modal__submitResult {
+  width: 380px;
+  height: 200px;
+  background-color: #fff;
+  font-size: 1.8rem;
+}
+.ccb-modal__submitResult-title {
+  padding: 1rem;
+}
+.ccb-modal__submitResult-desc {
+  font-size: 1.6rem;
+  padding: 1rem;
+}
+
+.ccb-modal__submitResult-desparatebar {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.ccb-modal__submitResult-button {
+  padding: 1rem;
 }
 
 li {
