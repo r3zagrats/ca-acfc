@@ -131,7 +131,7 @@ async function onRender() {
 
   $('.ccb-modal__submitResult').on('click', (e) => {
     e.stopPropagation();
-  })
+  });
   /**
    * Listening to form submit events
    */
@@ -340,21 +340,13 @@ async function onRender() {
     if (!hasError) {
       $('.ccb-modal').show();
       $('.ccb-modal__loading').hide();
-      $('.ccb-modal__submitResult').show();
-      $('.ccb-modal__submitResult-title p').text('Congratulations');
-      $('.ccb-modal__submitResult-icon').empty()
-      $('.ccb-modal__submitResult-icon').append('<i class="fa-solid fa-check success"></i>');
-      $('.ccb-modal__submitResult-desc p').text('Your changes have been submitted successfully');
+      $('.ccb-modal__submitResult.success').show();
+      $('.ccb-modal__submitResult.failed').hide();
     } else {
       $('.ccb-modal').show();
       $('.ccb-modal__loading').hide();
-      $('.ccb-modal__submitResult').show();
-      $('.ccb-modal__submitResult-title p').text('Error');
-      $('.ccb-modal__submitResult-icon').empty()
-      $('.ccb-modal__submitResult-icon').append('<i class="fa-solid fa-xmark error"></i>');
-      $('.ccb-modal__submitResult-desc p').text(
-        'An error occurred while submitting the form. Please try again.'
-      );
+      $('.ccb-modal__submitResult.failed').show();
+      $('.ccb-modal__submitResult.success').hide();
     }
   });
 

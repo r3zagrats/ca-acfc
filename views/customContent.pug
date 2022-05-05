@@ -27,10 +27,19 @@ body
             svg.spinner(viewbox='0 0 50 50')
               circle.path(cx='25' cy='25' r='20' fill='none' stroke-width='5')
             p.ccb-modal__text Loading data...
-          .ccb-modal__submitResult
+          .ccb-modal__submitResult.success
             .ccb-modal__submitResult-title
-              p
+              p Congratulations
             .ccb-modal__submitResult-desc
               .ccb-modal__submitResult-icon
-              p
+                i.fa-solid.fa-check
+              p Your changes have been submitted successfully
+            button.slds-button.slds-button_brand.ccb-modal__submitResult-button OK
+          .ccb-modal__submitResult.failed
+            .ccb-modal__submitResult-title
+              p Error
+            .ccb-modal__submitResult-desc
+              .ccb-modal__submitResult-icon
+                i.fa-solid.fa-xmark
+              p An error occurred while submitting the form. Please try again
             button.slds-button.slds-button_brand.ccb-modal__submitResult-button OK
