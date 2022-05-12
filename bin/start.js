@@ -9,19 +9,6 @@ const fs = require("fs");
 const http = require("http");
 const https = require("https");
 const app = require("../app");
-
-// const at = require("../utils/atHandler");
-// const privateKey = fs.readFileSync("certificates/localhost-key.pem");
-// const certificate = fs.readFileSync("certificates/localhost.pem");
-
-// const credentials = {
-//   key: privateKey,
-//   cert: certificate,
-//   // ca: ca,
-// };
-
-// const schedule = require("node-schedule");
-
 /**
  * Normalize a port into a number, string, or false.
  */
