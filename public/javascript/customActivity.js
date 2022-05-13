@@ -402,6 +402,7 @@ const getDEInfo = async (key) => {
 
 const getZNSTemplates = async (OAId) => {
   try {
+    console.log('OAId', OAId)
     const response = await superagent.post('/api/getznstemplates').send({ OAId });
     return response.body;
   } catch (error) {
