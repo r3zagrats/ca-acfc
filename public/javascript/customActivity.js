@@ -292,7 +292,7 @@ const showStep = async (step, stepIndex) => {
         text: 'done',
         enabled: false,
       });
-      console.log(endpoints);
+      console.log($('#Endpoints').val());
       switch ($('#Channels').val()) {
         case 'Zalo Message': {
           try {
@@ -312,7 +312,7 @@ const showStep = async (step, stepIndex) => {
         }
         case 'Zalo Notification Service': {
           try {
-            const customContent = await getZNSTemplates();
+            const customContent = await getZNSTemplates($('#Endpoints').val());
             tmpCustomContents = customContent.items;
             $('#ContentOptions')
               .empty()
