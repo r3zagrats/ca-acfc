@@ -99,7 +99,7 @@ exports.execute = async (req, res) => {
           JSON.stringify({
             items: [
               {
-                OAId: OAInfo.OAInfo,
+                OAId: data.inArguments[0].Endpoints,
                 ZaloId: znsSendLog.error === 0 ? znsSendLog.data.user_id : '',
                 MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
                 UTCTime: new Date().toUTCString(),
