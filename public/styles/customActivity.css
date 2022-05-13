@@ -10,6 +10,7 @@ font-weight: 600;
 
 .ca-container {
   min-height: 100vh;
+  position: relative;
 }
 
 
@@ -40,6 +41,7 @@ font-weight: 600;
   right: 0;
   bottom: 0;
   background-color: rgba(126,140,153,.8);
+  opacity: 0.65;
   /* display: none; */
 }
 
