@@ -16,7 +16,7 @@ const pgdb = require('../db/postgresql');
 const asyncGet = require('../utils/async-http-get');
 const fs = require('fs');
 const redisClient = require('../db/redis');
-const refreshZaloAT = require('../utils/refreshZaloAT')
+const { refreshZaloAT } = require('../utils/refreshZaloAT');
 /**
  * The Journey Builder calls this method for each contact processed by the journey.
  * @param req
@@ -37,7 +37,7 @@ exports.execute = async (req, res) => {
     switch (data.inArguments[0].Channels) {
       case 'Zalo Message': {
         // Query OA Info
-        const tmpAccessToken = refreshZaloAT(data.inArguments[0].Endpoints) 
+        const tmpAccessToken = refreshZaloAT(data.inArguments[0].Endpoints);
         console.log('\ntmpAccessToken: ', tmpAccessToken);
         if (Content.type === 'AttachedFile') {
           // Check if file exists
@@ -97,16 +97,18 @@ exports.execute = async (req, res) => {
         if (znsSendLog.error !== 0) throw znsSendLog.message;
         const firstStep = await RestClient.insertZaloOASendLog(
           JSON.stringify({
-            items: [{
-              OAId: OAInfo.OAInfo,
-              ZaloId: znsSendLog.error === 0 ? znsSendLog.data.user_id : '',
-              MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
-              UTCTime: new Date().toUTCString(),
-              Timestamp: new Date().getTime(),
-              StatusCode: znsSendLog.error,
-              ErrorMessage: znsSendLog.message,
-              Message: JSON.stringify(znsContent.message)
-            }],
+            items: [
+              {
+                OAId: OAInfo.OAInfo,
+                ZaloId: znsSendLog.error === 0 ? znsSendLog.data.user_id : '',
+                MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
+                UTCTime: new Date().toUTCString(),
+                Timestamp: new Date().getTime(),
+                StatusCode: znsSendLog.error,
+                ErrorMessage: znsSendLog.message,
+                Message: JSON.stringify(znsContent.message),
+              },
+            ],
           })
         );
         res.status(200).send({ Status: 'Successfull' });
