@@ -316,7 +316,7 @@ const showStep = async (step, stepIndex) => {
             const customContent = await getZNSTemplates($('#Endpoints').val());
             console.log('customContent:', customContent);
             // tmpCustomContents = customContent.items;
-            tmpZNSTemplates = customContent.data
+            tmpZNSTemplates = JSON.parse(customContent).data
             console.log('tmpZNSTemplates:', tmpZNSTemplates)
             $('#ContentOptions')
               .empty()
