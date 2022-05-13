@@ -34,8 +34,8 @@ const requestedInteractionHandler = async (settings) => {
       $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
     });
   } catch (error) {
-    alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
     connection.trigger('destroy');
+    alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
   }
 };
 
