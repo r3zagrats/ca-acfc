@@ -50,3 +50,23 @@ block content
             textarea#ContentValue.slds-input.js-activity-setting( rows = '20' required='', placeholder='', name='text', disabled)
             #DisplayContent
     footer.slds-card__footer
+    .ca-modal
+        .ca-modal__container
+          .ca-modal__loading
+            svg.spinner(viewbox='0 0 50 50')
+              circle.path(cx='25' cy='25' r='20' fill='none' stroke-width='5')
+            p.ca-modal__text Loading data...
+          .ca-modal__submitResult.success
+            .ca-modal__submitResult-title
+              p Congratulations
+            .ca-modal__submitResult-desc
+              i.fa-solid.fa-check
+              p Your changes have been submitted successfully
+            button.slds-button.slds-button_brand.ca-modal__submitResult-button OK
+          .ca-modal__submitResult.failed
+            .ca-modal__submitResult-title
+              p Error
+            .ca-modal__submitResult-desc
+              i.fa-solid.fa-xmark
+              p An error occurred while submitting the form. Please try again
+            button.slds-button.slds-button_brand.ca-modal__submitResult-button OK
