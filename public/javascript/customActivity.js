@@ -92,18 +92,41 @@ const onRender = () => {
     $('#ContentValue').val('');
     $('#ContentOptions').empty();
     $('#DisplayContent').empty();
-    try {
-      const customContent = await getCustomContent();
-      tmpContents = customContent.items;
-      $('#ContentOptions').append(
-        `<option value=''>--Select one of the following contents--</option>`
-      );
-      $.each(tmpContents, (index, content) => {
-        $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
-      });
-      checkContent('refresh');
-    } catch (error) {
-      alert(`Error on fetching data: ${error.message}`);
+    switch ($('#Channels').val()) {
+      case 'Zalo Message': {
+        try {
+          const customContent = await getCustomContent();
+          tmpContents = customContent.items;
+          $('#ContentOptions')
+            .empty()
+            .append(`<option value=''>--Select one of the following contents--</option>`);
+          $.each(tmpContents, (index, content) => {
+            $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
+          });
+          checkContent('refresh');
+        } catch (error) {
+          alert(`Error on fetching data: ${error.message}`);
+        }
+        break;
+      }
+      case 'Zalo Notification Service': {
+        try {
+          const customContent = await getZNSTemplates($('#Endpoints').val());
+          console.log('customContent:', customContent);
+          tmpContents = JSON.parse(customContent).data
+          console.log('tmpContents:', tmpContents)
+          $('#ContentOptions')
+            .empty()
+            .append(`<option value=''>--Select one of the following contents--</option>`);
+          $.each(tmpContents, (index, content) => {
+            $('#ContentOptions').append(`<option value=${content.templateId}>${content.templateName}</option>`);
+          });
+          checkContent('refresh');
+        } catch (error) {
+          alert(`Error on fetching data: ${error.message}`);
+        }
+        break;
+      }
     }
   });
 };
