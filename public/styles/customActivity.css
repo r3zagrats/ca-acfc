@@ -16,20 +16,6 @@ font-weight: 600;
 
 #okia{ padding-right: 10px;}
 
-.loading-indicator {
-  height:80px;
-  width:80px;
-  background:url('../images/loading.gif' );
-  background-repeat:no-repeat;
-  background-position:center center;
-}
-
-.loading-indicator-overlay {
-  background-color:#FFFFFF;
-  opacity:0.6;
-  filter: alpha(opacity =60);
-}
-
 #ContentValue { 
   display:none;
 }
@@ -57,36 +43,36 @@ font-weight: 600;
 }
 
 .ca-modal__text {
-  font-size: 2rem;
+  font-size: 20px;
   color: white;
 }
 
 .ca-modal__submitResult {
   width: 380px;
   background-color: #fff;
-  font-size: 1.8rem;
+  font-size: 18px;
   display: none;
 }
 
 .ca-modal__submitResult i {
-  font-size: 8rem;
+  font-size: 80px;
   width: 100%;
 }
 
 .ca-modal__submitResult-title {
-  padding: 1rem;
+  padding: 10px;
 }
 .ca-modal__submitResult-desc {
-  font-size: 1.6rem;
-  padding: 1rem;
+  font-size: 16px;
+  padding: 10px;
   border-top: 1px solid rgba(0, 0, 0, 0.3);
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
   text-align: center;
 }
 
 .ca-modal__submitResult-button {
-  margin: 1rem;
-  padding: 0.6rem;
+  margin: 10px;
+  padding: 6px;
   float: right;
 }
 
