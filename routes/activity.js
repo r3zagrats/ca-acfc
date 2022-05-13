@@ -150,6 +150,7 @@ exports.execute = async (req, res) => {
       }
     }
   } catch (error) {
+    console.log(error);
     res.status(500).send({ status: 'Error', message: error });
   }
 };
