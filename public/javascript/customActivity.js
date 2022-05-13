@@ -112,8 +112,17 @@ const onRender = () => {
       });
     }
   });
-  $('#ContentOptions').on('change', (e) => {
+  $('#ContentOptions').on('change', async (e) => {
     contentOptions = $('#ContentOptions').val();
+    if ($('#ChannelsOptions').val() === 'Zalo Notification Service') {
+      $('.ca-modal').show();
+      const repsponse = await getZNSTemplateDetail(
+        $('#ContentOptions').val(),
+        $('#Endpoints').val()
+      );
+      $('.ca-modal').hide();
+      console.log('repsonse detail', repsponse.text);
+    }
     checkContent('process');
   });
   $('#refreshButton').on('click', async () => {
@@ -437,9 +446,6 @@ const checkContent = (type) => {
         console.log('payloadData', payloadData);
         $('#ContentValue').val(JSON.stringify(payloadData));
         $('#DisplayContent').empty().append(value.content);
-      } else if (value.templateId == $('#ContentOptions').val()) {
-        const repsponse = getZNSTemplateDetail(value.templateId, $('#Endpoints').val());
-        console.log('repsonse detail', repsponse.text);
       }
     });
     if (error == true) {
@@ -460,7 +466,7 @@ const checkContent = (type) => {
       enabled: false,
     });
   }
-}
+};
 
 const getCustomContent = async () => {
   try {
