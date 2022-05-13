@@ -81,73 +81,10 @@ const onRender = () => {
   });
   $('#Endpoints').on('change', async (e) => {
     if ($('#Endpoints').val()) {
-      switch ($('#Channels').val()) {
-        case 'Zalo Message': {
-          try {
-            $('.ca-modal').show();
-            const customContent = await getCustomContent();
-            $('.ca-modal').hide();
-            tmpContents = customContent.items;
-            $('#ContentOptions')
-              .empty()
-              .append(`<option value=''>--Select one of the following contents--</option>`);
-            $.each(tmpContents, (index, content) => {
-              $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
-            });
-            checkContent('refresh');
-            connection.trigger('updateButton', {
-              button: 'next',
-              enabled: true,
-            });
-          } catch (error) {
-            alert(`Error on fetching data: ${error.message}`);
-            connection.trigger('updateButton', {
-              button: 'next',
-              enabled: false,
-            });
-          }
-          break;
-        }
-        case 'Zalo Notification Service': {
-          try {
-            $('.ca-modal').show();
-            let customContent = await getZNSTemplates($('#Endpoints').val());
-            $('.ca-modal').hide();
-            console.log('customContent:', customContent);
-            customContent = JSON.parse(customContent);
-            if (customContent.error === '0') {
-              tmpContents = customContent.data;
-              console.log('tmpContents:', tmpContents);
-              $('#ContentOptions')
-                .empty()
-                .append(`<option value=''>--Select one of the following contents--</option>`);
-              $.each(tmpContents, (index, content) => {
-                $('#ContentOptions').append(
-                  `<option value=${content.templateId}>${content.templateName}</option>`
-                );
-              });
-              checkContent('refresh');
-              connection.trigger('updateButton', {
-                button: 'next',
-                enabled: true,
-              });
-            } else {
-              alert(`${customContent.message}`);
-              connection.trigger('updateButton', {
-                button: 'next',
-                enabled: false,
-              });
-            }
-          } catch (error) {
-            alert(`Error on fetching data: ${error.message}`);
-            connection.trigger('updateButton', {
-              button: 'next',
-              enabled: false,
-            });
-          }
-          break;
-        }
-      }
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: true,
+      });
     } else {
       connection.trigger('updateButton', {
         button: 'next',
@@ -163,6 +100,53 @@ const onRender = () => {
     $('#ContentValue').val('');
     $('#ContentOptions').empty();
     $('#DisplayContent').empty();
+    switch ($('#Channels').val()) {
+      case 'Zalo Message': {
+        try {
+          $('.ca-modal').show();
+          const customContent = await getCustomContent();
+          $('.ca-modal').hide();
+          tmpContents = customContent.items;
+          $('#ContentOptions')
+            .empty()
+            .append(`<option value=''>--Select one of the following contents--</option>`);
+          $.each(tmpContents, (index, content) => {
+            $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
+          });
+          checkContent('refresh');
+        } catch (error) {
+          alert(`Error on fetching data: ${error.message}`);
+        }
+        break;
+      }
+      case 'Zalo Notification Service': {
+        try {
+          $('.ca-modal').show();
+          let customContent = await getZNSTemplates($('#Endpoints').val());
+          $('.ca-modal').hide();
+          console.log('customContent:', customContent);
+          customContent = JSON.parse(customContent);
+          if (customContent.error === '0') {
+            tmpContents = customContent.data;
+            console.log('tmpContents:', tmpContents);
+            $('#ContentOptions')
+              .empty()
+              .append(`<option value=''>--Select one of the following contents--</option>`);
+            $.each(tmpContents, (index, content) => {
+              $('#ContentOptions').append(
+                `<option value=${content.templateId}>${content.templateName}</option>`
+              );
+            });
+            checkContent('refresh');
+          } else {
+            alert(`${customContent.message}`);
+          }
+        } catch (error) {
+          alert(`Error on fetching data: ${error.message}`);
+        }
+        break;
+      }
+    }
   });
 };
 
@@ -361,7 +345,7 @@ const showStep = async (step, stepIndex) => {
           try {
             $('.ca-modal').show();
             const customContent = await getCustomContent();
-            $('.ca-modal').hide();          
+            $('.ca-modal').hide();
             tmpContents = customContent.items;
             $('#ContentOptions')
               .empty()
