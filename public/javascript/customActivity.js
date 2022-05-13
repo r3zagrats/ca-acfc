@@ -120,8 +120,8 @@ const onRender = () => {
       $('.ca-modal').hide();
       console.log('repsonse detail', response);
       response = JSON.parse(response);
-      $('.ca-frame').show();
-      $('.ca-frame').attr('src', "test");
+      $('#ca-frame').show();
+      $('#ca-frame').attr('src', "test");
     }
     checkContent('process');
   });
