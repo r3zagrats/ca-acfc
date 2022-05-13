@@ -292,6 +292,7 @@ const showStep = async (step, stepIndex) => {
         text: 'done',
         enabled: false,
       });
+      console.log($('#Channels').val())
       try {
         const customContent = await getCustomContent();
         tmpCustomContents = customContent.items;
@@ -377,3 +378,11 @@ const getDEInfo = async (key) => {
   }
 };
 
+const getZNSTemplates = async (OAId) => {
+  try {
+    const response = await superagent.get('/api/getcustomcontent');
+    return response.body;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}

@@ -399,9 +399,11 @@ exports.test = async (req, res) => {
 
 exports.getZNSTemplates = async (req, res) => {
   try {
-    console.log('req body:', req.body);
-    const token = await refreshZaloAT(req.body)
-    res.status(200).send(token);
+    console.log('req body:', req.body.OAId);
+    const token = await refreshZaloAT(req.body.OAId)
+    console.log('token:', token);
+    const response = await superagent.get('https://business.openapi.zalo.me/template/all?offset=0&limit=100&status=1').set('access_token', token)
+    res.status(200).send(response.text);
   } catch (error) {
     res.status(500).send(error.message);
   }
