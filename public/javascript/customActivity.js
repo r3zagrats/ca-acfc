@@ -124,8 +124,8 @@ const onRender = () => {
           $('.ca-modal').show();
           let customContent = await getZNSTemplates($('#Endpoints').val());
           $('.ca-modal').hide();
-          console.log('customContent:', customContent);
           customContent = JSON.parse(customContent);
+          console.log('customContent:', customContent);
           if (customContent.error === '0') {
             tmpContents = customContent.data;
             console.log('tmpContents:', tmpContents);
