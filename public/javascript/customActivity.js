@@ -116,10 +116,10 @@ const onRender = () => {
     contentOptions = $('#ContentOptions').val();
     if ($('#Channels').val() === 'Zalo Notification Service') {
       $('.ca-modal').show();
-      let repsponse = await getZNSTemplateDetail($('#ContentOptions').val(), $('#Endpoints').val());
+      let response = await getZNSTemplateDetail($('#ContentOptions').val(), $('#Endpoints').val());
       $('.ca-modal').hide();
-      console.log('repsonse detail', repsponse);
-      response = JSON.parse(repsponse);
+      console.log('repsonse detail', response);
+      response = JSON.parse(response);
       $('.ca-frame').show();
       $('.ca-frame').attr('src', response.previewUrl);
     }
