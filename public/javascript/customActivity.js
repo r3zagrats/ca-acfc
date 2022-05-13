@@ -36,12 +36,12 @@ const requestedInteractionHandler = async (settings) => {
         $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
       });
     } catch (error) {
-      connection.trigger('destroy');
       alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
+      connection.trigger('destroy');
     }
   } else {
-    connection.trigger('destroy');
     alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
+    connection.trigger('destroy');
   }
 };
 
@@ -84,7 +84,9 @@ const onRender = () => {
       switch ($('#Channels').val()) {
         case 'Zalo Message': {
           try {
+            $('.ca-modal').show();
             const customContent = await getCustomContent();
+            $('.ca-modal').hide();
             tmpContents = customContent.items;
             $('#ContentOptions')
               .empty()
@@ -108,7 +110,9 @@ const onRender = () => {
         }
         case 'Zalo Notification Service': {
           try {
+            $('.ca-modal').show();
             let customContent = await getZNSTemplates($('#Endpoints').val());
+            $('.ca-modal').hide();
             console.log('customContent:', customContent);
             customContent = JSON.parse(customContent);
             if (customContent.error === '0') {
@@ -355,7 +359,9 @@ const showStep = async (step, stepIndex) => {
       switch ($('#Channels').val()) {
         case 'Zalo Message': {
           try {
+            $('.ca-modal').show();
             const customContent = await getCustomContent();
+            $('.ca-modal').hide();          
             tmpContents = customContent.items;
             $('#ContentOptions')
               .empty()
@@ -371,7 +377,9 @@ const showStep = async (step, stepIndex) => {
         }
         case 'Zalo Notification Service': {
           try {
+            $('.ca-modal').show();
             const customContent = await getZNSTemplates($('#Endpoints').val());
+            $('.ca-modal').hide();
             console.log('customContent:', customContent);
             tmpContents = JSON.parse(customContent).data;
             console.log('tmpContents:', tmpContents);
