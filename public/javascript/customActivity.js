@@ -6,8 +6,7 @@ let channels = '';
 let endpoints = '';
 let contentOptions = '';
 let contentValue = '';
-let tmpCustomContents = '';
-let tmpZNSTemplates = '';
+let tmpContents = '';
 let deFields = [];
 let eventDefinitionKey = '';
 
@@ -95,11 +94,11 @@ const onRender = () => {
     $('#DisplayContent').empty();
     try {
       const customContent = await getCustomContent();
-      tmpCustomContents = customContent.items;
+      tmpContents = customContent.items;
       $('#ContentOptions').append(
         `<option value=''>--Select one of the following contents--</option>`
       );
-      $.each(tmpCustomContents, (index, content) => {
+      $.each(tmpContents, (index, content) => {
         $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
       });
       checkContent('refresh');
@@ -298,11 +297,11 @@ const showStep = async (step, stepIndex) => {
         case 'Zalo Message': {
           try {
             const customContent = await getCustomContent();
-            tmpCustomContents = customContent.items;
+            tmpContents = customContent.items;
             $('#ContentOptions')
               .empty()
               .append(`<option value=''>--Select one of the following contents--</option>`);
-            $.each(tmpCustomContents, (index, content) => {
+            $.each(tmpContents, (index, content) => {
               $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
             });
             checkContent('init');
@@ -315,16 +314,15 @@ const showStep = async (step, stepIndex) => {
           try {
             const customContent = await getZNSTemplates($('#Endpoints').val());
             console.log('customContent:', customContent);
-            // tmpCustomContents = customContent.items;
-            tmpZNSTemplates = JSON.parse(customContent).data
-            console.log('tmpZNSTemplates:', tmpZNSTemplates)
+            tmpContents = JSON.parse(customContent).data
+            console.log('tmpContents:', tmpContents)
             $('#ContentOptions')
               .empty()
               .append(`<option value=''>--Select one of the following contents--</option>`);
-            $.each(tmpZNSTemplates, (index, content) => {
+            $.each(tmpContents, (index, content) => {
               $('#ContentOptions').append(`<option value=${content.templateId}>${content.templateName}</option>`);
             });
-            // checkContent('init');
+            checkContent('init');
           } catch (error) {
             alert(`Error on fetching data: ${error.message}`);
           }
@@ -338,10 +336,10 @@ function checkContent(type) {
   console.log('type: ', type);
   let error = false;
   let errorContent = [];
-  console.log('tmpCustomContents:', tmpCustomContents);
+  console.log('tmpContents:', tmpContents);
   if (type !== 'refresh') $('#ContentOptions').val(contentOptions);
   if ($('#ContentOptions').val()) {
-    tmpCustomContents.forEach((value) => {
+    tmpContents.forEach((value) => {
       if (value.id == $('#ContentOptions').val()) {
         const regex = /%%([\s\S]*?)%%/gm;
         let message;
