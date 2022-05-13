@@ -20,7 +20,7 @@ let currentStep = steps[0].key;
 
 const requestedInteractionHandler = async (settings) => {
   console.log('settings', settings);
-  if (settings.trigger[0]) {
+  if (settings.trigger.length !== 0) {
     eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
     try {
       $('.ca-modal').show();
