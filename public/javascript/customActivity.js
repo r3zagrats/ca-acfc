@@ -362,20 +362,25 @@ const showStep = async (step, stepIndex) => {
         case 'Zalo Notification Service': {
           try {
             $('.ca-modal').show();
-            const customContent = await getZNSTemplates($('#Endpoints').val());
+            let customContent = await getZNSTemplates($('#Endpoints').val());
             $('.ca-modal').hide();
+            customContent = JSON.parse(customContent);
             console.log('customContent:', customContent);
-            tmpContents = JSON.parse(customContent).data;
-            console.log('tmpContents:', tmpContents);
-            $('#ContentOptions')
-              .empty()
-              .append(`<option value=''>--Select one of the following contents--</option>`);
-            $.each(tmpContents, (index, content) => {
-              $('#ContentOptions').append(
-                `<option value=${content.templateId}>${content.templateName}</option>`
-              );
-            });
-            checkContent('init');
+            if (customContent.error === '0') {
+              tmpContents = customContent.data;
+              console.log('tmpContents:', tmpContents);
+              $('#ContentOptions')
+                .empty()
+                .append(`<option value=''>--Select one of the following contents--</option>`);
+              $.each(tmpContents, (index, content) => {
+                $('#ContentOptions').append(
+                  `<option value=${content.templateId}>${content.templateName}</option>`
+                );
+              });
+              checkContent('refresh');
+            } else {
+              alert(`${customContent.message}`);
+            }
           } catch (error) {
             alert(`Error on fetching data: ${error.message}`);
           }
