@@ -404,8 +404,8 @@ const getZNSTemplates = async (OAId) => {
   try {
     console.log('OAId', OAId)
     const response = await superagent.post('/api/getznstemplates').send({ OAId });
-    console.log('response', response.body)
-    return response.body;
+    console.log('response', response.text)
+    return response.text;
   } catch (error) {
     throw new Error(error.message);
   }
