@@ -92,8 +92,8 @@ const onRender = () => {
             button: 'next',
             enabled: true,
           });
-        } catch (e) {
-          alert(`${customContent.message}`);
+        } catch (error) {
+          alert(`${error}`);
           connection.trigger('updateButton', {
             button: 'next',
             enabled: false,
