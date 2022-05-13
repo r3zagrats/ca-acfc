@@ -19,22 +19,27 @@ let steps = [
 let currentStep = steps[0].key;
 
 const requestedInteractionHandler = async (settings) => {
-  console.log('settings', settings)
-  eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
-  try {
-    $('.ca-modal').show()
-    const deInfo = await getDEInfo(eventDefinitionKey);
-    $('.ca-modal').hide()
-    $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
-    $('#DEFields').empty();
-    $.each(deInfo.deCol, (index, field) => {
-      deFields.push(field.Name);
-      $('#DEFields').append(
-        `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
-      );
-      $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
-    });
-  } catch (error) {
+  console.log('settings', settings);
+  if (settings.trigger[0]) {
+    eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
+    try {
+      $('.ca-modal').show();
+      const deInfo = await getDEInfo(eventDefinitionKey);
+      $('.ca-modal').hide();
+      $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
+      $('#DEFields').empty();
+      $.each(deInfo.deCol, (index, field) => {
+        deFields.push(field.Name);
+        $('#DEFields').append(
+          `<p value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</p>`
+        );
+        $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
+      });
+    } catch (error) {
+      connection.trigger('destroy');
+      alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
+    }
+  } else {
     connection.trigger('destroy');
     alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
   }
