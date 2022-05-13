@@ -410,7 +410,7 @@ const showStep = async (step, stepIndex) => {
       break;
   }
 };
-async function checkContent(type) {
+const checkContent = async (type) => {
   console.log('type: ', type);
   let error = false;
   let errorContent = [];
