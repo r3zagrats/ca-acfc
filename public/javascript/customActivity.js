@@ -121,7 +121,7 @@ const onRender = () => {
       console.log('repsonse detail', response);
       response = JSON.parse(response);
       $('.ca-frame').show();
-      $('.ca-frame').attr('src', response.previewUrl);
+      $('.ca-frame').attr('src', "test");
     }
     checkContent('process');
   });

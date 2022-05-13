@@ -125,7 +125,7 @@ html {
   }
 }
 
-.ca-frame {
+#ca-frame {
   width: 100%;
   height: 100%;
   display: none;
