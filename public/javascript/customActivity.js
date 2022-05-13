@@ -118,10 +118,10 @@ const onRender = () => {
       $('.ca-modal').show();
       let response = await getZNSTemplateDetail($('#ContentOptions').val(), $('#Endpoints').val());
       $('.ca-modal').hide();
-      console.log('repsonse detail', response);
       response = JSON.parse(response);
+      console.log('repsonse detail', response);
       $('#ca-frame').show();
-      $('#ca-frame').attr('src');
+      $('#ca-frame').attr('src', response.data.previewUrl);
     }
     checkContent('process');
   });
