@@ -33,7 +33,7 @@ font-weight: 600;
   display:none;
 }
 
-.ccb-modal {
+.ca-modal {
   position: absolute;
   top: 0;
   left: 0;
@@ -43,7 +43,7 @@ font-weight: 600;
   /* display: none; */
 }
 
-.ccb-modal__container {
+.ca-modal__container {
   position: absolute;
   width: 200px;
   top: 50%;
@@ -54,27 +54,27 @@ font-weight: 600;
   align-items: center;
 }
 
-.ccb-modal__text {
+.ca-modal__text {
   font-size: 2rem;
   color: white;
 }
 
-.ccb-modal__submitResult {
+.ca-modal__submitResult {
   width: 380px;
   background-color: #fff;
   font-size: 1.8rem;
   display: none;
 }
 
-.ccb-modal__submitResult i {
+.ca-modal__submitResult i {
   font-size: 8rem;
   width: 100%;
 }
 
-.ccb-modal__submitResult-title {
+.ca-modal__submitResult-title {
   padding: 1rem;
 }
-.ccb-modal__submitResult-desc {
+.ca-modal__submitResult-desc {
   font-size: 1.6rem;
   padding: 1rem;
   border-top: 1px solid rgba(0, 0, 0, 0.3);
@@ -82,16 +82,16 @@ font-weight: 600;
   text-align: center;
 }
 
-.ccb-modal__submitResult-button {
+.ca-modal__submitResult-button {
   margin: 1rem;
   padding: 0.6rem;
   float: right;
 }
 
-.ccb-modal__submitResult.success i {
+.ca-modal__submitResult.success i {
   color: #45c65a;
 }
 
-.ccb-modal__submitResult.failed i {
+.ca-modal__submitResult.failed i {
   color: #ba0517;
 }
