@@ -37,7 +37,7 @@ exports.execute = async (req, res) => {
     switch (data.inArguments[0].Channels) {
       case 'Zalo Message': {
         // Query OA Info
-        const tmpAccessToken = refreshZaloAT(data.inArguments[0].Endpoints);
+        const tmpAccessToken = await refreshZaloAT(data.inArguments[0].Endpoints);
         console.log('\ntmpAccessToken: ', tmpAccessToken);
         if (Content.type === 'AttachedFile') {
           // Check if file exists
