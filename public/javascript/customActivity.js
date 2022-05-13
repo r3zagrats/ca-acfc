@@ -19,7 +19,6 @@ let steps = [
 let currentStep = steps[0].key;
 
 const requestedInteractionHandler = async (settings) => {
-  console.log('settings', settings);
   if (settings.triggers[0]) {
     eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
     try {
@@ -81,10 +80,31 @@ const onRender = () => {
   });
   $('#Endpoints').on('change', async (e) => {
     if ($('#Endpoints').val()) {
-      connection.trigger('updateButton', {
-        button: 'next',
-        enabled: true,
-      });
+      if ($('#Channels').val() === 'Zalo Notification Service') {
+        try {
+          $('.ca-modal').show();
+          let customContent = await getZNSTemplates($('#Endpoints').val());
+          $('.ca-modal').hide();
+          customContent = JSON.parse(customContent);
+          console.log('customContent:', customContent);
+          if (customContent.error !== 0) throw customContent.message;
+          connection.trigger('updateButton', {
+            button: 'next',
+            enabled: true,
+          });
+        } catch (e) {
+          alert(`${customContent.message}`);
+          connection.trigger('updateButton', {
+            button: 'next',
+            enabled: false,
+          });
+        }
+      } else {
+        connection.trigger('updateButton', {
+          button: 'next',
+          enabled: true,
+        });
+      }
     } else {
       connection.trigger('updateButton', {
         button: 'next',
