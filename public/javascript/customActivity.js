@@ -114,7 +114,7 @@ const onRender = () => {
   });
   $('#ContentOptions').on('change', async (e) => {
     contentOptions = $('#ContentOptions').val();
-    if ($('#ChannelsOptions').val() === 'Zalo Notification Service') {
+    if ($('#Channels').val() === 'Zalo Notification Service') {
       $('.ca-modal').show();
       const repsponse = await getZNSTemplateDetail(
         $('#ContentOptions').val(),
