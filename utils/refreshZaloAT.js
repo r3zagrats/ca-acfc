@@ -47,7 +47,6 @@ exports.refreshZaloAT = async (OAId) => {
     } else {
       console.log(`\nAccess Token cua ${OAInfo.OAName} con han`);
     }
-    console.log('\ntmpAccessToken: ', tmpAccessToken);
     return tmpAccessToken
   } catch (error) {
     console.log('error:' , error)

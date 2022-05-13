@@ -410,7 +410,7 @@ const showStep = async (step, stepIndex) => {
       break;
   }
 };
-function checkContent(type) {
+async function checkContent(type) {
   console.log('type: ', type);
   let error = false;
   let errorContent = [];
@@ -433,12 +433,13 @@ function checkContent(type) {
             errorContent.push(message[0]);
           }
         }
-        // if (type == 'process') {
         const payloadData = value.meta.options.customBlockData;
         console.log('payloadData', payloadData);
         $('#ContentValue').val(JSON.stringify(payloadData));
         $('#DisplayContent').empty().append(value.content);
-        // }
+      } else if (value.templateId == $('#ContentOptions').val()) {
+        const repsponse = await getZNSTemplateDetail(value.templateId, $('#Endpoints').val());
+        console.log('repsonse detail', repsonse.text);
       }
     });
     if (error == true) {
@@ -482,6 +483,15 @@ const getDEInfo = async (key) => {
 const getZNSTemplates = async (OAId) => {
   try {
     const response = await superagent.post('/api/getznstemplates').send({ OAId });
+    return response.text;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+const getZNSTemplateDetail = async (TemplateId, OAId) => {
+  try {
+    const response = await superagent.post('/api/getznstemplatedetail').send({ TemplateId, OAId });
     return response.text;
   } catch (error) {
     throw new Error(error.message);

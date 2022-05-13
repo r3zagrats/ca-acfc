@@ -2,7 +2,7 @@ const RestClient = require('../utils/sfmc-client');
 const superagent = require('superagent');
 require('dotenv').config();
 const { createClient } = require('redis');
-const { refreshZaloAT } = require('../utils/refreshZaloAT') 
+const { refreshZaloAT } = require('../utils/refreshZaloAT');
 
 /**
  * @param req
@@ -400,11 +400,30 @@ exports.test = async (req, res) => {
 exports.getZNSTemplates = async (req, res) => {
   try {
     console.log('req body:', req.body.OAId);
-    const token = await refreshZaloAT(req.body.OAId)
+    const token = await refreshZaloAT(req.body.OAId);
     console.log('token:', token);
-    const response = await superagent.get('https://business.openapi.zalo.me/template/all?offset=0&limit=100&status=1').set('access_token', token)
+    const response = await superagent
+      .get('https://business.openapi.zalo.me/template/all?offset=0&limit=100&status=1')
+      .set('access_token', token);
     res.status(200).send(response.text);
   } catch (error) {
     res.status(500).send(error.message);
   }
-}
+};
+
+exports.getZNSTemplateDetail = async (req, res) => {
+  try {
+    console.log('req body:', `https://business.openapi.zalo.me/template/info?template_id=${req.body.TemplateId}`);
+    const token = await refreshZaloAT(req.body.OAId);
+    console.log('token:', token);
+    const response = await superagent
+      .get(
+        `https://business.openapi.zalo.me/template/info?template_id=${req.body.TemplateId}`
+      )
+      .set('access_token', token);
+    console.log('response:', response.text)
+    res.status(200).send(response.text);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};

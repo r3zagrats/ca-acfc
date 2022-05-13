@@ -68,6 +68,7 @@ app.use('/api/getcustomcontent/', api.getCustomContent);
 app.use('/api/getimagecontent/', api.getImageContent);
 app.use('/api/getmetadatacontent/', api.getMetaDataContent);
 app.post('/api/getznstemplates/', api.getZNSTemplates);
+app.post('/api/getznstemplatedetail/', api.getZNSTemplateDetail);
 app.post('/api/insertde/', api.insertDE);
 app.post('/api/getdeinfo/', api.getDEInfo);
 app.use('/api/zaloauth/', api.zaloAuth)
