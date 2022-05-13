@@ -54,7 +54,7 @@ const onRender = () => {
   connection.trigger('requestSchema');
   $('#Channels').on('change', (e) => {
     if ($('#Channels').val() === 'SMS') {
-      alert('This channel is not supported yet. Please select another channel!')
+      alert('This channel is not supported yet. Please select another channel!');
       connection.trigger('updateButton', {
         button: 'next',
         enabled: false,
@@ -231,7 +231,7 @@ const showStep = async (step, stepIndex) => {
       $('#step1').show();
       $('#titleDynamic').empty().append('Channels');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
-      if ($('#Channels').val() !==  'SMS') {
+      if ($('#Channels').val() !== 'SMS') {
         connection.trigger('updateButton', {
           button: 'next',
           enabled: true,
@@ -292,19 +292,40 @@ const showStep = async (step, stepIndex) => {
         text: 'done',
         enabled: false,
       });
-      console.log($('#Channels').val())
-      try {
-        const customContent = await getCustomContent();
-        tmpCustomContents = customContent.items;
-        $('#ContentOptions')
-          .empty()
-          .append(`<option value=''>--Select one of the following contents--</option>`);
-        $.each(tmpCustomContents, (index, content) => {
-          $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
-        });
-        checkContent('init');
-      } catch (error) {
-        alert(`Error on fetching data: ${error.message}`);
+      console.log(endpoints);
+      switch ($('#Channels').val()) {
+        case 'Zalo Message': {
+          try {
+            const customContent = await getCustomContent();
+            tmpCustomContents = customContent.items;
+            $('#ContentOptions')
+              .empty()
+              .append(`<option value=''>--Select one of the following contents--</option>`);
+            $.each(tmpCustomContents, (index, content) => {
+              $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
+            });
+            checkContent('init');
+          } catch (error) {
+            alert(`Error on fetching data: ${error.message}`);
+          }
+          break;
+        }
+        case 'Zalo Notification Service': {
+          try {
+            const customContent = await getZNSTemplates();
+            tmpCustomContents = customContent.items;
+            $('#ContentOptions')
+              .empty()
+              .append(`<option value=''>--Select one of the following contents--</option>`);
+            $.each(tmpCustomContents, (index, content) => {
+              $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
+            });
+            checkContent('init');
+          } catch (error) {
+            alert(`Error on fetching data: ${error.message}`);
+          }
+          break;
+        }
       }
       break;
   }
@@ -380,9 +401,9 @@ const getDEInfo = async (key) => {
 
 const getZNSTemplates = async (OAId) => {
   try {
-    const response = await superagent.get('/api/getcustomcontent');
+    const response = await superagent.post('/api/getznstemplates').send({ OAId });
     return response.body;
   } catch (error) {
     throw new Error(error.message);
   }
-}
+};
