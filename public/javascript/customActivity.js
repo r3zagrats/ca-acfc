@@ -71,12 +71,71 @@ const onRender = () => {
       });
     }
   });
-  $('#Endpoints').on('change', (e) => {
+  $('#Endpoints').on('change', async (e) => {
     if ($('#Endpoints').val()) {
-      connection.trigger('updateButton', {
-        button: 'next',
-        enabled: true,
-      });
+      switch ($('#Channels').val()) {
+        case 'Zalo Message': {
+          try {
+            const customContent = await getCustomContent();
+            tmpContents = customContent.items;
+            $('#ContentOptions')
+              .empty()
+              .append(`<option value=''>--Select one of the following contents--</option>`);
+            $.each(tmpContents, (index, content) => {
+              $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
+            });
+            checkContent('refresh');
+            connection.trigger('updateButton', {
+              button: 'next',
+              enabled: true,
+            });
+          } catch (error) {
+            alert(`Error on fetching data: ${error.message}`);
+            connection.trigger('updateButton', {
+              button: 'next',
+              enabled: false,
+            });
+          }
+          break;
+        }
+        case 'Zalo Notification Service': {
+          try {
+            let customContent = await getZNSTemplates($('#Endpoints').val());
+            console.log('customContent:', customContent);
+            customContent = JSON.parse(customContent);
+            if (customContent.error === '0') {
+              tmpContents = customContent.data;
+              console.log('tmpContents:', tmpContents);
+              $('#ContentOptions')
+                .empty()
+                .append(`<option value=''>--Select one of the following contents--</option>`);
+              $.each(tmpContents, (index, content) => {
+                $('#ContentOptions').append(
+                  `<option value=${content.templateId}>${content.templateName}</option>`
+                );
+              });
+              checkContent('refresh');
+              connection.trigger('updateButton', {
+                button: 'next',
+                enabled: true,
+              });
+            } else {
+              alert(`${customContent.message}`);
+              connection.trigger('updateButton', {
+                button: 'next',
+                enabled: false,
+              });
+            }
+          } catch (error) {
+            alert(`Error on fetching data: ${error.message}`);
+            connection.trigger('updateButton', {
+              button: 'next',
+              enabled: false,
+            });
+          }
+          break;
+        }
+      }
     } else {
       connection.trigger('updateButton', {
         button: 'next',
@@ -92,42 +151,6 @@ const onRender = () => {
     $('#ContentValue').val('');
     $('#ContentOptions').empty();
     $('#DisplayContent').empty();
-    switch ($('#Channels').val()) {
-      case 'Zalo Message': {
-        try {
-          const customContent = await getCustomContent();
-          tmpContents = customContent.items;
-          $('#ContentOptions')
-            .empty()
-            .append(`<option value=''>--Select one of the following contents--</option>`);
-          $.each(tmpContents, (index, content) => {
-            $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
-          });
-          checkContent('refresh');
-        } catch (error) {
-          alert(`Error on fetching data: ${error.message}`);
-        }
-        break;
-      }
-      case 'Zalo Notification Service': {
-        try {
-          const customContent = await getZNSTemplates($('#Endpoints').val());
-          console.log('customContent:', customContent);
-          tmpContents = JSON.parse(customContent).data
-          console.log('tmpContents:', tmpContents)
-          $('#ContentOptions')
-            .empty()
-            .append(`<option value=''>--Select one of the following contents--</option>`);
-          $.each(tmpContents, (index, content) => {
-            $('#ContentOptions').append(`<option value=${content.templateId}>${content.templateName}</option>`);
-          });
-          checkContent('refresh');
-        } catch (error) {
-          alert(`Error on fetching data: ${error.message}`);
-        }
-        break;
-      }
-    }
   });
 };
 
@@ -337,13 +360,15 @@ const showStep = async (step, stepIndex) => {
           try {
             const customContent = await getZNSTemplates($('#Endpoints').val());
             console.log('customContent:', customContent);
-            tmpContents = JSON.parse(customContent).data
-            console.log('tmpContents:', tmpContents)
+            tmpContents = JSON.parse(customContent).data;
+            console.log('tmpContents:', tmpContents);
             $('#ContentOptions')
               .empty()
               .append(`<option value=''>--Select one of the following contents--</option>`);
             $.each(tmpContents, (index, content) => {
-              $('#ContentOptions').append(`<option value=${content.templateId}>${content.templateName}</option>`);
+              $('#ContentOptions').append(
+                `<option value=${content.templateId}>${content.templateName}</option>`
+              );
             });
             checkContent('init');
           } catch (error) {
