@@ -410,7 +410,7 @@ const showStep = async (step, stepIndex) => {
       break;
   }
 };
-const checkContent = async (type) => {
+const checkContent = (type) => {
   console.log('type: ', type);
   let error = false;
   let errorContent = [];
@@ -438,8 +438,8 @@ const checkContent = async (type) => {
         $('#ContentValue').val(JSON.stringify(payloadData));
         $('#DisplayContent').empty().append(value.content);
       } else if (value.templateId == $('#ContentOptions').val()) {
-        const repsponse = await getZNSTemplateDetail(value.templateId, $('#Endpoints').val());
-        console.log('repsonse detail', repsonse.text);
+        const repsponse = getZNSTemplateDetail(value.templateId, $('#Endpoints').val());
+        console.log('repsonse detail', repsponse.text);
       }
     });
     if (error == true) {
