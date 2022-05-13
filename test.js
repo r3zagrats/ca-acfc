@@ -1,8 +1,7 @@
-const EventEmitter = require('events');
+const { refreshZaloAT } = require('./utils/refreshZaloAT');
 
-const eventEmitter = new EventEmitter();
-eventEmitter.on('start', (start, end) => {
-  console.log(`started from ${start} to ${end}`);
-});
+(async () => {
+  const token = await refreshZaloAT('1461858946955248598');
+  console.log('token', token);
+})();
 
-eventEmitter.emit('start', 1, 100);

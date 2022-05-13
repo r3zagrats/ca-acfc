@@ -16,6 +16,7 @@ const pgdb = require('../db/postgresql');
 const asyncGet = require('../utils/async-http-get');
 const fs = require('fs');
 const redisClient = require('../db/redis');
+const refreshZaloAT = require('../utils/refreshZaloAT')
 /**
  * The Journey Builder calls this method for each contact processed by the journey.
  * @param req
@@ -34,50 +35,9 @@ exports.execute = async (req, res) => {
   Content = JSON.parse(Content);
   try {
     switch (data.inArguments[0].Channels) {
-      case 'Zalo Notification Service': {
+      case 'Zalo Message': {
         // Query OA Info
-        const { rows } = await pgdb.query(
-          `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${data.inArguments[0].Endpoints}'`
-        );
-        const OAInfo = rows[0];
-        console.log('\nOAInfo: ', OAInfo);
-        let tmpAccessToken = OAInfo.AccessToken || '';
-        // Check if the access token is valid
-        if (IsExpiredToken(Number(OAInfo.Timestamp))) {
-          console.log(`\nAccess Token cua ${OAInfo.OAName} het han`);
-          // Refresh Token
-          let response = await superagent
-            .post(process.env.ZALO_OAUTH_URL)
-            .set('secret_key', process.env.ZALO_APP_SECRET_KEY)
-            .send(`refresh_token=${OAInfo.RefreshToken}`)
-            .send(`app_id=${process.env.ZALO_APP_ID}`)
-            .send('grant_type=refresh_token');
-          response = JSON.parse(response.text);
-          console.log(`\nAccessToken Response cua ${OAInfo.OAName}: "`, response);
-          if (response && response.access_token) {
-            tmpAccessToken = response.access_token;
-            let updateInfo = {
-              ...OAInfo,
-              AccessToken: response.access_token,
-              RefreshToken: response.refresh_token,
-              Timestamp: Date.now() + response.expires_in * 1000,
-              ExpiryDate: new Date(Date.now() + response.expires_in * 1000).toUTCString(),
-            };
-            console.log(`\nupdateInfo cua OA ${OAInfo.OAName}: `, updateInfo);
-            let valueList = [];
-            for (const [key, value] of Object.entries(updateInfo)) {
-              valueList.push(`"${key}" = '${value}'`);
-            }
-            const result = await pgdb.query(
-              `UPDATE "${process.env.PSQL_ZALOOA_TABLE}" SET ${valueList} WHERE "OAId" = '${OAInfo.OAId}'`
-            );
-            console.log(`\nCap nhat db thanh cong cho OA ${OAInfo.OAName}:`);
-          } else {
-            throw response;
-          }
-        } else {
-          console.log(`\nAccess Token cua ${OAInfo.OAName} con han`);
-        }
+        const tmpAccessToken = refreshZaloAT(data.inArguments[0].Endpoints) 
         console.log('\ntmpAccessToken: ', tmpAccessToken);
         if (Content.type === 'AttachedFile') {
           // Check if file exists
@@ -150,6 +110,9 @@ exports.execute = async (req, res) => {
           })
         );
         res.status(200).send({ Status: 'Successfull' });
+        break;
+      }
+      case 'Zalo Notification Service': {
         break;
       }
       case 'Web Push Notification': {

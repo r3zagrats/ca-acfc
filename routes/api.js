@@ -2,6 +2,7 @@ const RestClient = require('../utils/sfmc-client');
 const superagent = require('superagent');
 require('dotenv').config();
 const { createClient } = require('redis');
+const { refreshZaloAT } = require('../utils/refreshZaloAT') 
 
 /**
  * @param req
@@ -395,3 +396,13 @@ exports.test = async (req, res) => {
     res.status(500).send({ status: 'error' });
   }
 };
+
+exports.getZNSTemplates = async (req, res) => {
+  try {
+    console.log('req body:', req.body);
+    const token = await refreshZaloAT(req.body)
+    res.status(200).send(token);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+}
