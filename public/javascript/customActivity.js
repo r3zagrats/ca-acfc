@@ -277,7 +277,7 @@ const showStep = async (step, stepIndex) => {
       $('#step1').show();
       $('#titleDynamic').empty().append('Channels');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
-      console.log('show step1')
+      console.log('show step1', $('#Channels').val())
       if ($('#Channels').val() !== 'SMS' || $('#Channels').val() !== '') {
         connection.trigger('updateButton', {
           button: 'next',
