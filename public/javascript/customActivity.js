@@ -121,7 +121,7 @@ const onRender = () => {
         $('#Endpoints').val()
       );
       $('.ca-modal').hide();
-      console.log('repsonse detail', repsponse.body;
+      console.log('repsonse detail', repsponse.body);
     }
     checkContent('process');
   });
