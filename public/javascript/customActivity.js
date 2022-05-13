@@ -494,7 +494,7 @@ const getZNSTemplateDetail = async (TemplateId, OAId) => {
     console.log('TemplateId:', TemplateId);
     console.log('OAId:', OAId);
     const response = await superagent.post('/api/getznstemplatedetail').send({ TemplateId, OAId });
-    rconsole.log('esponse.text:', esponse.text);
+    console.log('esponse.text:', esponse.text);
     return response.text;
   } catch (error) {
     throw new Error(error.message);
