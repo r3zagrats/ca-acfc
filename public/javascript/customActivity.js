@@ -7,6 +7,7 @@ let endpoints = '';
 let contentOptions = '';
 let contentValue = '';
 let tmpCustomContents = '';
+let tmpZNSTemplates = '';
 let deFields = [];
 let eventDefinitionKey = '';
 
@@ -315,12 +316,13 @@ const showStep = async (step, stepIndex) => {
             const customContent = await getZNSTemplates($('#Endpoints').val());
             console.log('customContent:', customContent);
             // tmpCustomContents = customContent.items;
-            // $('#ContentOptions')
-            //   .empty()
-            //   .append(`<option value=''>--Select one of the following contents--</option>`);
-            // $.each(tmpCustomContents, (index, content) => {
-            //   $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
-            // });
+            tmpZNSTemplates = customContent.data
+            $('#ContentOptions')
+              .empty()
+              .append(`<option value=''>--Select one of the following contents--</option>`);
+            $.each(tmpZNSTemplates, (index, content) => {
+              $('#ContentOptions').append(`<option value=${content.templateId}>${content.templateName}</option>`);
+            });
             // checkContent('init');
           } catch (error) {
             alert(`Error on fetching data: ${error.message}`);
@@ -402,9 +404,7 @@ const getDEInfo = async (key) => {
 
 const getZNSTemplates = async (OAId) => {
   try {
-    console.log('OAId', OAId)
     const response = await superagent.post('/api/getznstemplates').send({ OAId });
-    console.log('response', response.text)
     return response.text;
   } catch (error) {
     throw new Error(error.message);
