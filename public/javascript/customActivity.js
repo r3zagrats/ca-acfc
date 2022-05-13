@@ -21,7 +21,9 @@ let currentStep = steps[0].key;
 const requestedInteractionHandler = async (settings) => {
   eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
   try {
+    $('.ca-modal').show()
     const deInfo = await getDEInfo(eventDefinitionKey);
+    $('.ca-modal').hide()
     $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
     $('#DEFields').empty();
     $.each(deInfo.deCol, (index, field) => {
