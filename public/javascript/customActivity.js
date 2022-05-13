@@ -313,14 +313,15 @@ const showStep = async (step, stepIndex) => {
         case 'Zalo Notification Service': {
           try {
             const customContent = await getZNSTemplates($('#Endpoints').val());
-            tmpCustomContents = customContent.items;
-            $('#ContentOptions')
-              .empty()
-              .append(`<option value=''>--Select one of the following contents--</option>`);
-            $.each(tmpCustomContents, (index, content) => {
-              $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
-            });
-            checkContent('init');
+            console.log('customContent:', customContent);
+            // tmpCustomContents = customContent.items;
+            // $('#ContentOptions')
+            //   .empty()
+            //   .append(`<option value=''>--Select one of the following contents--</option>`);
+            // $.each(tmpCustomContents, (index, content) => {
+            //   $('#ContentOptions').append(`<option value=${content.id}>${content.name}</option>`);
+            // });
+            // checkContent('init');
           } catch (error) {
             alert(`Error on fetching data: ${error.message}`);
           }
