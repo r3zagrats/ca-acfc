@@ -317,6 +317,7 @@ const showStep = async (step, stepIndex) => {
             console.log('customContent:', customContent);
             // tmpCustomContents = customContent.items;
             tmpZNSTemplates = customContent.data
+            console.log('tmpZNSTemplates:', tmpZNSTemplates)
             $('#ContentOptions')
               .empty()
               .append(`<option value=''>--Select one of the following contents--</option>`);
