@@ -1,23 +1,28 @@
 html {
   background: #ffffff;
 }
-.error {border-color: red;}
-.slds-form-element__label{ 
-font-size: .85rem;
-font-weight: 600;
+.error {
+  border-color: red;
 }
-#DEFields{ font-size: 0.75rem;}
+.slds-form-element__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+#DEFields {
+  font-size: 0.75rem;
+}
 
 .ca-container {
   min-height: 100vh;
   position: relative;
 }
 
+#okia {
+  padding-right: 10px;
+}
 
-#okia{ padding-right: 10px;}
-
-#ContentValue { 
-  display:none;
+#ContentValue {
+  display: none;
 }
 
 .ca-modal {
@@ -26,7 +31,7 @@ font-weight: 600;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(126,140,153,.8);
+  background-color: rgba(126, 140, 153, 0.8);
   opacity: 0.65;
   display: none;
 }
@@ -118,4 +123,10 @@ font-weight: 600;
     stroke-dasharray: 90, 150;
     stroke-dashoffset: -124;
   }
+}
+
+.ca-frame {
+  width: 100%;
+  height: 100%;
+  display: none;
 }

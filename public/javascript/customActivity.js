@@ -116,12 +116,12 @@ const onRender = () => {
     contentOptions = $('#ContentOptions').val();
     if ($('#Channels').val() === 'Zalo Notification Service') {
       $('.ca-modal').show();
-      const repsponse = await getZNSTemplateDetail(
-        $('#ContentOptions').val(),
-        $('#Endpoints').val()
-      );
+      let repsponse = await getZNSTemplateDetail($('#ContentOptions').val(), $('#Endpoints').val());
       $('.ca-modal').hide();
       console.log('repsonse detail', repsponse);
+      response = JSON.parse(repsponse);
+      $('.ca-frame').show();
+      $('.ca-frame').attr('src', response.previewUrl);
     }
     checkContent('process');
   });
@@ -497,10 +497,7 @@ const getZNSTemplates = async (OAId) => {
 
 const getZNSTemplateDetail = async (TemplateId, OAId) => {
   try {
-    console.log('TemplateId:', TemplateId);
-    console.log('OAId:', OAId);
     const response = await superagent.post('/api/getznstemplatedetail').send({ TemplateId, OAId });
-    console.log('response.text:', response.text);
     return response.text;
   } catch (error) {
     throw new Error(error.message);
