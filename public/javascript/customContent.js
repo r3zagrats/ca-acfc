@@ -504,7 +504,7 @@ const restoreData = () => {
         $('#imageOption').val(data.imageOption);
         if (data.imageOption === 'imageFile') {
           renderImageFiles();
-        } else if (data.imageOption === 'imageUrl') {
+        } else if (data.imageOption === 'imageURL') {
           renderImageUrlInput();
         }
         $('#imageUrl').val(data.imageUrl);
