@@ -139,6 +139,7 @@ const onRender = () => {
     $('#ContentValue').val('');
     $('#ContentOptions').empty();
     $('#DisplayContent').empty();
+    $('#ca-frame').hide()
     switch ($('#Channels').val()) {
       case 'Zalo Message': {
         try {
@@ -436,6 +437,16 @@ const checkContent = (type) => {
   console.log('tmpContents:', tmpContents);
   if (type !== 'refresh') $('#ContentOptions').val(contentOptions);
   console.log($('#ContentOptions').val())
+  switch ($('#Channels').val()) {
+    case 'Zalo Message': {
+      break;
+    }
+    case 'Zalo Notification Service': {
+      break;
+    }
+    default:
+      break;
+  }
   if ($('#ContentOptions').val()) {
     tmpContents.forEach((value) => {
       if (value.id == $('#ContentOptions').val()) {
