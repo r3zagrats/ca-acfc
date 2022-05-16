@@ -415,16 +415,15 @@ const checkContent = async (type) => {
   console.log('type: ', type);
   $('#ca-frame').hide();
   $('#DisplayContent').empty();
-
   let error = false;
   let errorContent = [];
   console.log('tmpContents:', tmpContents);
+  console.log(contentOptions);
   if (type !== 'refresh') $('#ContentOptions').val(contentOptions);
   console.log($('#ContentOptions').val());
   if ($('#ContentOptions').val()) {
     switch ($('#Channels').val()) {
       case 'Zalo Message': {
-        $('#ca-frame').hide();
         tmpContents.forEach((value) => {
           if (value.id == $('#ContentOptions').val()) {
             const regex = /%%([\s\S]*?)%%/gm;
@@ -463,7 +462,6 @@ const checkContent = async (type) => {
         break;
       }
       case 'Zalo Notification Service': {
-        $('#DisplayContent').empty();
         $('.ca-modal').show();
         let response = await getZNSTemplateDetail(
           $('#ContentOptions').val(),
