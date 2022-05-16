@@ -474,8 +474,8 @@ const checkContent = async (type) => {
         $.each(response.data.listParams, (index, param) => {
           contentValue.template_data[param.name] = ''
         })
-        console.log('contentValue', contentValue);
         $('#ContentValue').val(contentValue)
+        console.log('contentValue', $('#ContentValue').val());
         connection.trigger('updateButton', {
           button: 'next',
           enabled: true,
