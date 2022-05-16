@@ -475,6 +475,7 @@ const checkContent = async (type) => {
           contentValue.template_data[param.name] = ''
         })
         console.log('contentValue', contentValue);
+        $('#ContentValue').val(contentValue)
         connection.trigger('updateButton', {
           button: 'next',
           enabled: true,
