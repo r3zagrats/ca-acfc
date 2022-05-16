@@ -114,25 +114,6 @@ const onRender = () => {
   });
   $('#ContentOptions').on('change', async (e) => {
     contentOptions = $('#ContentOptions').val();
-    if ($('#Channels').val() === 'Zalo Notification Service') {
-      $('#DisplayContent').empty()
-      $('.ca-modal').show();
-      let response = await getZNSTemplateDetail($('#ContentOptions').val(), $('#Endpoints').val());
-      $('.ca-modal').hide();
-      response = JSON.parse(response);
-      console.log('repsonse detail', response);
-      $('#ca-frame').show();
-      $('#ca-frame').attr('src', response.data.previewUrl);
-      contentValue = {
-        phone: '',
-        template_id: response.data.templateId,
-        template_data: {},
-      };
-      $.each(response.data.listParams, (index, param) => {
-        contentValue.template_data[param.name] = ''
-      })
-      console.log('contentValue', contentValue);
-    }
     checkContent('process');
   });
   $('#refreshButton').on('click', async () => {
@@ -437,50 +418,71 @@ const checkContent = (type) => {
   console.log('tmpContents:', tmpContents);
   if (type !== 'refresh') $('#ContentOptions').val(contentOptions);
   console.log($('#ContentOptions').val())
-  switch ($('#Channels').val()) {
-    case 'Zalo Message': {
-      break;
-    }
-    case 'Zalo Notification Service': {
-      break;
-    }
-    default:
-      break;
-  }
   if ($('#ContentOptions').val()) {
-    tmpContents.forEach((value) => {
-      if (value.id == $('#ContentOptions').val()) {
-        const regex = /%%([\s\S]*?)%%/gm;
-        let message;
-        while (
-          (message = regex.exec(type == 'process' ? value.content : $('#ContentValue').val())) !==
-          null
-        ) {
-          if (message.index === regex.lastIndex) {
-            regex.lastIndex++;
+    switch ($('#Channels').val()) {
+      case 'Zalo Message': {
+        tmpContents.forEach((value) => {
+          if (value.id == $('#ContentOptions').val()) {
+            const regex = /%%([\s\S]*?)%%/gm;
+            let message;
+            while (
+              (message = regex.exec(type == 'process' ? value.content : $('#ContentValue').val())) !==
+              null
+            ) {
+              if (message.index === regex.lastIndex) {
+                regex.lastIndex++;
+              }
+              if (!deFields.includes(message[1])) {
+                error = true;
+                errorContent.push(message[0]);
+              }
+            }
+            const payloadData = value.meta.options.customBlockData;
+            console.log('payloadData', payloadData);
+            $('#ContentValue').val(JSON.stringify(payloadData));
+            $('#DisplayContent').empty().append(value.content);
           }
-          if (!deFields.includes(message[1])) {
-            error = true;
-            errorContent.push(message[0]);
-          }
+        });
+        if (error == true) {
+          alert(`Tồn tại giá trị ${errorContent.join(', ')} trong Content không hợp lệ !`);
+          connection.trigger('updateButton', {
+            button: 'next',
+            enabled: false,
+          });
+        } else {
+          connection.trigger('updateButton', {
+            button: 'next',
+            enabled: true,
+          });
         }
-        const payloadData = value.meta.options.customBlockData;
-        console.log('payloadData', payloadData);
-        $('#ContentValue').val(JSON.stringify(payloadData));
-        $('#DisplayContent').empty().append(value.content);
+        break;
       }
-    });
-    if (error == true) {
-      alert(`Tồn tại giá trị ${errorContent.join(', ')} trong Content không hợp lệ !`);
-      connection.trigger('updateButton', {
-        button: 'next',
-        enabled: false,
-      });
-    } else {
-      connection.trigger('updateButton', {
-        button: 'next',
-        enabled: true,
-      });
+      case 'Zalo Notification Service': {
+        $('#DisplayContent').empty()
+        $('.ca-modal').show();
+        let response = await getZNSTemplateDetail($('#ContentOptions').val(), $('#Endpoints').val());
+        $('.ca-modal').hide();
+        response = JSON.parse(response);
+        console.log('repsonse detail', response);
+        $('#ca-frame').show();
+        $('#ca-frame').attr('src', response.data.previewUrl);
+        contentValue = {
+          phone: '',
+          template_id: response.data.templateId,
+          template_data: {},
+        };
+        $.each(response.data.listParams, (index, param) => {
+          contentValue.template_data[param.name] = ''
+        })
+        console.log('contentValue', contentValue);
+        connection.trigger('updateButton', {
+          button: 'next',
+          enabled: true,
+        });
+        break;
+      }
+      default:
+        break;
     }
   } else {
     connection.trigger('updateButton', {
