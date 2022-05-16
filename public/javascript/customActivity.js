@@ -398,7 +398,7 @@ const showStep = async (step, stepIndex) => {
                   `<option value=${content.templateId}>${content.templateName}</option>`
                 );
               });
-              checkContent('refresh');
+              checkContent('init');
             } else {
               alert(`${customContent.message}`);
             }
