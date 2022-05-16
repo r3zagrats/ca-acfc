@@ -120,7 +120,7 @@ const onRender = () => {
     $('#ContentValue').val('');
     $('#ContentOptions').empty();
     $('#DisplayContent').empty();
-    $('#ca-frame').hide()
+    $('#ca-frame').hide();
     switch ($('#Channels').val()) {
       case 'Zalo Message': {
         try {
@@ -413,11 +413,14 @@ const showStep = async (step, stepIndex) => {
 };
 const checkContent = async (type) => {
   console.log('type: ', type);
+  $('#ca-frame').hide();
+  $('#DisplayContent').empty();
+
   let error = false;
   let errorContent = [];
   console.log('tmpContents:', tmpContents);
   if (type !== 'refresh') $('#ContentOptions').val(contentOptions);
-  console.log($('#ContentOptions').val())
+  console.log($('#ContentOptions').val());
   if ($('#ContentOptions').val()) {
     switch ($('#Channels').val()) {
       case 'Zalo Message': {
@@ -427,8 +430,9 @@ const checkContent = async (type) => {
             const regex = /%%([\s\S]*?)%%/gm;
             let message;
             while (
-              (message = regex.exec(type == 'process' ? value.content : $('#ContentValue').val())) !==
-              null
+              (message = regex.exec(
+                type == 'process' ? value.content : $('#ContentValue').val()
+              )) !== null
             ) {
               if (message.index === regex.lastIndex) {
                 regex.lastIndex++;
@@ -459,9 +463,12 @@ const checkContent = async (type) => {
         break;
       }
       case 'Zalo Notification Service': {
-        $('#DisplayContent').empty()
+        $('#DisplayContent').empty();
         $('.ca-modal').show();
-        let response = await getZNSTemplateDetail($('#ContentOptions').val(), $('#Endpoints').val());
+        let response = await getZNSTemplateDetail(
+          $('#ContentOptions').val(),
+          $('#Endpoints').val()
+        );
         $('.ca-modal').hide();
         response = JSON.parse(response);
         console.log('repsonse detail', response);
@@ -473,9 +480,9 @@ const checkContent = async (type) => {
           template_data: {},
         };
         $.each(response.data.listParams, (index, param) => {
-          contentValue.template_data[param.name] = ''
-        })
-        $('#ContentValue').val(JSON.stringify(contentValue))
+          contentValue.template_data[param.name] = '';
+        });
+        $('#ContentValue').val(JSON.stringify(contentValue));
         console.log('contentValue', $('#ContentValue').val());
         connection.trigger('updateButton', {
           button: 'next',
