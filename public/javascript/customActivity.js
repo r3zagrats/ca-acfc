@@ -421,6 +421,7 @@ const checkContent = async (type) => {
   if ($('#ContentOptions').val()) {
     switch ($('#Channels').val()) {
       case 'Zalo Message': {
+        $('#ca-frame').hide();
         tmpContents.forEach((value) => {
           if (value.id == $('#ContentOptions').val()) {
             const regex = /%%([\s\S]*?)%%/gm;
