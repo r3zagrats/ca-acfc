@@ -415,12 +415,14 @@ const checkContent = async (type) => {
   console.log('type: ', type);
   $('#ca-frame').hide();
   $('#DisplayContent').empty();
-  $('#ContentOptions').val('')
   let error = false;
   let errorContent = [];
   console.log('tmpContents:', tmpContents);
   console.log(contentOptions);
-  if (type !== 'refresh') $('#ContentOptions').val(contentOptions);
+  if (type === 'process') $('#ContentOptions').val(contentOptions);
+  else if (type !== 'init') {
+    $('#ContentOptions').val('')
+  }
   console.log($('#ContentOptions').val());
   if ($('#ContentOptions').val()) {
     switch ($('#Channels').val()) {
