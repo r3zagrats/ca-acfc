@@ -122,6 +122,15 @@ const onRender = () => {
       console.log('repsonse detail', response);
       $('#ca-frame').show();
       $('#ca-frame').attr('src', response.data.previewUrl);
+      contentValue = {
+        phone: '',
+        template_id: response.data.templateId,
+        template_data: {},
+      };
+      $.each(response.data.listParams, (index, param) => {
+        contentValue.template_data[param.name] = ''
+      })
+      console.log('contentValue', contentValue);
     }
     checkContent('process');
   });
