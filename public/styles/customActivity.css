@@ -126,6 +126,6 @@ html {
 }
 
 #ca-frame {
-  min-height: 100vh;
+  min-height: 500px;
   display: none;
 }
