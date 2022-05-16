@@ -415,6 +415,7 @@ const checkContent = async (type) => {
   console.log('type: ', type);
   $('#ca-frame').hide();
   $('#DisplayContent').empty();
+  $('#ContentOptions').val('')
   let error = false;
   let errorContent = [];
   console.log('tmpContents:', tmpContents);
