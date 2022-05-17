@@ -259,6 +259,7 @@ function save() {
       value[setting.id] = setting.value;
     });
   });
+  console.log('payload: ', payload);
   connection.trigger('updateActivity', payload);
 }
 /**
