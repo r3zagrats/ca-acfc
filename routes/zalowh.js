@@ -79,7 +79,7 @@ exports.zaloWebhook = async (req, res) => {
           )
           .set('access_token', tmpAccessToken);
         response = JSON.parse(response.text)
-        console.log('response', JSON.parse(response.text));
+        console.log('response', response);
         const insertData = RestClient.insertZaloUserActionTracking(
           JSON.stringify({
             items: [
