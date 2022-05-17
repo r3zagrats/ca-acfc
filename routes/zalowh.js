@@ -78,7 +78,7 @@ exports.zaloWebhook = async (req, res) => {
             `https://openapi.zalo.me/v2.0/oa/getprofile?data={"user_id":"${userTrackingInfo.follower.id}"}`
           )
           .set('access_token', tmpAccessToken);
-        console.log('response', response);
+        console.log('response', JSON.parse(response.text));
         const insertData = RestClient.insertZaloUserActionTracking(
           JSON.stringify({
             items: [
