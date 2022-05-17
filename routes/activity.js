@@ -26,13 +26,13 @@ const { refreshZaloAT } = require('../utils/refreshZaloAT');
 exports.execute = async (req, res) => {
   const data = JWT(req.body);
   console.log('\ndata.inArguments: ', data.inArguments[0]);
-  let Content = data.inArguments[0].ContentValue;
-  // Handle Content
-  for (const [key, value] of Object.entries(data.inArguments[0])) {
-    Content = Content.replaceAll(`%%${key}%%`, value);
-  }
-  console.log('\nContent', Content);
-  Content = JSON.parse(Content);
+  // let Content = data.inArguments[0].ContentValue;
+  // // Handle Content
+  // for (const [key, value] of Object.entries(data.inArguments[0])) {
+  //   Content = Content.replaceAll(`%%${key}%%`, value);
+  // }
+  // console.log('\nContent', Content);
+  // Content = JSON.parse(Content);
   res.status(200).send({ Status: 'Successful'});
   // try {
   //   // switch (data.inArguments[0].Channels) {

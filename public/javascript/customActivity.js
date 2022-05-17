@@ -419,10 +419,7 @@ const checkContent = async (type) => {
   let errorContent = [];
   console.log('tmpContents:', tmpContents);
   console.log(contentOptions);
-  if (type !== 'refresh') {
-    if (contentOptions) $('#ContentOptions').val(contentOptions);
-    else $('#ContentOptions').val('')
-  }
+  if (type !== 'refresh') $('#ContentOptions').val(contentOptions);
   console.log($('#ContentOptions').val());
   if ($('#ContentOptions').val()) {
     switch ($('#Channels').val()) {
