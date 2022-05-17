@@ -26,7 +26,6 @@ const { refreshZaloAT } = require('../utils/refreshZaloAT');
 exports.execute = async (req, res) => {
   const data = JWT(req.body);
   console.log('\ndata.inArguments: ', data.inArguments[0]);
-  res.status(200).send({ Status: 'Successful' });
 
   let Content = data.inArguments[0].ContentValue;
   // Handle Content
@@ -126,6 +125,7 @@ exports.execute = async (req, res) => {
           .set('access_token', tmpAccessToken)
           .send(JSON.stringify({ ...Content, tracking_id: Date.now() }));
         console.log('response', response.body);
+        res.status(200).send({ Status: 'Successfull' });
         break;
       }
       case 'Web Push Notification': {
