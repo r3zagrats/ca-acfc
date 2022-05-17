@@ -71,7 +71,14 @@ exports.zaloWebhook = async (req, res) => {
     case 'follow': {
       console.log('User follow OA');
       try {
+        const tmpAccessToken = await refreshZaloAT(userTrackingInfo.oa_id);
+        console.log('\ntmpAccessToken: ', tmpAccessToken);
         const response = await superagent
+          .get(
+            `https://openapi.zalo.me/v2.0/oa/getprofile?data={"user_id":"${userTrackingInfo.follower.id}"}`
+          )
+          .set('access_token', tmpAccessToken);
+        console.log('response', response);
         const insertData = RestClient.insertZaloUserActionTracking(
           JSON.stringify({
             items: [
@@ -235,7 +242,7 @@ exports.zaloWebhook = async (req, res) => {
           JSON.stringify({
             items: [
               {
-                OAId: OAInfo.OAInfo,
+                OAId: OAInfo.OAId,
                 ZaloId: znsSendLog.error === 0 ? znsSendLog.data.user_id : '',
                 MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
                 UTCTime: new Date().toUTCString(),
@@ -261,4 +268,3 @@ exports.zaloWebhook = async (req, res) => {
     }
   }
 };
-
