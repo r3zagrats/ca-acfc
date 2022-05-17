@@ -119,11 +119,13 @@ exports.execute = async (req, res) => {
       case 'Zalo Notification Service': {
         const tmpAccessToken = await refreshZaloAT(data.inArguments[0].Endpoints);
         console.log('\ntmpAccessToken: ', tmpAccessToken);
-        console.log('ZNS content', { ...Content, tracking_id: Date.now() })
-        // const response = await superagent
-        //   .post('https://business.openapi.zalo.me/message/template')
-        //   .set('Content-Type', 'application/json')
-        //   .set('access_token', tmpAccessToken).send(JSON.stringify({ ...Content, tracking_id: Date.now() }));
+        console.log('ZNS content', { ...Content, tracking_id: Date.now() });
+        const response = await superagent
+          .post('https://business.openapi.zalo.me/message/template')
+          .set('Content-Type', 'application/json')
+          .set('access_token', tmpAccessToken)
+          .send(JSON.stringify({ ...Content, tracking_id: Date.now() }));
+        console.log('response', response);
         break;
       }
       case 'Web Push Notification': {
