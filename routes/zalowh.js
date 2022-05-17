@@ -98,7 +98,7 @@ exports.zaloWebhook = async (req, res) => {
           JSON.stringify({
             items: [
               {
-                Name: response.error === 0 ? response.display_name : '',
+                Name: response.error === 0 ? response.data.display_name : '',
                 ZaloId: userTrackingInfo.follower.id,
                 OAId: userTrackingInfo.oa_id,
                 Status: userTrackingInfo.event_name,
@@ -120,6 +120,15 @@ exports.zaloWebhook = async (req, res) => {
     case 'unfollow': {
       console.log('User unfollow OA');
       try {
+        const tmpAccessToken = await refreshZaloAT(userTrackingInfo.oa_id);
+        console.log('\ntmpAccessToken: ', tmpAccessToken);
+        let response = await superagent
+          .get(
+            `https://openapi.zalo.me/v2.0/oa/getprofile?data={"user_id":"${userTrackingInfo.follower.id}"}`
+          )
+          .set('access_token', tmpAccessToken);
+        response = JSON.parse(response.text)
+        console.log('response', response);
         const insertData = RestClient.insertZaloUserActionTracking(
           JSON.stringify({
             items: [
@@ -138,6 +147,7 @@ exports.zaloWebhook = async (req, res) => {
           JSON.stringify({
             items: [
               {
+                Name: response.error === 0 ? response.data.display_name : '',
                 ZaloId: userTrackingInfo.follower.id,
                 OAId: userTrackingInfo.oa_id,
                 Status: userTrackingInfo.event_name,
