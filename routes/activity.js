@@ -125,7 +125,7 @@ exports.execute = async (req, res) => {
           .set('Content-Type', 'application/json')
           .set('access_token', tmpAccessToken)
           .send(JSON.stringify({ ...Content, tracking_id: Date.now() }));
-        console.log('response', response);
+        console.log('response', response.body);
         break;
       }
       case 'Web Push Notification': {
