@@ -125,6 +125,24 @@ exports.execute = async (req, res) => {
           .set('access_token', tmpAccessToken)
           .send(JSON.stringify({ ...Content, tracking_id: Date.now() }));
         console.log('response', response.body);
+        const znsSendLog = response.body;
+        console.log('\nznsSendLog:', znsSendLog);
+        if (znsSendLog.error !== 0) throw znsSendLog.message;
+        const firstStep = await RestClient.insertZaloOASendLog(
+          JSON.stringify({
+            items: [
+              {
+                OAId: data.inArguments[0].Endpoints,
+                MsgId: znsSendLog.error === 0 ? znsSendLog.data.msg_id : '',
+                UTCTime: new Date().toUTCString(),
+                Timestamp: new Date().getTime(),
+                StatusCode: znsSendLog.error,
+                ErrorMessage: znsSendLog.message,
+                Message: JSON.stringify({ ...Content, tracking_id: Date.now() }),
+              },
+            ],
+          })
+        );
         res.status(200).send({ Status: 'Successfull' });
         break;
       }
