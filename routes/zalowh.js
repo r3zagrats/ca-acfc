@@ -254,7 +254,7 @@ exports.zaloWebhook = async (req, res) => {
           JSON.stringify({
             items: [
               {
-                OAId: OAInfo.OAId,
+                OAId: userTrackingInfo.recipient.id,
                 ZaloId: znsSendLog.error === 0 ? znsSendLog.data.user_id : '',
                 MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
                 UTCTime: new Date().toUTCString(),
