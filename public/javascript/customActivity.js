@@ -474,12 +474,12 @@ const checkContent = async (type) => {
         $('#ca-frame').show();
         $('#ca-frame').attr('src', response.data.previewUrl);
         contentValue = {
-          phone: '',
+          phone: '%%phone%%',
           template_id: response.data.templateId,
           template_data: {},
         };
         $.each(response.data.listParams, (index, param) => {
-          contentValue.template_data[param.name] = '';
+          contentValue.template_data[param.name] = `%%${param.name}%%`;
         });
         $('#ContentValue').val(JSON.stringify(contentValue));
         console.log('contentValue', $('#ContentValue').val());
