@@ -419,9 +419,9 @@ const checkContent = async (type) => {
   let errorContent = [];
   console.log('tmpContents:', tmpContents);
   console.log(contentOptions);
-  if (type === 'process') $('#ContentOptions').val(contentOptions);
-  else if (type !== 'init') {
-    $('#ContentOptions').val('')
+  if (type !== 'refresh') {
+    if (contentOptions) $('#ContentOptions').val(contentOptions);
+    else $('#ContentOptions').val('')
   }
   console.log($('#ContentOptions').val());
   if ($('#ContentOptions').val()) {

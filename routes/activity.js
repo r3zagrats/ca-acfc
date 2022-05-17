@@ -33,7 +33,7 @@ exports.execute = async (req, res) => {
   }
   console.log('\nContent', Content);
   Content = JSON.parse(Content);
-  res.status(200).send({ Status: 'Successful' });
+  res.status(200).send({ Status: 'Successful'});
   // try {
   //   // switch (data.inArguments[0].Channels) {
   //   //   case 'Zalo Message': {
