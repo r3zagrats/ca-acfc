@@ -57,22 +57,22 @@ html {
   color: white;
 }
 
-.ccb-modal__submitResult {
+.ccb-modal__validateResult {
   width: 380px;
   background-color: #fff;
   font-size: 1.8rem;
   display: none;
 }
 
-.ccb-modal__submitResult i {
+.ccb-modal__validateResult i {
   font-size: 8rem;
   width: 100%;
 }
 
-.ccb-modal__submitResult-title {
+.ccb-modal__validateResult__title {
   padding: 1rem;
 }
-.ccb-modal__submitResult-desc {
+.ccb-modal__validateResult__desc {
   font-size: 1.6rem;
   padding: 1rem;
   border-top: 1px solid rgba(0, 0, 0, 0.3);
@@ -80,17 +80,17 @@ html {
   text-align: center;
 }
 
-.ccb-modal__submitResult-button {
+.ccb-modal__validateResult-button {
   margin: 1rem;
   padding: 0.6rem;
   float: right;
 }
 
-.ccb-modal__submitResult.success i {
+.ccb-modal__validateResult.success i {
   color: #45c65a;
 }
 
-.ccb-modal__submitResult.failed i {
+.ccb-modal__validateResult.failed i {
   color: #ba0517;
 }
 

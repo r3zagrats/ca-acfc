@@ -121,7 +121,7 @@ async function onRender() {
     reRenderUI();
   });
 
-  $('.ccb-modal__submitResult-button').on('click', (e) => {
+  $('.ccb-modal__validateResult__button').on('click', (e) => {
     $('.ccb-modal').hide();
   });
 
@@ -129,7 +129,7 @@ async function onRender() {
     $('.ccb-modal').hide();
   });
 
-  $('.ccb-modal__submitResult').on('click', (e) => {
+  $('.ccb-modal__validateResult').on('click', (e) => {
     e.stopPropagation();
   });
   /**
@@ -340,13 +340,14 @@ async function onRender() {
     if (!hasError) {
       $('.ccb-modal').show();
       $('.ccb-modal__loading').hide();
-      $('.ccb-modal__submitResult.success').show();
-      $('.ccb-modal__submitResult.failed').hide();
+      $('.ccb-modal__validateResult.success').show();
+      $('.ccb-modal__validateResult.failed').hide();
     } else {
       $('.ccb-modal').show();
       $('.ccb-modal__loading').hide();
-      $('.ccb-modal__submitResult.failed').show();
-      $('.ccb-modal__submitResult.success').hide();
+      displayCustomError()
+      $('.ccb-modal__validateResult.failed').show();
+      $('.ccb-modal__validateResult.success').hide();
     }
   });
 
@@ -370,7 +371,8 @@ async function onRender() {
   $('#addNormalList').click(() => {
     normalList = JSON.parse(localStorage.getItem('LSNormalList'));
     if (normalList.length === 5) {
-      alert('Một danh sách chỉ có tối đa 5 phần tử');
+      displayCustomError('Mỗi danh sách chỉ có tối đa 5 phần tử')
+      $('.ccb-modal__validateResult.failed').show();
       return;
     }
     addNormalListElement(normalList);
@@ -384,7 +386,8 @@ async function onRender() {
   $('#addButtonList').click(() => {
     buttonList = JSON.parse(localStorage.getItem('LSButtonList'));
     if (buttonList.length === 5) {
-      alert('Một danh sách chỉ có tối đa 5 phần tử');
+      displayCustomError('Mỗi danh sách chỉ có tối đa 5 phần tử')
+      $('.ccb-modal__validateResult.failed').show();
       return;
     }
     addButtonListElement(buttonList);
@@ -1161,7 +1164,8 @@ const reRenderUI = () => {
             break;
           }
           default: {
-            alert('This type is not supported');
+            displayCustomError('This type is not supported')
+            $('.ccb-modal__validateResult.failed').show();
           }
         }
         sdk.setContent(htmlScript);
@@ -1675,3 +1679,11 @@ const getMetaDataContent = async () => {
     return { status: error };
   }
 };
+
+const displayCustomError = (message) => {
+  if (message) {
+    $('.ccb-modal__validateResult__error-message').val(message)
+  } else {
+    $('.ccb-modal__validateResult__error-message').val('An error occurred while submitting the form. Please try again')
+  }
+}
