@@ -30,7 +30,7 @@ exports.customActivity = async (req, res) => {
   }
 };
 
-const ZMOptions = [
+const zmOptions = [
   { value: 'Default', name: '--Select one of the following options--' },
   { value: 'Text', name: 'ZM Text' },
   { value: 'Image', name: 'ZM Image' },
@@ -41,7 +41,7 @@ const ZMOptions = [
 ];
 
 exports.customContent = async (req, res) => {
-  res.status(200).render('customContent', { ZMOptions });
+  res.status(200).render('customContent', { zmOptions });
 };
 
 /**
