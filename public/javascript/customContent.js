@@ -417,7 +417,7 @@ const renderInitialUI = () => {
     '<input id="addButtonList" class="button slds-button slds-button_brand" value="Add Element" />'
   );
   $('#ccb-form').append(
-    '<input type="submit" id="submitBtn" class="button submitButton slds-button slds-button_success" value="Submit" />'
+    '<input type="submit" id="submitBtn" class="button submitButton slds-button slds-button_success" value="Validate" />'
   );
   $('#submitBtn').hide();
   $('#addNormalList').hide();
