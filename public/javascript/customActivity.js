@@ -24,6 +24,7 @@ const requestedInteractionHandler = async (settings) => {
     try {
       $('.ca-modal').show();
       $('.ca-modal__loading').show();
+      $('.ca-modal__validateResult.failed').hide();
       const deInfo = await getDEInfo(eventDefinitionKey);
       $('.ca-modal').hide();
       $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
@@ -106,6 +107,7 @@ const onRender = () => {
         try {
           $('.ca-modal').show();
           $('.ca-modal__loading').show();
+          $('.ca-modal__validateResult.failed').hide();
           let customContent = await getZNSTemplates($('#Endpoints').val());
           $('.ca-modal').hide();
           customContent = JSON.parse(customContent);
@@ -152,6 +154,7 @@ const onRender = () => {
         try {
           $('.ca-modal').show();
           $('.ca-modal__loading').show();
+          $('.ca-modal__validateResult.failed').hide();
           const customContent = await getCustomContent();
           $('.ca-modal').hide();
           tmpContents = customContent.items;
@@ -174,6 +177,7 @@ const onRender = () => {
         try {
           $('.ca-modal').show();
           $('.ca-modal__loading').show();
+          $('.ca-modal__validateResult.failed').hide();
           let customContent = await getZNSTemplates($('#Endpoints').val());
           $('.ca-modal').hide();
           customContent = JSON.parse(customContent);
@@ -404,6 +408,7 @@ const showStep = async (step, stepIndex) => {
           try {
             $('.ca-modal').show();
             $('.ca-modal__loading').show();
+            $('.ca-modal__validateResult.failed').hide();
             const customContent = await getCustomContent();
             $('.ca-modal').hide();
             tmpContents = customContent.items;
@@ -426,6 +431,7 @@ const showStep = async (step, stepIndex) => {
           try {
             $('.ca-modal').show();
             $('.ca-modal__loading').show();
+            $('.ca-modal__validateResult.failed').hide();
             let customContent = await getZNSTemplates($('#Endpoints').val());
             $('.ca-modal').hide();
             customContent = JSON.parse(customContent);
@@ -520,6 +526,7 @@ const checkContent = async (type) => {
       case 'Zalo Notification Service': {
         $('.ca-modal').show();
         $('.ca-modal__loading').show();
+        $('.ca-modal__validateResult.failed').hide();
         let response = await getZNSTemplateDetail(
           $('#ContentOptions').val(),
           $('#Endpoints').val()
