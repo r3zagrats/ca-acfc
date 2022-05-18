@@ -80,7 +80,7 @@ html {
   text-align: center;
 }
 
-.ccb-modal__validateResult-button {
+.ccb-modal__validateResult__button {
   margin: 1rem;
   padding: 0.6rem;
   float: right;
