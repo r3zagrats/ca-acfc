@@ -23,6 +23,7 @@ const requestedInteractionHandler = async (settings) => {
     eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
     try {
       $('.ca-modal').show();
+      $('.ca-modal__loading').show();
       const deInfo = await getDEInfo(eventDefinitionKey);
       $('.ca-modal').hide();
       $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
@@ -67,6 +68,7 @@ const onRender = () => {
   connection.trigger('requestSchema');
   $('.ca-modal__validateResult__button').on('click', (e) => {
     $('.ca-modal').hide();
+    console.log('this', $(this))
   });
 
   $('.ca-modal').on('click', (e) => {
@@ -103,6 +105,7 @@ const onRender = () => {
       if ($('#Channels').val() === 'Zalo Notification Service') {
         try {
           $('.ca-modal').show();
+          $('.ca-modal__loading').show();
           let customContent = await getZNSTemplates($('#Endpoints').val());
           $('.ca-modal').hide();
           customContent = JSON.parse(customContent);
@@ -148,6 +151,7 @@ const onRender = () => {
       case 'Zalo Message': {
         try {
           $('.ca-modal').show();
+          $('.ca-modal__loading').show();
           const customContent = await getCustomContent();
           $('.ca-modal').hide();
           tmpContents = customContent.items;
@@ -169,6 +173,7 @@ const onRender = () => {
       case 'Zalo Notification Service': {
         try {
           $('.ca-modal').show();
+          $('.ca-modal__loading').show();
           let customContent = await getZNSTemplates($('#Endpoints').val());
           $('.ca-modal').hide();
           customContent = JSON.parse(customContent);
@@ -398,6 +403,7 @@ const showStep = async (step, stepIndex) => {
         case 'Zalo Message': {
           try {
             $('.ca-modal').show();
+            $('.ca-modal__loading').show();
             const customContent = await getCustomContent();
             $('.ca-modal').hide();
             tmpContents = customContent.items;
@@ -419,6 +425,7 @@ const showStep = async (step, stepIndex) => {
         case 'Zalo Notification Service': {
           try {
             $('.ca-modal').show();
+            $('.ca-modal__loading').show();
             let customContent = await getZNSTemplates($('#Endpoints').val());
             $('.ca-modal').hide();
             customContent = JSON.parse(customContent);
@@ -512,6 +519,7 @@ const checkContent = async (type) => {
       }
       case 'Zalo Notification Service': {
         $('.ca-modal').show();
+        $('.ca-modal__loading').show();
         let response = await getZNSTemplateDetail(
           $('#ContentOptions').val(),
           $('#Endpoints').val()
