@@ -65,6 +65,17 @@ const onRender = () => {
   connection.trigger('requestEndpoints');
   connection.trigger('requestInteraction');
   connection.trigger('requestSchema');
+  $('.ccb-modal__validateResult__button').on('click', (e) => {
+    $('.ccb-modal').hide();
+  });
+
+  $('.ccb-modal').on('click', (e) => {
+    $('.ccb-modal').hide();
+  });
+
+  $('.ccb-modal__validateResult').on('click', (e) => {
+    e.stopPropagation();
+  });
   $('#Channels').on('change', (e) => {
     if ($('#Channels').val() === 'SMS') {
       displayCustomError('This channel is not supported yet. Please select another channel!');
