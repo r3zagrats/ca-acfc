@@ -12,7 +12,7 @@ let eventDefinitionKey = '';
 
 let steps = [
   { label: 'Channels', key: 'step1' },
-  { label: 'Endpoints', key: 'step2' },
+  { label: 'Senders', key: 'step2' },
   { label: 'Data', key: 'step3' },
   { label: 'Contents', key: 'step4' },
 ];

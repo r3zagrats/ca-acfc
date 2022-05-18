@@ -46,7 +46,7 @@
   },
   "wizardSteps":[
     { "label": "Channels", "key": "step1", "active": true },
-    { "label": "Endpoints", "key": "step2", "active": true },
+    { "label": "Senders", "key": "step2", "active": true },
     { "label": "Data", "key": "step3", "active": true },
     { "label": "Contents", "key": "step4", "active": true }
   ],

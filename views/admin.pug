@@ -14,8 +14,6 @@ head
       .row
         .col
           .header-content
-            .logo
-              img.ca-logo(src='/images/icon.png' alt='logo')
             .user
               .noti
                 i.fa-solid.fa-bell.ca-bell
@@ -24,27 +22,37 @@ head
               .avatar-wrapper
                 img.avatar(src='/images/user.jpg' alt='avatar')
   .body
-    .container
-      .row
-        .sidebar
-          span.menu-heading Intergrated Channels
-          ul.menu
-            each Channel in Channels
-              li.menu-item
-                a= Channel.Name
-                i.fa-solid.fa-chevron-right
-                ul.submenu 
-                  li.submenu-item
-                    a - Manage
-                  li.submenu-item 
-                    b - Detail
-        .col
-          .content Content
+    .breadcrumb
+      span.breadcrumb__channel Zalo Message
+      span.breadcrumb__path Zalo Massage > Admin
+    .content__container 
+      .content Content1
+    //- .container
+    //-   .row
+    //-     .col
+    //-       .content Content1
+    //-     .col
+    //-       .content Content2
   footer.footer
-    .container
-      .row
-        .col
+    .footer-content Footer
+    //- .container-fluid
+    //-   .row
+    //-     .col.g-0
           .footer-content Footer
+.sidebar
+  .logo
+    img.ca-logo(src='/images/logo.png' alt='logo')
+  ul.menu
+    each Channel in Channels
+      li.menu-item
+        .menu-item-heading
+          a= Channel.Name
+          i.fa-solid.fa-chevron-right
+        ul.submenu 
+          li.submenu-item
+            a - Manage
+          li.submenu-item 
+            b - Detail
 script(src='/javascript/libs/superagent.min.js')
 script(src='/javascript/libs/jquery.min.js')
 script(src='/javascript/libs/bootstrap.bundle.min.js')
