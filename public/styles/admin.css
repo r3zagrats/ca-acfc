@@ -1,0 +1,129 @@
+:root {
+  --primary-color: #524fa1;
+  --text-color: #4b5563;
+  --component-color: #263237;
+}
+
+@font-face {
+  font-family: 'SalesforceSans';
+  src: url('/fonts/SalesforceSans-Regular.ttf') format('truetype');
+}
+
+* {
+  box-sizing: inherit;
+  font-family: 'SFS', sans-serif;
+}
+
+html {
+  font-size: 62.5%;
+  line-height: 1.6rem;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+.header {
+  height: 7.2rem;
+  background-color: var(--component-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+}
+
+.header-content {
+  height: 7.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ca-logo {
+  height: 6rem;
+  width: auto;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+}
+
+.noti {
+  color: #fff;
+  padding: 2rem;
+  position: relative;
+}
+
+.ca-bell {
+  font-size: 2rem;
+}
+
+.noti-count-wrapper {
+  position: absolute;
+  top: 13px;
+  left: 28px;
+
+  background-color: red;
+  border-radius: 50%;
+  min-height: 1.5rem;
+  min-width: 1.5rem;
+  display: flex;
+}
+
+.noti-count {
+  margin: auto;
+  color: #fff;
+  font-size: 1rem;
+  padding: 0.1rem;
+}
+
+.avatar-wrapper {
+  border-radius: 50%;
+  width: 4rem;
+  height: 4rem;
+}
+
+.avatar {
+  border-radius: 50%;
+}
+
+.body {
+  margin-top: 7.2rem;
+  font-size: 2rem;
+  height: 300rem;
+}
+
+.sidebar {
+  background-color: var(--component-color);
+  color: white;
+  position:fixed;
+  top: 7.2rem;
+  bottom: 0;
+  width: 30rem;
+}
+
+.content {
+  background-color: white;
+  margin-left: 30rem;
+}
+
+.footer {
+  position: fixed;
+  right: 0;
+  left: 0;
+  bottom: 0;
+}
+
+.footer-content {
+  margin-left: 30rem;
+  background-color: white;
+  height: 5rem; 
+}
+
+.menu-heading {
+  font-size: 3rem;
+}
+
+.menu-item {
+  
+}

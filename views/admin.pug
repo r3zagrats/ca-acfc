@@ -1,0 +1,51 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(http-equiv='X-UA-Compatible' content='IE=edge')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Document
+  link(rel='stylesheet' href='/styles/bootstrap.min.css')
+  link(rel='stylesheet' href='/styles/salesforce-lightning-design-system.min.css')
+  link(rel='stylesheet' href='/styles/fontawesome.min.css')
+  link(rel='stylesheet' href='/styles/admin.css')
+#main
+  header.header
+    .container
+      .row
+        .col
+          .header-content
+            .logo
+              img.ca-logo(src='/images/icon.png' alt='logo')
+            .user
+              .noti
+                i.fa-solid.fa-bell.ca-bell
+                .noti-count-wrapper
+                  span.noti-count 99
+              .avatar-wrapper
+                img.avatar(src='/images/user.jpg' alt='avatar')
+  .body
+    .container
+      .row
+        .sidebar
+          span.menu-heading Intergrated Channels
+          ul.menu
+            each Channel in Channels
+              li.menu-item
+                a= Channel.Name
+                i.fa-solid.fa-chevron-right
+                ul.submenu 
+                  li.submenu-item
+                    a - Manage
+                  li.submenu-item 
+                    b - Detail
+        .col
+          .content Content
+  footer.footer
+    .container
+      .row
+        .col
+          .footer-content Footer
+script(src='/javascript/libs/superagent.min.js')
+script(src='/javascript/libs/jquery.min.js')
+script(src='/javascript/libs/bootstrap.bundle.min.js')
+script(src='/javascript/admin.js')
