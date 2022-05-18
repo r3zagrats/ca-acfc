@@ -35,11 +35,17 @@ const requestedInteractionHandler = async (settings) => {
         $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
       });
     } catch (error) {
-      alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
+      displayCustomError('Please choose ENTRY EVENT and SAVE Journey before Continue');
+      $('.ccb-modal').show();
+      $('.ccb-modal__loading').hide();
+      $('.ccb-modal__validateResult.failed').show();
       connection.trigger('destroy');
     }
   } else {
-    alert('Please choose ENTRY EVENT and SAVE Journey before Continue');
+    displayCustomError('Please choose ENTRY EVENT and SAVE Journey before Continue');
+    $('.ccb-modal').show();
+    $('.ccb-modal__loading').hide();
+    $('.ccb-modal__validateResult.failed').show();
     connection.trigger('destroy');
   }
 };
@@ -61,7 +67,10 @@ const onRender = () => {
   connection.trigger('requestSchema');
   $('#Channels').on('change', (e) => {
     if ($('#Channels').val() === 'SMS') {
-      alert('This channel is not supported yet. Please select another channel!');
+      displayCustomError('This channel is not supported yet. Please select another channel!');
+      $('.ccb-modal').show();
+      $('.ccb-modal__loading').hide();
+      $('.ccb-modal__validateResult.failed').show();
       connection.trigger('updateButton', {
         button: 'next',
         enabled: false,
@@ -93,7 +102,10 @@ const onRender = () => {
             enabled: true,
           });
         } catch (error) {
-          alert(`${error}`);
+          displayCustomError(`${error}`);
+          $('.ccb-modal').show();
+          $('.ccb-modal__loading').hide();
+          $('.ccb-modal__validateResult.failed').show();
           connection.trigger('updateButton', {
             button: 'next',
             enabled: false,
@@ -136,7 +148,10 @@ const onRender = () => {
           });
           checkContent('refresh');
         } catch (error) {
-          alert(`Error on fetching data: ${error.message}`);
+          displayCustomError(`Error on fetching data: ${error.message}`);
+          $('.ccb-modal').show();
+          $('.ccb-modal__loading').hide();
+          $('.ccb-modal__validateResult.failed').show();
         }
         break;
       }
@@ -160,10 +175,16 @@ const onRender = () => {
             });
             checkContent('refresh');
           } else {
-            alert(`${customContent.message}`);
+            displayCustomError(`${customContent.message}`);
+            $('.ccb-modal').show();
+            $('.ccb-modal__loading').hide();
+            $('.ccb-modal__validateResult.failed').show();
           }
         } catch (error) {
-          alert(`Error on fetching data: ${error.message}`);
+          displayCustomError(`Error on fetching data: ${error.message}`);
+          $('.ccb-modal').show();
+          $('.ccb-modal__loading').hide();
+          $('.ccb-modal__validateResult.failed').show();
         }
         break;
       }
@@ -377,7 +398,10 @@ const showStep = async (step, stepIndex) => {
             });
             checkContent('init');
           } catch (error) {
-            alert(`Error on fetching data: ${error.message}`);
+            displayCustomError(`Error on fetching data: ${error.message}`);
+            $('.ccb-modal').show();
+            $('.ccb-modal__loading').hide();
+            $('.ccb-modal__validateResult.failed').show();
           }
           break;
         }
@@ -401,10 +425,16 @@ const showStep = async (step, stepIndex) => {
               });
               checkContent('init');
             } else {
-              alert(`${customContent.message}`);
+              displayCustomError(`${customContent.message}`);
+              $('.ccb-modal').show();
+              $('.ccb-modal__loading').hide();
+              $('.ccb-modal__validateResult.failed').show();
             }
           } catch (error) {
-            alert(`Error on fetching data: ${error.message}`);
+            displayCustomError(`Error on fetching data: ${error.message}`);
+            $('.ccb-modal').show();
+            $('.ccb-modal__loading').hide();
+            $('.ccb-modal__validateResult.failed').show();
           }
           break;
         }
@@ -449,7 +479,14 @@ const checkContent = async (type) => {
           }
         });
         if (error == true) {
-          alert(`Tồn tại giá trị ${errorContent.join(', ')} trong Content không tồn tại trong Data Extension đã chọn!`);
+          displayCustomError(
+            `Tồn tại giá trị ${errorContent.join(
+              ', '
+            )} trong Content không tồn tại trong Data Extension đã chọn!`
+          );
+          $('.ccb-modal').show();
+          $('.ccb-modal__loading').hide();
+          $('.ccb-modal__validateResult.failed').show();
           connection.trigger('updateButton', {
             button: 'next',
             enabled: false,
@@ -538,8 +575,10 @@ const getZNSTemplateDetail = async (TemplateId, OAId) => {
 
 const displayCustomError = (message) => {
   if (message) {
-    $('.ccb-modal__validateResult__error-message').text(message)
+    $('.ccb-modal__validateResult__error-message').text(message);
   } else {
-    $('.ccb-modal__validateResult__error-message').text('An error occurred while submitting the form. Please try again')
+    $('.ccb-modal__validateResult__error-message').text(
+      'An error occurred while submitting the form. Please try again'
+    );
   }
-}
+};
