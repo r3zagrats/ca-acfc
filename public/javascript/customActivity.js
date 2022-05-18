@@ -449,7 +449,7 @@ const checkContent = async (type) => {
           }
         });
         if (error == true) {
-          alert(`Tồn tại giá trị ${errorContent.join(', ')} trong Content không hợp lệ !`);
+          alert(`Tồn tại giá trị ${errorContent.join(', ')} trong Content không tồn tại trong Data Extension đã chọn!`);
           connection.trigger('updateButton', {
             button: 'next',
             enabled: false,
