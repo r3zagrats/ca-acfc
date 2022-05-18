@@ -54,10 +54,10 @@ async function onRender() {
   $('.ccb-modal').hide();
   // DOM events listeners
   /**
-   * Listening to ZNS Options changes
+   * Listening to ZM Options changes
    */
-  $('#ccb-znsOptions-select').on('change', (e) => {
-    $('.ccb-form__znsContent-wrapper').empty();
+  $('#ccb-zmOptions-select').on('change', (e) => {
+    $('.ccb-form__zmContent-wrapper').empty();
     switch (e.target.value) {
       case 'Default': {
         $('#submitBtn').hide();
@@ -66,23 +66,23 @@ async function onRender() {
         break;
       }
       case 'Text': {
-        renderZNSText();
+        renderZMText();
         break;
       }
       case 'Image': {
-        renderZNSImage();
+        renderZMImage();
         break;
       }
       case 'NormalList': {
-        $('.ccb-form__znsContent-wrapper').append('<ul id="elementList"></ul>');
+        $('.ccb-form__zmContent-wrapper').append('<ul id="elementList"></ul>');
         $('#submitBtn').show();
         $('#addNormalList').show();
         $('#addButtonList').hide();
-        renderZNSList(normalList, false);
+        renderZMList(normalList, false);
         break;
       }
       case 'ButtonList': {
-        $('.ccb-form__znsContent-wrapper').append(
+        $('.ccb-form__zmContent-wrapper').append(
           '<div id="ccb-form__Group-Button__header" class="ccb-form__Group"></div>'
         );
         $('#ccb-form__Group-Button__header').append(`
@@ -93,22 +93,22 @@ async function onRender() {
             </div>
           </div>
         `);
-        $('.ccb-form__znsContent-wrapper').append(
+        $('.ccb-form__zmContent-wrapper').append(
           '<div id="ccb-form__Group-Button__body" class="ccb-form__Group"></div>'
         );
         $('#ccb-form__Group-Button__body').append('<ul id="elementList"></ul>');
         $('#submitBtn').show();
         $('#addNormalList').hide();
         $('#addButtonList').show();
-        renderZNSList(buttonList, true);
+        renderZMList(buttonList, true);
         break;
       }
       case 'AttachedFile': {
-        renderZNSAttachedFile();
+        renderZMAttachedFile();
         break;
       }
       case 'RequestUserInfo': {
-        renderZNSRequestUserInfo();
+        renderZMRequestUserInfo();
         break;
       }
     }
@@ -143,8 +143,8 @@ async function onRender() {
     const formData = new FormData(myForm);
     const formProps = Object.fromEntries(formData);
     console.log('formProps: ', formProps);
-    let { znsOptions, msgText, imageUrl, imageOption, attachedFile, title, subTitle } = formProps;
-    switch (znsOptions) {
+    let { zmOptions, msgText, imageUrl, imageOption, attachedFile, title, subTitle } = formProps;
+    switch (zmOptions) {
       case 'Text': {
         $('#ccb-form-msgText-element').removeClass('slds-has-error');
         $('#ccb-form-msgText-element-text-error').remove();
@@ -214,11 +214,11 @@ async function onRender() {
         break;
       }
       case 'NormalList': {
-        hasError = validateZNSList(formProps, hasError, errorMsg);
+        hasError = validateZMList(formProps, hasError, errorMsg);
         break;
       }
       case 'ButtonList': {
-        hasError = validateZNSList(formProps, hasError, errorMsg);
+        hasError = validateZMList(formProps, hasError, errorMsg);
         break;
       }
       case 'AttachedFile': {
@@ -375,7 +375,7 @@ async function onRender() {
     }
     addNormalListElement(normalList);
     localStorage.setItem('LSNormalList', JSON.stringify(normalList));
-    renderZNSList(normalList, false);
+    renderZMList(normalList, false);
   });
 
   /**
@@ -389,7 +389,7 @@ async function onRender() {
     }
     addButtonListElement(buttonList);
     localStorage.setItem('LSButtonList', JSON.stringify(buttonList));
-    renderZNSList(buttonList, true);
+    renderZMList(buttonList, true);
   });
 }
 
@@ -409,7 +409,7 @@ const fetchData = async () => {
  * Render Initial UI
  */
 const renderInitialUI = () => {
-  $('#ccb-form').append('<div class="ccb-form__znsContent-wrapper"></div>');
+  $('#ccb-form').append('<div class="ccb-form__zmContent-wrapper"></div>');
   $('#ccb-form').append(
     '<input id="addNormalList" class="button slds-button slds-button_brand" value="Add Element" />'
   );
@@ -435,14 +435,14 @@ const restoreData = () => {
     }
     switch (data.type) {
       case 'Text': {
-        renderZNSText();
-        $('#ccb-znsOptions-select').val(data.type);
+        renderZMText();
+        $('#ccb-zmOptions-select').val(data.type);
         $('#msgText').val(data.msgText);
         break;
       }
       case 'Image': {
-        renderZNSImage();
-        $('#ccb-znsOptions-select').val(data.type);
+        renderZMImage();
+        $('#ccb-zmOptions-select').val(data.type);
         $('#msgText').val(data.msgText);
         $('#imageOption').val(data.imageOption);
         if (data.imageOption === 'imageFile') {
@@ -454,19 +454,19 @@ const restoreData = () => {
         break;
       }
       case 'NormalList': {
-        $('#ccb-znsOptions-select').val(data.type);
-        $('.ccb-form__znsContent-wrapper').append('<ul id="elementList"></ul>');
+        $('#ccb-zmOptions-select').val(data.type);
+        $('.ccb-form__zmContent-wrapper').append('<ul id="elementList"></ul>');
         $('#submitBtn').show();
         $('#addNormalList').show();
         $('#addButtonList').hide();
-        renderZNSList(data.elements, false);
+        renderZMList(data.elements, false);
         normalList = data.elements;
         localStorage.setItem('LSNormalList', JSON.stringify(normalList));
         break;
       }
       case 'ButtonList': {
-        $('#ccb-znsOptions-select').val(data.type);
-        $('.ccb-form__znsContent-wrapper').append(
+        $('#ccb-zmOptions-select').val(data.type);
+        $('.ccb-form__zmContent-wrapper').append(
           '<div id="ccb-form__Group-Button__header" class="ccb-form__Group"></div>'
         );
         $('#ccb-form__Group-Button__header').append(`
@@ -477,28 +477,28 @@ const restoreData = () => {
           </div>
         </div>
       `);
-        $('.ccb-form__znsContent-wrapper').append(
+        $('.ccb-form__zmContent-wrapper').append(
           '<div id="ccb-form__Group-Button__body" class="ccb-form__Group"></div>'
         );
         $('#ccb-form__Group-Button__body').append('<ul id="elementList"></ul>');
         $('#submitBtn').show();
         $('#addNormalList').hide();
         $('#addButtonList').show();
-        renderZNSList(data.elements, true);
+        renderZMList(data.elements, true);
         $('#msgText').val(data.msgText);
         buttonList = data.elements;
         localStorage.setItem('LSButtonList', JSON.stringify(buttonList));
         break;
       }
       case 'AttachedFile': {
-        $('#ccb-znsOptions-select').val(data.type);
-        renderZNSAttachedFile();
+        $('#ccb-zmOptions-select').val(data.type);
+        renderZMAttachedFile();
         $('#attachedFile').val(JSON.stringify(data.value));
         break;
       }
       case 'RequestUserInfo': {
-        renderZNSRequestUserInfo();
-        $('#ccb-znsOptions-select').val(data.type);
+        renderZMRequestUserInfo();
+        $('#ccb-zmOptions-select').val(data.type);
         $('#title').val(data.title);
         $('#subTitle').val(data.subTitle);
         $('#imageOption').val(data.imageOption);
@@ -570,13 +570,13 @@ const removeListElement = (elementList, id) => {
 //Validate function
 
 /**
- * Validate ZNS Normal/Button List
+ * Validate ZM Normal/Button List
  * @param {object} formProps
  * @param {boolean} hasError
  * @param {string} errorMsg
  * @returns {string}
  */
-const validateZNSList = (formProps, hasError, errorMsg) => {
+const validateZMList = (formProps, hasError, errorMsg) => {
   console.log({ formProps, hasError, errorMsg });
   for (const [key, value] of Object.entries(formProps)) {
     $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
@@ -720,8 +720,8 @@ const reRenderUI = () => {
   const formProps = Object.fromEntries(formData);
   sdk.getContent((content) => {
     content = formProps;
-    const { znsOptions, msgText, imageUrl, imageOption, attachedFile, title, subTitle } = content;
-    switch (znsOptions) {
+    const { zmOptions, msgText, imageUrl, imageOption, attachedFile, title, subTitle } = content;
+    switch (zmOptions) {
       case 'Text': {
         const payloadData = {
           recipient: {
@@ -1262,10 +1262,10 @@ const reRenderUI = () => {
 
 // Render functions
 /**
- * Render ZNS Text
+ * Render ZM Text
  */
-const renderZNSText = () => {
-  $('.ccb-form__znsContent-wrapper').append(
+const renderZMText = () => {
+  $('.ccb-form__zmContent-wrapper').append(
     '<div id="ccb-form__Group" class="ccb-form__Group"></div>'
   );
   $('#ccb-form__Group').append(`
@@ -1302,10 +1302,10 @@ const renderImageUrlInput = (el) => {
 };
 
 /**
- * Render ZNS Image
+ * Render ZM Image
  */
-const renderZNSImage = async () => {
-  $('.ccb-form__znsContent-wrapper').append(
+const renderZMImage = async () => {
+  $('.ccb-form__zmContent-wrapper').append(
     '<div id="ccb-form__Group" class="ccb-form__Group"></div>'
   );
   $('#ccb-form__Group').append(`
@@ -1345,11 +1345,11 @@ const renderImageOptions = (el) => {
 };
 
 /**
- * Render ZNS Normal/Button List
+ * Render ZM Normal/Button List
  * @param {array} elementList
  * @param {boolean} isButtonList
  */
-const renderZNSList = (elementList, isButtonList) => {
+const renderZMList = (elementList, isButtonList) => {
   $('#elementList').empty();
   elementList.forEach((el) => {
     $('#elementList').append(
@@ -1450,7 +1450,7 @@ const renderZNSList = (elementList, isButtonList) => {
         normalList = JSON.parse(localStorage.getItem('LSNormalList'));
         normalList = removeListElement(normalList, el.id);
         localStorage.setItem('LSNormalList', JSON.stringify(normalList));
-        renderZNSList(normalList, false);
+        renderZMList(normalList, false);
         reRenderUI();
       });
     } else {
@@ -1458,7 +1458,7 @@ const renderZNSList = (elementList, isButtonList) => {
         buttonList = JSON.parse(localStorage.getItem('LSButtonList'));
         buttonList = removeListElement(buttonList, el.id);
         localStorage.setItem('LSButtonList', JSON.stringify(buttonList));
-        renderZNSList(buttonList);
+        renderZMList(buttonList);
         reRenderUI();
       });
     }
@@ -1466,7 +1466,7 @@ const renderZNSList = (elementList, isButtonList) => {
 };
 
 /**
- * Render ZNS Action Types
+ * Render ZM Action Types
  * @param {object} el
  * @param {string} type
  */
@@ -1587,8 +1587,8 @@ const renderImageFiles = (el) => {
   });
 };
 
-const renderZNSAttachedFile = () => {
-  $('.ccb-form__znsContent-wrapper').append(
+const renderZMAttachedFile = () => {
+  $('.ccb-form__zmContent-wrapper').append(
     '<div id="ccb-form__Group" class="ccb-form__Group"></div>'
   );
   $('.ccb-form__Group').append(`
@@ -1629,8 +1629,8 @@ const renderZNSAttachedFile = () => {
   $('#addButtonList').hide();
 };
 
-const renderZNSRequestUserInfo = () => {
-  $('.ccb-form__znsContent-wrapper').append(
+const renderZMRequestUserInfo = () => {
+  $('.ccb-form__zmContent-wrapper').append(
     '<div id="ccb-form__Group" class="ccb-form__Group"></div>'
   );
   $('.ccb-form__Group').append(`

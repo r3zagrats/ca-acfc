@@ -30,18 +30,18 @@ exports.customActivity = async (req, res) => {
   }
 };
 
-const znsOptions = [
+const ZMOptions = [
   { value: 'Default', name: '--Select one of the following options--' },
-  { value: 'Text', name: 'ZNS Text' },
-  { value: 'Image', name: 'ZNS Image' },
-  { value: 'NormalList', name: 'ZNS Normal List' },
-  { value: 'ButtonList', name: 'ZNS Button List' },
-  { value: 'AttachedFile', name: 'ZNS Attached File' },
-  { value: 'RequestUserInfo', name: 'ZNS Request User Info' },
+  { value: 'Text', name: 'ZM Text' },
+  { value: 'Image', name: 'ZM Image' },
+  { value: 'NormalList', name: 'ZM Normal List' },
+  { value: 'ButtonList', name: 'ZM Button List' },
+  { value: 'AttachedFile', name: 'ZM Attached File' },
+  { value: 'RequestUserInfo', name: 'ZM Request User Info' },
 ];
 
 exports.customContent = async (req, res) => {
-  res.status(200).render('customContent', { znsOptions });
+  res.status(200).render('customContent', { ZMOptions });
 };
 
 /**
@@ -51,4 +51,9 @@ exports.customContent = async (req, res) => {
  */
 exports.login = async (req, res) => {
   res.render('login', { error: false });
+};
+
+exports.admin = async (req, res) => {
+  const { rows:Channels } = await pgdb.query(`SELECT * FROM "${process.env.PSQL_CHANNELS_TABLE}" ORDER BY "Id"`);
+  res.render('admin', { Channels });
 };

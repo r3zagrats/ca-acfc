@@ -43,6 +43,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // serve config
 app.use('/config.json', routes.config);
 app.get('/login', routes.login);
+app.get('/admin', routes.admin);
 app.post('/login', pgDBRouter.authen);
 app.get('/favicon.ico', (req, res) => res.status(204));
 // custom activity routes
@@ -53,6 +54,7 @@ app.use('/journey/validate/', activityRouter.validate);
 app.use('/journey/stop/', activityRouter.stop);
 
 //pgDB
+app.get('/pgdb/channels/', pgDBRouter.getAllChannels)
 app.get('/pgdb/zalooa/', pgDBRouter.getAllOA)
 app.post('/pgdb/zalooa/', pgDBRouter.createOA)
 app.patch('/pgdb/zalooa/', pgDBRouter.updateOA)
