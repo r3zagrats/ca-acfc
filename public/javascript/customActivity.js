@@ -535,3 +535,11 @@ const getZNSTemplateDetail = async (TemplateId, OAId) => {
     throw new Error(error.message);
   }
 };
+
+const displayCustomError = (message) => {
+  if (message) {
+    $('.ccb-modal__validateResult__error-message').text(message)
+  } else {
+    $('.ccb-modal__validateResult__error-message').text('An error occurred while submitting the form. Please try again')
+  }
+}

@@ -371,10 +371,7 @@ async function onRender() {
   $('#addNormalList').click(() => {
     normalList = JSON.parse(localStorage.getItem('LSNormalList'));
     if (normalList.length === 5) {
-      displayCustomError('Mỗi danh sách chỉ có tối đa 5 phần tử')
-      $('.ccb-modal').show();
-      $('.ccb-modal__loading').hide();
-      $('.ccb-modal__validateResult.failed').show();
+      alert('Mỗi danh sách chỉ có tối đa 5 phần tử')
       return;
     }
     addNormalListElement(normalList);
@@ -388,10 +385,7 @@ async function onRender() {
   $('#addButtonList').click(() => {
     buttonList = JSON.parse(localStorage.getItem('LSButtonList'));
     if (buttonList.length === 5) {
-      displayCustomError('Mỗi danh sách chỉ có tối đa 5 phần tử')
-      $('.ccb-modal').show();
-      $('.ccb-modal__loading').hide();
-      $('.ccb-modal__validateResult.failed').show();
+      alert('Mỗi danh sách chỉ có tối đa 5 phần tử')
       return;
     }
     addButtonListElement(buttonList);
@@ -1168,8 +1162,7 @@ const reRenderUI = () => {
             break;
           }
           default: {
-            displayCustomError('This type is not supported')
-            $('.ccb-modal__validateResult.failed').show();
+            alert('This type is not supported')
           }
         }
         sdk.setContent(htmlScript);
