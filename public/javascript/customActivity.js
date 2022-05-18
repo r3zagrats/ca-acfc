@@ -36,16 +36,16 @@ const requestedInteractionHandler = async (settings) => {
       });
     } catch (error) {
       displayCustomError('Please choose ENTRY EVENT and SAVE Journey before Continue');
-      $('.ccb-modal').show();
-      $('.ccb-modal__loading').hide();
-      $('.ccb-modal__validateResult.failed').show();
+      $('.ca-modal').show();
+      $('.ca-modal__loading').hide();
+      $('.ca-modal__validateResult.failed').show();
       connection.trigger('destroy');
     }
   } else {
     displayCustomError('Please choose ENTRY EVENT and SAVE Journey before Continue');
-    $('.ccb-modal').show();
-    $('.ccb-modal__loading').hide();
-    $('.ccb-modal__validateResult.failed').show();
+    $('.ca-modal').show();
+    $('.ca-modal__loading').hide();
+    $('.ca-modal__validateResult.failed').show();
     connection.trigger('destroy');
   }
 };
@@ -65,23 +65,23 @@ const onRender = () => {
   connection.trigger('requestEndpoints');
   connection.trigger('requestInteraction');
   connection.trigger('requestSchema');
-  $('.ccb-modal__validateResult__button').on('click', (e) => {
-    $('.ccb-modal').hide();
+  $('.ca-modal__validateResult__button').on('click', (e) => {
+    $('.ca-modal').hide();
   });
 
-  $('.ccb-modal').on('click', (e) => {
-    $('.ccb-modal').hide();
+  $('.ca-modal').on('click', (e) => {
+    $('.ca-modal').hide();
   });
 
-  $('.ccb-modal__validateResult').on('click', (e) => {
+  $('.ca-modal__validateResult').on('click', (e) => {
     e.stopPropagation();
   });
   $('#Channels').on('change', (e) => {
     if ($('#Channels').val() === 'SMS') {
       displayCustomError('This channel is not supported yet. Please select another channel!');
-      $('.ccb-modal').show();
-      $('.ccb-modal__loading').hide();
-      $('.ccb-modal__validateResult.failed').show();
+      $('.ca-modal').show();
+      $('.ca-modal__loading').hide();
+      $('.ca-modal__validateResult.failed').show();
       connection.trigger('updateButton', {
         button: 'next',
         enabled: false,
@@ -114,9 +114,9 @@ const onRender = () => {
           });
         } catch (error) {
           displayCustomError(`${error}`);
-          $('.ccb-modal').show();
-          $('.ccb-modal__loading').hide();
-          $('.ccb-modal__validateResult.failed').show();
+          $('.ca-modal').show();
+          $('.ca-modal__loading').hide();
+          $('.ca-modal__validateResult.failed').show();
           connection.trigger('updateButton', {
             button: 'next',
             enabled: false,
@@ -160,9 +160,9 @@ const onRender = () => {
           checkContent('refresh');
         } catch (error) {
           displayCustomError(`Error on fetching data: ${error.message}`);
-          $('.ccb-modal').show();
-          $('.ccb-modal__loading').hide();
-          $('.ccb-modal__validateResult.failed').show();
+          $('.ca-modal').show();
+          $('.ca-modal__loading').hide();
+          $('.ca-modal__validateResult.failed').show();
         }
         break;
       }
@@ -187,15 +187,15 @@ const onRender = () => {
             checkContent('refresh');
           } else {
             displayCustomError(`${customContent.message}`);
-            $('.ccb-modal').show();
-            $('.ccb-modal__loading').hide();
-            $('.ccb-modal__validateResult.failed').show();
+            $('.ca-modal').show();
+            $('.ca-modal__loading').hide();
+            $('.ca-modal__validateResult.failed').show();
           }
         } catch (error) {
           displayCustomError(`Error on fetching data: ${error.message}`);
-          $('.ccb-modal').show();
-          $('.ccb-modal__loading').hide();
-          $('.ccb-modal__validateResult.failed').show();
+          $('.ca-modal').show();
+          $('.ca-modal__loading').hide();
+          $('.ca-modal__validateResult.failed').show();
         }
         break;
       }
@@ -410,9 +410,9 @@ const showStep = async (step, stepIndex) => {
             checkContent('init');
           } catch (error) {
             displayCustomError(`Error on fetching data: ${error.message}`);
-            $('.ccb-modal').show();
-            $('.ccb-modal__loading').hide();
-            $('.ccb-modal__validateResult.failed').show();
+            $('.ca-modal').show();
+            $('.ca-modal__loading').hide();
+            $('.ca-modal__validateResult.failed').show();
           }
           break;
         }
@@ -437,15 +437,15 @@ const showStep = async (step, stepIndex) => {
               checkContent('init');
             } else {
               displayCustomError(`${customContent.message}`);
-              $('.ccb-modal').show();
-              $('.ccb-modal__loading').hide();
-              $('.ccb-modal__validateResult.failed').show();
+              $('.ca-modal').show();
+              $('.ca-modal__loading').hide();
+              $('.ca-modal__validateResult.failed').show();
             }
           } catch (error) {
             displayCustomError(`Error on fetching data: ${error.message}`);
-            $('.ccb-modal').show();
-            $('.ccb-modal__loading').hide();
-            $('.ccb-modal__validateResult.failed').show();
+            $('.ca-modal').show();
+            $('.ca-modal__loading').hide();
+            $('.ca-modal__validateResult.failed').show();
           }
           break;
         }
@@ -495,9 +495,9 @@ const checkContent = async (type) => {
               ', '
             )} trong Content không tồn tại trong Data Extension đã chọn!`
           );
-          $('.ccb-modal').show();
-          $('.ccb-modal__loading').hide();
-          $('.ccb-modal__validateResult.failed').show();
+          $('.ca-modal').show();
+          $('.ca-modal__loading').hide();
+          $('.ca-modal__validateResult.failed').show();
           connection.trigger('updateButton', {
             button: 'next',
             enabled: false,
@@ -586,9 +586,9 @@ const getZNSTemplateDetail = async (TemplateId, OAId) => {
 
 const displayCustomError = (message) => {
   if (message) {
-    $('.ccb-modal__validateResult__error-message').text(message);
+    $('.ca-modal__validateResult__error-message').text(message);
   } else {
-    $('.ccb-modal__validateResult__error-message').text(
+    $('.ca-modal__validateResult__error-message').text(
       'An error occurred while submitting the form. Please try again'
     );
   }
