@@ -121,7 +121,8 @@ html {
   justify-content: space-between;
   align-items: center;
   background-color: #fff;
-  margin-bottom: 2rem;
+  margin: 0 -2rem 2rem -2rem;
+  padding: 0 2rem;
 }
 
 .breadcrumb__channel {
