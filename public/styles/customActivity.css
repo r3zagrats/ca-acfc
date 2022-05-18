@@ -63,10 +63,10 @@ html {
   width: 100%;
 }
 
-.ca-modal__submitResult-title {
+.ca-modal__submitResult__title {
   padding: 10px;
 }
-.ca-modal__submitResult-desc {
+.ca-modal__submitResult__desc {
   font-size: 16px;
   padding: 10px;
   border-top: 1px solid rgba(0, 0, 0, 0.3);
@@ -74,7 +74,7 @@ html {
   text-align: center;
 }
 
-.ca-modal__submitResult-button {
+.ca-modal__submitResult__button {
   margin: 10px;
   padding: 6px;
   float: right;
