@@ -1686,8 +1686,8 @@ const getMetaDataContent = async () => {
 
 const displayCustomError = (message) => {
   if (message) {
-    $('.ccb-modal__validateResult__error-message').val(message)
+    $('.ccb-modal__validateResult__error-message').text(message)
   } else {
-    $('.ccb-modal__validateResult__error-message').val('An error occurred while submitting the form. Please try again')
+    $('.ccb-modal__validateResult__error-message').text('An error occurred while submitting the form. Please try again')
   }
 }
