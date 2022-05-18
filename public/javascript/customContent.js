@@ -371,8 +371,8 @@ async function onRender() {
   $('#addNormalList').click(() => {
     normalList = JSON.parse(localStorage.getItem('LSNormalList'));
     if (normalList.length === 5) {
-      displayCustomError('Mỗi danh sách chỉ có tối đa 5 phần tử')
       $('.ccb-modal__validateResult.failed').show();
+      displayCustomError('Mỗi danh sách chỉ có tối đa 5 phần tử')
       return;
     }
     addNormalListElement(normalList);
@@ -386,8 +386,8 @@ async function onRender() {
   $('#addButtonList').click(() => {
     buttonList = JSON.parse(localStorage.getItem('LSButtonList'));
     if (buttonList.length === 5) {
-      displayCustomError('Mỗi danh sách chỉ có tối đa 5 phần tử')
       $('.ccb-modal__validateResult.failed').show();
+      displayCustomError('Mỗi danh sách chỉ có tối đa 5 phần tử')
       return;
     }
     addButtonListElement(buttonList);
