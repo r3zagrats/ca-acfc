@@ -24,7 +24,7 @@ head
   .body
     .breadcrumb
       span.breadcrumb__channel Zalo Message
-      span.breadcrumb__path Zalo Massage > Admin
+      span.breadcrumb__path Zalo Massage > Manage
     .content__container 
       .content
         #myModal.modal.fade(role='dialog')
@@ -44,7 +44,7 @@ head
             .row
               .col-sm-10
                 h2
-                  | Endpoint
+                  | Sender
                   b Details
             table.table.table-bordered
               thead
@@ -64,7 +64,7 @@ head
                     //- td= endpoint.AccessToken
                     //- td= endpoint.RefreshToken
                     //- td= endpoint.Timestamp
-                    td= endpoint.ExpiryDate
+                    //- td= endpoint.ExpiryDate
                     td
                       button.edit(title='Edit' data-toggle='tooltip') Edit
                       button.delete(title='Delete' data-toggle='tooltip') Delete
