@@ -55,5 +55,6 @@ exports.login = async (req, res) => {
 
 exports.admin = async (req, res) => {
   const { rows:Channels } = await pgdb.query(`SELECT * FROM "${process.env.PSQL_CHANNELS_TABLE}" ORDER BY "Id"`);
-  res.render('admin', { Channels });
+  const { rows:Endpoints } = await pgdb.query(`SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" ORDER BY "OAId"`);
+  res.render('admin', { Channels, Endpoints });
 };

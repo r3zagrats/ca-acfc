@@ -13,20 +13,64 @@ head
     .container
       .row
         .col
-          .header-content
+          .header__content
             .user
               .noti
-                i.fa-solid.fa-bell.ca-bell
-                .noti-count-wrapper
-                  span.noti-count 99
-              .avatar-wrapper
+                i.fa-solid.fa-bell.ca__bell
+                .noti__count__wrapper
+                  span.noti__count 99
+              .avatar__wrapper
                 img.avatar(src='/images/user.jpg' alt='avatar')
   .body
     .breadcrumb
       span.breadcrumb__channel Zalo Message
       span.breadcrumb__path Zalo Massage > Admin
     .content__container 
-      .content Content1
+      .content
+        #myModal.modal.fade(role='dialog')
+          .modal-dialog
+            // Modal content
+            .modal-content
+              .modal-header
+                button.close(type='button' data-dismiss='modal') &times;
+              .modal-body
+
+              .modal-footer
+                button.btn.btn-info.save(type='button') Save
+                button.btn.btn-default(type='button' data-dismiss='modal') Close
+
+        .table-wrapper
+          .table-title
+            .row
+              .col-sm-10
+                h2
+                  | Endpoint
+                  b Details
+            table.table.table-bordered
+              thead
+                tr
+                  th OAName
+                  th OAId
+                  //- th Access Token
+                  //- th Refresh Token
+                  //- th Timestamp
+                  //- th Expiry Date
+                  th Action
+              tbody
+                each endpoint in Endpoints
+                  tr
+                    td= endpoint.OAName
+                    td= endpoint.OAId
+                    //- td= endpoint.AccessToken
+                    //- td= endpoint.RefreshToken
+                    //- td= endpoint.Timestamp
+                    td= endpoint.ExpiryDate
+                    td
+                      button.edit(title='Edit' data-toggle='tooltip') Edit
+                      button.delete(title='Delete' data-toggle='tooltip') Delete
+            button.btn.btn-info.add-new(type='button')
+              i.fa.fa-plus
+              |  Add New
     //- .container
     //-   .row
     //-     .col
@@ -34,25 +78,49 @@ head
     //-     .col
     //-       .content Content2
   footer.footer
-    .footer-content Footer
+    span.footer__copyright
+      i.fa-regular.fa-copyright
+      |  White Space
+    span.footer__contact haquan@whitespace.vn
     //- .container-fluid
     //-   .row
     //-     .col.g-0
-          .footer-content Footer
+      .footer-content Footer
 .sidebar
   .logo
-    img.ca-logo(src='/images/logo.png' alt='logo')
+    img.ca__logo(src='/images/logo.png' alt='logo')
   ul.menu
     each Channel in Channels
-      li.menu-item
-        .menu-item-heading
-          a= Channel.Name
-          i.fa-solid.fa-chevron-right
+      li.menu__item
+        .menu__item__heading
+          a.menu__item__link= Channel.Name
+          i.fa-solid.fa-chevron-right.menu__item__arrow
         ul.submenu 
-          li.submenu-item
+          li.submenu__item
             a - Manage
-          li.submenu-item 
-            b - Detail
+          li.submenu__item 
+            a - Detail
+    li.menu__item
+      .menu__item__heading
+        a.menu__item__link Facebook Messenger
+        i.fa-solid.fa-chevron-right.menu__item__arrow
+      ul.submenu 
+        li.submenu__item
+          a - Manage
+        li.submenu__item 
+          a - Detail
+        li.submenu__item 
+          a - Test
+    li.menu__item
+      .menu__item__heading
+        a.menu__item__link Viper
+        i.fa-solid.fa-chevron-right.menu__item__arrow
+      ul.submenu 
+        li.submenu__item
+          a - Manage
+        li.submenu__item 
+          a - Detail
+        li.submenu__item 
 script(src='/javascript/libs/superagent.min.js')
 script(src='/javascript/libs/jquery.min.js')
 script(src='/javascript/libs/bootstrap.bundle.min.js')

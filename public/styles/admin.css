@@ -3,6 +3,7 @@
   --text-color: #4b5563;
   --component-color: #263237;
   --theme-bg-color: #1b96ff;
+  /* --submenu-height: 10rem; */
 }
 
 @font-face {
@@ -36,7 +37,7 @@ html {
   z-index: 10000;
 }
 
-.header-content {
+.header__content {
   height: 7.2rem;
   display: flex;
   justify-content: flex-end;
@@ -48,7 +49,7 @@ html {
   justify-content: center;
 }
 
-.ca-logo {
+.ca__logo {
   height: 10rem;
   width: auto;
 }
@@ -64,11 +65,11 @@ html {
   position: relative;
 }
 
-.ca-bell {
+.ca__bell {
   font-size: 2rem;
 }
 
-.noti-count-wrapper {
+.noti__count__wrapper {
   position: absolute;
   top: 13px;
   left: 28px;
@@ -79,14 +80,14 @@ html {
   display: flex;
 }
 
-.noti-count {
+.noti__count {
   margin: auto;
   color: #fff;
   font-size: 1rem;
   padding: 0.1rem;
 }
 
-.avatar-wrapper {
+.avatar__wrapper {
   border-radius: 50%;
   width: 4rem;
   height: 4rem;
@@ -133,28 +134,178 @@ html {
 
 .content__container {
   background-color: #fff;
-  height: 100%;
+  height: 98%;
 }
 
 .content {
 }
 
 .footer {
-  font-size: 2rem;
-  padding: 0;
-}
-
-.footer-content {
   background-color: #fff;
   height: 5rem;
-}
-
-.menu-heading {
-  font-size: 3rem;
-}
-
-.menu-item-heading {
+  font-size: 2rem;
+  padding: 0 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.menu__heading {
+  font-size: 3rem;
+}
+
+.menu__item__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.submenu {
+  opacity: 0;
+  transition: visibility 0s, opacity 0.5s linear;
+  display: none;
+}
+
+.menu__item {
+  /* transition: all 0.5s linear; */
+}
+
+.menu__item__arrow {
+  transition: transform 0.2s linear;
+}
+/* Utils */
+
+.rotate-90 {
+  transform: rotate(90deg);
+}
+
+.show {
+  opacity: 1;
+  display: inline-block;
+}
+
+/* .expanded {
+  transform: translateY(var(--submenu-height))
+} */
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.table-wrapper {
+  width: 95%;
+  margin: 30px auto;
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+.table-title {
+  padding-bottom: 10px;
+  margin: 0 0 10px;
+}
+.table-title h2 {
+  margin: 6px 0 0;
+  font-size: 22px;
+}
+.table-title .add-new {
+  float: right;
+  height: 30px;
+  font-weight: bold;
+  font-size: 12px;
+  text-shadow: none;
+  min-width: 100px;
+  border-radius: 50px;
+  line-height: 13px;
+}
+.table-title .add-new i {
+  margin-right: 4px;
+}
+table.table {
+  table-layout: fixed;
+}
+table.table tr th,
+table.table tr td {
+  border-color: #e9e9e9;
+}
+table.table th i {
+  font-size: 13px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+table.table th:last-child {
+  width: 100px;
+}
+table.table td a {
+  cursor: pointer;
+  display: inline-block;
+  margin: 0 5px;
+  min-width: 24px;
+}
+table.table td a.add {
+  color: #27c46b;
+}
+table.table td a.edit {
+  color: #ffc107;
+}
+table.table td a.delete {
+  color: #e34724;
+}
+table.table td i {
+  font-size: 19px;
+}
+table.table td a.add i {
+  font-size: 24px;
+  margin-right: -1px;
+  position: relative;
+  top: 3px;
+}
+table.table .form-control {
+  height: 32px;
+  line-height: 32px;
+  box-shadow: none;
+  border-radius: 2px;
+}
+table.table .form-control.error {
+  border-color: #f50000;
+}
+table.table td .add {
+  display: none;
+}
+.container-md,
+.container-sm,
+.container-xl {
+  max-width: 90%;
 }
