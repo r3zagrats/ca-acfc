@@ -565,7 +565,7 @@ const checkContent = async (type) => {
 
 const getCustomContent = async () => {
   try {
-    const response = await superagent.get('/api/getcustomcontent');
+    const response = await superagent.get('/api/sfmc/getcustomcontent');
     return response.body;
   } catch (error) {
     throw new Error(error.message);
@@ -574,7 +574,7 @@ const getCustomContent = async () => {
 
 const getDEInfo = async (key) => {
   try {
-    const response = await superagent.post('/api/getdeinfo').send({ key });
+    const response = await superagent.post('/api/sfmc/getdeinfo').send({ key });
     return response.body;
   } catch (error) {
     throw new Error(error.message);
@@ -583,7 +583,7 @@ const getDEInfo = async (key) => {
 
 const getZNSTemplates = async (OAId) => {
   try {
-    const response = await superagent.post('/api/getznstemplates').send({ OAId });
+    const response = await superagent.post('/api/zalo/getznstemplates').send({ OAId });
     return response.text;
   } catch (error) {
     throw new Error(error.message);
@@ -592,7 +592,7 @@ const getZNSTemplates = async (OAId) => {
 
 const getZNSTemplateDetail = async (TemplateId, OAId) => {
   try {
-    const response = await superagent.post('/api/getznstemplatedetail').send({ TemplateId, OAId });
+    const response = await superagent.post('/api/zalo/getznstemplatedetail').send({ TemplateId, OAId });
     return response.text;
   } catch (error) {
     throw new Error(error.message);
