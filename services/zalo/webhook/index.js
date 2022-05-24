@@ -169,113 +169,111 @@ const ZaloWebhook = async (req, res) => {
     }
     case 'user_send_text': {
       console.log('User send text message');
-      res.status(200).send({ message: 'OK' });
-      // try {
-      // //   const data = await fuelRestController.insertDEZaloUserActionTracking(
-      // //     JSON.stringify({
-      // //       items: [
-      // //         {
-      // //           AppId: userTrackingInfo.app_id,
-      // //           OAId: userTrackingInfo.recipient.id,
-      // //           ZaloId: userTrackingInfo.sender.id,
-      // //           MsgId: userTrackingInfo.message.msg_id,
-      // //           UTCTime: new Date(Number(userTrackingInfo.timestamp)).toUTCString(),
-      // //           Timestamp: userTrackingInfo.timestamp,
-      // //           EventName: userTrackingInfo.event_name,
-      // //           Message: userTrackingInfo.message.text,
-      // //         },
-      // //       ],
-      // //     })
-      // //   );
-      // //   let input = userTrackingInfo.message.text;
-      // //   const nameRegex = /(?<=Họ và Tên: ).*/gm;
-      // //   const phoneRegex = /(?<=Điện thoại: ).*/gm;
-      // //   const addressRegex = /(?<=Địa chỉ: ).*/gm;
-      // //   if (nameRegex.exec(input) && phoneRegex.exec(input) && addressRegex.exec(input)) {
-      // //     console.log('User send Request User Info Message');
-      // //     nameRegex.lastIndex = 0;
-      // //     phoneRegex.lastIndex = 0;
-      // //     addressRegex.lastIndex = 0;
-      // //     const data = await fuelRestController.insertDEZaloRequestUserInfoLog(
-      // //       JSON.stringify({
-      // //         items: [
-      // //           {
-      // //             AppId: userTrackingInfo.app_id,
-      // //             OAId: userTrackingInfo.recipient.id,
-      // //             ZaloId: userTrackingInfo.sender.id,
-      // //             MsgId: userTrackingInfo.message.msg_id,
-      // //             UTCTime: new Date(Number(userTrackingInfo.timestamp)).toUTCString(),
-      // //             Timestamp: userTrackingInfo.timestamp,
-      // //             Name: nameRegex.exec(input)[0],
-      // //             PhoneNumber: phoneRegex.exec(input)[0],
-      // //             Address: addressRegex.exec(input)[0],
-      // //           },
-      // //         ],
-      // //       })
-      // //     );
-      // //   }
-      // //   try {
-      // //     input = JSON.parse(input);
-      // //     if (input.EventDefinitionKey) {
-      // //       console.log('User triggered journey');
-      // //       const result = await fuelRestController.triggerJourneyBuilder(
-      // //         JSON.stringify({
-      // //           ContactKey: userTrackingInfo.sender.id,
-      // //           EventDefinitionKey: input.EventDefinitionKey,
-      // //           Data: {
-      // //             OAId: userTrackingInfo.recipient.id,
-      // //             ZaloId: userTrackingInfo.sender.id,
-      // //           },
-      // //         })
-      // //       );
-      // //       console.log('result:', result);
-      // //     }
-      // //   } catch (error) {}
-      // //   const tmpAccessToken = await refreshZaloToken(userTrackingInfo.recipient.id);
-      // //   console.log('\ntmpAccessToken: ', tmpAccessToken);
+      try {
+        const data = await fuelRestController.insertDEZaloUserActionTracking(
+          JSON.stringify({
+            items: [
+              {
+                AppId: userTrackingInfo.app_id,
+                OAId: userTrackingInfo.recipient.id,
+                ZaloId: userTrackingInfo.sender.id,
+                MsgId: userTrackingInfo.message.msg_id,
+                UTCTime: new Date(Number(userTrackingInfo.timestamp)).toUTCString(),
+                Timestamp: userTrackingInfo.timestamp,
+                EventName: userTrackingInfo.event_name,
+                Message: userTrackingInfo.message.text,
+              },
+            ],
+          })
+        );
+        let input = userTrackingInfo.message.text;
+        const nameRegex = /(?<=Họ và Tên: ).*/gm;
+        const phoneRegex = /(?<=Điện thoại: ).*/gm;
+        const addressRegex = /(?<=Địa chỉ: ).*/gm;
+        if (nameRegex.exec(input) && phoneRegex.exec(input) && addressRegex.exec(input)) {
+          console.log('User send Request User Info Message');
+          nameRegex.lastIndex = 0;
+          phoneRegex.lastIndex = 0;
+          addressRegex.lastIndex = 0;
+          const data = await fuelRestController.insertDEZaloRequestUserInfoLog(
+            JSON.stringify({
+              items: [
+                {
+                  AppId: userTrackingInfo.app_id,
+                  OAId: userTrackingInfo.recipient.id,
+                  ZaloId: userTrackingInfo.sender.id,
+                  MsgId: userTrackingInfo.message.msg_id,
+                  UTCTime: new Date(Number(userTrackingInfo.timestamp)).toUTCString(),
+                  Timestamp: userTrackingInfo.timestamp,
+                  Name: nameRegex.exec(input)[0],
+                  PhoneNumber: phoneRegex.exec(input)[0],
+                  Address: addressRegex.exec(input)[0],
+                },
+              ],
+            })
+          );
+        }
+        try {
+          input = JSON.parse(input);
+          if (input.EventDefinitionKey) {
+            console.log('User triggered journey');
+            const result = await fuelRestController.triggerJourneyBuilder(
+              JSON.stringify({
+                ContactKey: userTrackingInfo.sender.id,
+                EventDefinitionKey: input.EventDefinitionKey,
+                Data: {
+                  OAId: userTrackingInfo.recipient.id,
+                  ZaloId: userTrackingInfo.sender.id,
+                },
+              })
+            );
+            console.log('result:', result);
+          }
+        } catch (error) {}
+        const tmpAccessToken = await refreshZaloToken(userTrackingInfo.recipient.id);
+        console.log('\ntmpAccessToken: ', tmpAccessToken);
 
-      // //   let znsContent = {
-      // //     recipient: {
-      // //       user_id: userTrackingInfo.sender.id,
-      // //     },
-      // //     message: {
-      // //       text: 'Cảm ơn bạn đã nhắn tin cho White Space JSC, yêu cầu của bạn đang được quản trị viên xử lý',
-      // //     },
-      // //   };
-      // //   console.log('\nznsContent:', JSON.stringify(znsContent));
-      // //   // Send Message
-      // //   const response = await superagent
-      // //     .post('https://openapi.zalo.me/v2.0/oa/message')
-      // //     .set('Content-Type', 'application/json')
-      // //     .set('access_token', tmpAccessToken)
-      // //     .send(JSON.stringify(znsContent));
-      // //   const znsSendLog = response.body;
-      // //   console.log('\nznsSendLog:', znsSendLog);
-      // //   if (znsSendLog.error !== 0) throw znsSendLog.message;
-      // //   const firstStep = await fuelRestController.insertDEZaloOASendLog(
-      // //     JSON.stringify({
-      // //       items: [
-      // //         {
-      // //           OAId: userTrackingInfo.recipient.id,
-      // //           ZaloId: znsSendLog.error === 0 ? znsSendLog.data.user_id : '',
-      // //           MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
-      // //           UTCTime: new Date().toUTCString(),
-      // //           Timestamp: new Date().getTime(),
-      // //           StatusCode: znsSendLog.error,
-      // //           ErrorMessage: znsSendLog.message,
-      // //           Message: JSON.stringify(znsContent.message),
-      // //         },
-      // //       ],
-      // //     })
-      // //   );
-      //   // res.status(200).send(data.body);
-      //   // res.status(200).send()
-      // } catch (error) {
-      //   console.log(error);
-      //   res.status(500).send({
-      //     status: error,
-      //   });
-      // }
+        let znsContent = {
+          recipient: {
+            user_id: userTrackingInfo.sender.id,
+          },
+          message: {
+            text: 'Cảm ơn bạn đã nhắn tin cho White Space JSC, yêu cầu của bạn đang được quản trị viên xử lý',
+          },
+        };
+        console.log('\nznsContent:', JSON.stringify(znsContent));
+        // Send Message
+        const response = await superagent
+          .post('https://openapi.zalo.me/v2.0/oa/message')
+          .set('Content-Type', 'application/json')
+          .set('access_token', tmpAccessToken)
+          .send(JSON.stringify(znsContent));
+        const znsSendLog = response.body;
+        console.log('\nznsSendLog:', znsSendLog);
+        if (znsSendLog.error !== 0) throw znsSendLog.message;
+        const firstStep = await fuelRestController.insertDEZaloOASendLog(
+          JSON.stringify({
+            items: [
+              {
+                OAId: userTrackingInfo.recipient.id,
+                ZaloId: znsSendLog.error === 0 ? znsSendLog.data.user_id : '',
+                MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
+                UTCTime: new Date().toUTCString(),
+                Timestamp: new Date().getTime(),
+                StatusCode: znsSendLog.error,
+                ErrorMessage: znsSendLog.message,
+                Message: JSON.stringify(znsContent.message),
+              },
+            ],
+          })
+        );
+        res.status(200).send(data.body);
+      } catch (error) {
+        console.log(error);
+        res.status(500).send({
+          status: error,
+        });
+      }
       break;
     }
     default: {
