@@ -27,7 +27,7 @@ html {
   margin-left: 30rem;
 }
 
-.header {
+#header {
   height: 7.2rem;
   background-color: var(--theme-bg-color);
   position: fixed;
@@ -97,14 +97,14 @@ html {
   border-radius: 50%;
 }
 
-.body {
+#body {
   margin-top: 7.2rem;
   font-size: 2rem;
   height: 300rem;
   padding: 0 2rem 2rem 2rem;
 }
 
-.sidebar {
+#sidebar {
   background-color: var(--component-color);
   color: #fff;
   position: fixed;
@@ -130,6 +130,8 @@ html {
 }
 
 .breadcrumb__path {
+  display: flex;
+  align-items: center;
 }
 
 .content__container {
@@ -188,6 +190,7 @@ html {
   transform: translateY(var(--submenu-height))
 } */
 
+/* The Modal (background) */
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
@@ -225,6 +228,11 @@ html {
   cursor: pointer;
 }
 
+body {
+  color: #404e67;
+  background: #f5f7fa;
+  font-family: 'Open Sans', sans-serif;
+}
 .table-wrapper {
   width: 95%;
   margin: 30px auto;

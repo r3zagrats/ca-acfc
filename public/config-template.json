@@ -11,7 +11,7 @@
   },
   "arguments": {
     "execute": {
-      "url": "https://$DOMAIN/journey/execute",
+      "url": "https://$DOMAIN/sfmcjb/execute",
       "verb": "POST",
       "body": "",
       "header": "",
@@ -24,22 +24,22 @@
   },
   "configurationArguments": {
     "save": {
-      "url": "https://$DOMAIN/journey/save",
+      "url": "https://$DOMAIN/sfmcjb/save",
       "verb": "POST",
       "useJwt": true
     },
     "publish": {
-      "url": "https://$DOMAIN/journey/publish",
+      "url": "https://$DOMAIN/sfmcjb/publish",
       "verb": "POST",
       "useJwt": true
     },
     "stop": {
-      "url": "https://$DOMAIN/journey/stop",
+      "url": "https://$DOMAIN/sfmcjb/stop",
       "verb": "POST",
       "useJwt": true
     },
     "validate": {
-      "url": "https://$DOMAIN/journey/validate",
+      "url": "https://$DOMAIN/sfmcjb/validate",
       "verb": "POST",
       "useJwt": true
     }

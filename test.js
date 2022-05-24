@@ -1,7 +1,12 @@
-const displayCustomError = (message) => {
-  console.log(message);
-  if (message) {
-    console.log('true');
-  } else console.log('false');
-};
-displayCustomError();
+'use strict';
+class User {
+  constructor(name) {
+    this.name = name;
+  }
+  getName = async () => {
+    console.log(this.name);
+  };
+}
+
+const Quan = new User('Quan');
+Quan.getName();

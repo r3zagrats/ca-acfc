@@ -9,7 +9,7 @@ head
   link(rel='stylesheet' href='/styles/fontawesome.min.css')
   link(rel='stylesheet' href='/styles/admin.css')
 #main
-  header.header
+  header#header
     .container
       .row
         .col
@@ -21,30 +21,20 @@ head
                   span.noti__count 99
               .avatar__wrapper
                 img.avatar(src='/images/user.jpg' alt='avatar')
-  .body
+  #body
     .breadcrumb
       span.breadcrumb__channel Zalo Message
-      span.breadcrumb__path Zalo Massage > Manage
+      .breadcrumb__path 
+        span.breadcrumb__path-root Zalo Message
+        span.breadcrumb__path-sub
     .content__container 
       .content
-        #myModal.modal.fade(role='dialog')
-          .modal-dialog
-            // Modal content
-            .modal-content
-              .modal-header
-                button.close(type='button' data-dismiss='modal') &times;
-              .modal-body
-
-              .modal-footer
-                button.btn.btn-info.save(type='button') Save
-                button.btn.btn-default(type='button' data-dismiss='modal') Close
-
         .table-wrapper
           .table-title
             .row
               .col-sm-10
                 h2
-                  | Sender
+                  | Endpoint
                   b Details
             table.table.table-bordered
               thead
@@ -68,25 +58,19 @@ head
                     td
                       button.edit(title='Edit' data-toggle='tooltip') Edit
                       button.delete(title='Delete' data-toggle='tooltip') Delete
-            button.btn.btn-info.add-new(type='button')
+        button.btn.btn-info.add-new(type='button')
               i.fa.fa-plus
-              |  Add New
-    //- .container
-    //-   .row
-    //-     .col
-    //-       .content Content1
-    //-     .col
-    //-       .content Content2
-  footer.footer
+              | Add New
+  footer#footer
     span.footer__copyright
       i.fa-regular.fa-copyright
-      |  White Space
+      | White Space
     span.footer__contact haquan@whitespace.vn
     //- .container-fluid
     //-   .row
     //-     .col.g-0
       .footer-content Footer
-.sidebar
+#sidebar
   .logo
     img.ca__logo(src='/images/logo.png' alt='logo')
   ul.menu
@@ -96,32 +80,42 @@ head
           a.menu__item__link= Channel.Name
           i.fa-solid.fa-chevron-right.menu__item__arrow
         ul.submenu 
-          li.submenu__item
-            a - Manage
           li.submenu__item 
-            a - Detail
+            a Detail
+          li.submenu__item
+            a Manage
     li.menu__item
       .menu__item__heading
         a.menu__item__link Facebook Messenger
         i.fa-solid.fa-chevron-right.menu__item__arrow
       ul.submenu 
         li.submenu__item
-          a - Manage
+          a Manage
         li.submenu__item 
-          a - Detail
+          a Detail
         li.submenu__item 
-          a - Test
+          a Test
     li.menu__item
       .menu__item__heading
         a.menu__item__link Viper
         i.fa-solid.fa-chevron-right.menu__item__arrow
       ul.submenu 
         li.submenu__item
-          a - Manage
+          a Manage
         li.submenu__item 
-          a - Detail
-        li.submenu__item 
+          a Detail
+        li.submenu__item
+#myModal.modal.fade(role='dialog')
+          .modal-dialog
+            // Modal content
+            .modal-content
+              .modal-header
+                button.close(type='button' data-dismiss='modal') &times;
+              .modal-body
+              .modal-footer
+                button.btn.btn-info.save(type='button') Save
+                button.btn.btn-default(type='button' data-dismiss='modal') Close
 script(src='/javascript/libs/superagent.min.js')
 script(src='/javascript/libs/jquery.min.js')
 script(src='/javascript/libs/bootstrap.bundle.min.js')
-script(src='/javascript/admin.js')
+script(type="module" src='/javascript/admin.js')

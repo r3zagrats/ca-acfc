@@ -1,0 +1,44 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(http-equiv='X-UA-Compatible' content='IE=edge')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  script(src="javascript/libs/jquery.min.js")
+  link(href='styles/normalize.css' rel='stylesheet')
+  title Document
+  link(rel='stylesheet' href='/styles/salesforce-lightning-design-system.min.css')
+  link(href='/styles/fontawesome.min.css' rel='stylesheet')
+  link(rel='stylesheet' href='/styles/sfmcccb.css')
+  link(rel="preload" href="/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin)
+body
+  script(src='javascript/libs/blocksdk.js')
+  script(src="javascript/libs/superagent.min.js")
+  script(src='javascript/sfmcccb.js' type='module')
+  block content
+    .ccb-form__wrapper
+      .ccb-form__header Custom Content
+      form#ccb-form
+        .ccb-form__Options-wrapper
+          select#ccb-zmOptions-select.ccb-select.slds-select(name='zmOptions')
+            each zmOption in zmOptions
+              option(value=zmOption.value)=zmOption.name
+      .ccb-modal
+        .ccb-modal__container
+          .ccb-modal__loading
+            svg.spinner(viewbox='0 0 50 50')
+              circle.path(cx='25' cy='25' r='20' fill='none' stroke-width='5')
+            p.ccb-modal__text Loading data...
+          .ccb-modal__validateResult.success
+            .ccb-modal__validateResult__title
+              p Congratulations
+            .ccb-modal__validateResult__desc
+              i.fa-solid.fa-check
+              p.ccb-modal__validateResult__success-message Your changes have been validated successfully. Please click the SAVE button
+            button.slds-button.slds-button_brand.ccb-modal__validateResult__button OK
+          .ccb-modal__validateResult.failed
+            .ccb-modal__validateResult__title
+              p Error
+            .ccb-modal__validateResult__desc
+              i.fa-solid.fa-xmark
+              p.ccb-modal__validateResult__error-message An error occurred while validating the form. Please try again
+            button.slds-button.slds-button_brand.ccb-modal__validateResult__button OK

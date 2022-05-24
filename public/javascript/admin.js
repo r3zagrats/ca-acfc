@@ -1,9 +1,29 @@
-$(document).ready(async () => {});
+import Manage from './page/Manage.js';
+import Detail from './page/Detail.js';
 
 $('.menu__item__heading').click(function () {
   $(this).siblings('.submenu').toggleClass('show');
-  $(this).children('.menu__item__arrow').toggleClass('rotate-90')
+  $(this).children('.menu__item__arrow').toggleClass('rotate-90');
+  $('.breadcrumb__channel').text($(this).text());
+  $('.breadcrumb__path-root').text($(this).text());
 });
+
+$('.submenu__item').click(function (e) {
+  $('.breadcrumb__path-sub').text($(this).text());
+  console.log($(this).parents().parents('.menu__item__heading').text());
+  if (e.target.text === 'Manage') {
+    console.log('Loading Manage');
+    $('.content').empty();
+    $('.content').append(Manage.UI);
+  }
+  if (e.target.text === 'Detail') {
+    console.log('Loading Detail');
+    $('.content').empty();
+    $('.content').append(Detail.UI);
+  }
+});
+
+const updateBreadcrumb = () => {};
 
 $(window).ready(onRender);
 function onRender() {
@@ -32,11 +52,11 @@ function onRender() {
   });
 
   // Delete row on delete button click
-  $(document).on('click', '.delete', function () {
-    const thisId = $(this).parents('tr').find('td:nth-child(2)')[0].innerText;
-    deleteData(thisId);
-    $(this).parents('tr').remove();
-  });
+  // $(document).on('click', '.delete', function () {
+  //   const thisId = $(this).parents('tr').find('td:nth-child(2)')[0].innerText;
+  //   deleteData(thisId);
+  //   $(this).parents('tr').remove();
+  // });
 
   //Save Row
   $(document).on('click', '.save', async () => {

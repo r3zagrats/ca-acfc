@@ -4,7 +4,7 @@ head
     meta(charset='utf-8')
     meta(name='viewport' content='width=device-width, initial-scale=1')
     link(rel='stylesheet' href='/styles/bootstrap.min.css')
-    link(rel='stylesheet' href='/styles/custom.css')
+    link(rel='stylesheet' href='/styles/user.css')
     link(rel="icon" type="image/x-icon" href="/images/icon.png")
     script(src="javascript/libs/jquery.min.js")
     //- script(src="javascript/libs/popper.min.js")
@@ -28,26 +28,6 @@ head
           button.btn.btn-default(type='button' data-dismiss='modal') Close
 
     // Modal Pass
-  //- #modalPass.modal.fade(role='dialog')
-  //-   .modal-dialog
-  //-     // Modal content
-  //-     .modal-content
-  //-       .modal-header
-  //-         button.close(type='button' data-dismiss='modal') &times;
-  //-       .modal-body-pass
-  //-         .card.card-outline-secondary
-  //-           .card-header
-  //-             h3.mb-0 Change Password
-  //-           .card-body
-  //-             form.form(role='form' autocomplete='off')
-  //-               .form-group
-  //-                 label(for='inputPasswordNew') New Password
-  //-                 input#inputPasswordNew.form-control(type='password' required='')
-  //-               .form-group
-  //-                 label(for='inputPasswordNewVerify') Verify
-  //-                 input#inputPasswordNewVerify.form-control(type='password' required='')
-  //-               .form-group
-  //-                 button.btn.btn-success.btn-lg.float-right#savePass(type='button') Save
 
   .table-wrapper
     .table-title
@@ -56,9 +36,6 @@ head
           h2
             | Endpoint
             b Details
-        //- .col-sm-2
-        //-   .container(style='background-color:#f1f1f1')
-        //-       a#changepass(href='#') Change password
       table.table.table-bordered
         thead
           tr
@@ -70,14 +47,14 @@ head
             th Expiry Date
             th Action
         tbody
-          each ads in selectOpt
+          each endpoint in Endpoints
             tr
-              td= ads.OAName
-              td= ads.OAId
-              td= ads.AccessToken
-              td= ads.RefreshToken
-              td= ads.Timestamp
-              td= ads.ExpiryDate
+              td= endpoint.OAName
+              td= endpoint.OAId
+              td= endpoint.AccessToken
+              td= endpoint.RefreshToken
+              td= endpoint.Timestamp
+              td= endpoint.ExpiryDate
               td
                 button.edit(title='Edit' data-toggle='tooltip') Edit
                 button.delete(title='Delete' data-toggle='tooltip') Delete
