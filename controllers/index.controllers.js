@@ -22,7 +22,7 @@ class MainRouter {
    */
   config = (req, res) => {
     const domain = req.headers.host || req.headers.origin;
-    const file = path.join(__dirname, '..', 'public', 'config-template.json');
+    const file = path.join(__dirname, '..', 'public/sfmcca', 'config-template.json');
     const configTemplate = fs.readFileSync(file, 'utf-8');
     const config = JSON.parse(configTemplate.replace(/\$DOMAIN/g, domain));
     console.log('config', config);
