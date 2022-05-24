@@ -35,24 +35,24 @@ class MainRouter {
    * @param res
    */
   sfmcca = async (req, res) => {
-    const { rows: Channels } = await pgClient.query(
-      `SELECT * FROM "${process.env.PSQL_CHANNELS_TABLE}" ORDER BY "Id"`
-    );
-    const { rows: Endpoints } = await pgClient.query(
-      `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" ORDER BY "OAId"`
-    );
-    res.render('sfmcca', { Channels, Endpoints });
-    // if ((req.headers['referer'] ?? 'no end').includes('marketingcloudapps')) {
-    //   const { rows: Channels } = await pgClient.query(
-    //     `SELECT * FROM "${process.env.PSQL_CHANNELS_TABLE}" ORDER BY "Id"`
-    //   );
-    //   const { rows: Endpoints } = await pgClient.query(
-    //     `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" ORDER BY "OAId"`
-    //   );
-    //   res.render('sfmcca', { Channels, Endpoints });
-    // } else {
-    //   res.status(500).send({ Status: 'Access is not allowed' });
-    // }
+    // const { rows: Channels } = await pgClient.query(
+    //   `SELECT * FROM "${process.env.PSQL_CHANNELS_TABLE}" ORDER BY "Id"`
+    // );
+    // const { rows: Endpoints } = await pgClient.query(
+    //   `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" ORDER BY "OAId"`
+    // );
+    // res.render('sfmcca', { Channels, Endpoints });
+    if ((req.headers['referer'] ?? 'no end').includes('marketingcloudapps')) {
+      const { rows: Channels } = await pgClient.query(
+        `SELECT * FROM "${process.env.PSQL_CHANNELS_TABLE}" ORDER BY "Id"`
+      );
+      const { rows: Endpoints } = await pgClient.query(
+        `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" ORDER BY "OAId"`
+      );
+      res.render('sfmcca', { Channels, Endpoints });
+    } else {
+      res.status(500).send({ Status: 'Access is not allowed' });
+    }
   };
 
   sfmcccb = async (req, res) => {
