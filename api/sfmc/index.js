@@ -1,6 +1,7 @@
 'use strict';
 
 const fuelSDKClient = require('../../config/sfmc/fuel-sdk/fuel-sdk.config');
+const fuelRestUtils = require('../../services/fuel-rest');
 const superagent = require('superagent');
 require('dotenv').config();
 
@@ -141,7 +142,7 @@ class SFMCAPI {
    */
   getCustomContent = async (req, res) => {
     try {
-      const data = await fuelSDKClient.getContent(
+      const data = await fuelRestUtils.getContent(
         JSON.stringify({
           page: {
             page: 1,
@@ -174,7 +175,7 @@ class SFMCAPI {
 
   getImageContent = async (req, res) => {
     try {
-      const data = await fuelSDKClient.getContent(
+      const data = await fuelRestUtils.getContent(
         JSON.stringify({
           page: {
             page: 1,
@@ -206,7 +207,7 @@ class SFMCAPI {
 
   getMetaDataContent = async (req, res) => {
     try {
-      const data = await fuelSDKClient.getContent(
+      const data = await fuelRestUtils.getContent(
         JSON.stringify({
           page: {
             page: 1,
@@ -244,54 +245,56 @@ class SFMCAPI {
   getDEInfo = async (req, res) => {
     try {
       if (req.body.key != '' || req.body.key != null) {
-        const data = await fuelSDKClient.getJourney(req.body.key);
+        const data = await fuelRestUtils.getJourney(req.body.key);
         const props = ['Name', 'CustomerKey', 'ObjectID'];
-        fuelSDKClient.dataExtension({
-          props,
-          filter: {
-            //remove filter for all.
-            leftOperand: 'ObjectID',
-            operator: 'equals',
-            rightOperand: data.body.dataExtensionId,
-          },
-        }).get((err, dataDE) => {
-          if (dataDE.body.Results.length > 0) {
-            var options = {
-              props: [
-                'ObjectID',
-                'PartnerKey',
-                'Name',
-                'DefaultValue',
-                'MaxLength',
-                'IsRequired',
-                'Ordinal',
-                'IsPrimaryKey',
-                'FieldType',
-                'CreatedDate',
-                'ModifiedDate',
-                'Scale',
-                'Client.ID',
-                'CustomerKey',
-              ], //required
-              ///*
-              filter: {
-                //remove filter for all.
-                leftOperand: 'DataExtension.CustomerKey',
-                operator: 'equals',
-                rightOperand: dataDE.body.Results[0].CustomerKey,
-              },
-              //*/
-            };
-            fuelSDKClient.dataExtensionColumn(options).get((err, dataCol) => {
-              const _data = dataCol.body.Results;
-              _data.sort(dynamicSort('Name'));
-              res.status(200).send({
-                deCol: _data,
-                dataExtension: dataDE.body.Results[0],
+        fuelSDKClient
+          .dataExtension({
+            props,
+            filter: {
+              //remove filter for all.
+              leftOperand: 'ObjectID',
+              operator: 'equals',
+              rightOperand: data.body.dataExtensionId,
+            },
+          })
+          .get((err, dataDE) => {
+            if (dataDE.body.Results.length > 0) {
+              var options = {
+                props: [
+                  'ObjectID',
+                  'PartnerKey',
+                  'Name',
+                  'DefaultValue',
+                  'MaxLength',
+                  'IsRequired',
+                  'Ordinal',
+                  'IsPrimaryKey',
+                  'FieldType',
+                  'CreatedDate',
+                  'ModifiedDate',
+                  'Scale',
+                  'Client.ID',
+                  'CustomerKey',
+                ], //required
+                ///*
+                filter: {
+                  //remove filter for all.
+                  leftOperand: 'DataExtension.CustomerKey',
+                  operator: 'equals',
+                  rightOperand: dataDE.body.Results[0].CustomerKey,
+                },
+                //*/
+              };
+              fuelSDKClient.dataExtensionColumn(options).get((err, dataCol) => {
+                const _data = dataCol.body.Results;
+                _data.sort(dynamicSort('Name'));
+                res.status(200).send({
+                  deCol: _data,
+                  dataExtension: dataDE.body.Results[0],
+                });
               });
-            });
-          } else res.status(500).send({ status: 'No Data Extension Found', message: error });
-        });
+            } else res.status(500).send({ status: 'No Data Extension Found', message: error });
+          });
       } else res.status(500).send({ status: 'Key Required', message: error });
     } catch (error) {
       console.log('error:', error);

@@ -1,7 +1,7 @@
 'use strict';
 const fuelRestClient = require('../../config/sfmc/fuel-rest/fuel-rest.config');
 
-class FuelRestController {
+class FuelRestUtils {
   /**
    * Get Content
    * @param externalKey
@@ -122,4 +122,4 @@ class FuelRestController {
     });
 }
 
-module.exports = new FuelRestController();
+module.exports = new FuelRestUtils();
