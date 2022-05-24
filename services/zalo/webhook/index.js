@@ -12,7 +12,7 @@ const ZaloWebhook = async (req, res) => {
     case 'user_received_message': {
       console.log('User received message');
       try {
-        const data = await fuelSDKClient.insertZaloUserActionTracking(
+        const data = await fuelSDKClient.insertDEZaloUserActionTracking(
           JSON.stringify({
             items: [
               {
@@ -44,7 +44,7 @@ const ZaloWebhook = async (req, res) => {
             `userTrackingInfo.message.msg_ids[${i}]: `,
             userTrackingInfo.message.msg_ids[i]
           );
-          await fuelSDKClient.insertZaloUserActionTracking(
+          await fuelSDKClient.insertDEZaloUserActionTracking(
             JSON.stringify({
               items: [
                 {
@@ -81,7 +81,7 @@ const ZaloWebhook = async (req, res) => {
           .set('access_token', tmpAccessToken);
         response = JSON.parse(response.text);
         console.log('response', response);
-        const insertData = fuelSDKClient.insertZaloUserActionTracking(
+        const insertData = fuelSDKClient.insertDEZaloUserActionTracking(
           JSON.stringify({
             items: [
               {
@@ -95,7 +95,7 @@ const ZaloWebhook = async (req, res) => {
             ],
           })
         );
-        const upsertData = fuelSDKClient.upsertOAFollowers(
+        const upsertData = fuelSDKClient.upsertDEOAFollowers(
           JSON.stringify({
             items: [
               {
@@ -130,7 +130,7 @@ const ZaloWebhook = async (req, res) => {
           .set('access_token', tmpAccessToken);
         response = JSON.parse(response.text);
         console.log('response', response);
-        const insertData = fuelSDKClient.insertZaloUserActionTracking(
+        const insertData = fuelSDKClient.insertDEZaloUserActionTracking(
           JSON.stringify({
             items: [
               {
@@ -144,7 +144,7 @@ const ZaloWebhook = async (req, res) => {
             ],
           })
         );
-        const upsertData = fuelSDKClient.upsertOAFollowers(
+        const upsertData = fuelSDKClient.upsertDEOAFollowers(
           JSON.stringify({
             items: [
               {
@@ -170,7 +170,7 @@ const ZaloWebhook = async (req, res) => {
     case 'user_send_text': {
       console.log('User send text message');
       try {
-        const data = await fuelSDKClient.insertZaloUserActionTracking(
+        const data = await fuelSDKClient.insertDEZaloUserActionTracking(
           JSON.stringify({
             items: [
               {
@@ -195,7 +195,7 @@ const ZaloWebhook = async (req, res) => {
           nameRegex.lastIndex = 0;
           phoneRegex.lastIndex = 0;
           addressRegex.lastIndex = 0;
-          const data = await fuelSDKClient.insertZaloRequestUserInfoLog(
+          const data = await fuelSDKClient.insertDEZaloRequestUserInfoLog(
             JSON.stringify({
               items: [
                 {
@@ -251,7 +251,7 @@ const ZaloWebhook = async (req, res) => {
         const znsSendLog = response.body;
         console.log('\nznsSendLog:', znsSendLog);
         if (znsSendLog.error !== 0) throw znsSendLog.message;
-        const firstStep = await fuelSDKClient.insertZaloOASendLog(
+        const firstStep = await fuelSDKClient.insertDEZaloOASendLog(
           JSON.stringify({
             items: [
               {
