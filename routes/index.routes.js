@@ -28,7 +28,7 @@ const Router = (app) => {
   // Zalo webhook
   app.post('/webhook/zalo', ZaloWebhook);
 
-  app.use('/config.json', MainRouter.config);
+  app.use('/sfmcca/config.json', MainRouter.config);
   app.get('/login', MainRouter.login);
   app.get('/admin', MainRouter.admin);
   app.get('/favicon.ico', (req, res) => res.status(204));
