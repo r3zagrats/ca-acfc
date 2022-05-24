@@ -39,7 +39,7 @@ const Router = (app) => {
   app.use('/sfmcccb', MainRouter.sfmcccb);
 
   // Custom Activity
-  app.use('/sfmcca', MainRouter.sfmcca);
+  app.use('/', MainRouter.sfmcca);
 };
 
 module.exports = Router;
