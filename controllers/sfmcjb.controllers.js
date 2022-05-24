@@ -4,7 +4,7 @@ const JWT = require('../utils/jwtDecoder');
 //const queue = require('../routes/queue');
 // const admin = require('../firebase');
 const superagent = require('superagent');
-const fuelSDKClient = require('../config/sfmc/fuel-sdk/fuel-sdk.config');
+const fuelRestController = require('../config/sfmc/fuel-sdk/fuel-sdk.config');
 const fsPromises = require('fs/promises');
 // const { Storage } = require('@google-cloud/storage');
 // const bucketName = 'crucial-zodiac-341510.appspot.com';
@@ -16,7 +16,7 @@ const fs = require('fs');
 const redisClient = require('../config/database/redis/redis.config');
 const refreshZaloToken = require('../services/zalo/refreshZaloToken');
 
-class SFMCCAController {
+class SFMCJBController {
   /**
    * The Journey Builder calls this method for each contact processed by the journey.
    * @param req
@@ -96,7 +96,7 @@ class SFMCCAController {
           const znsSendLog = response.body;
           console.log('\nznsSendLog:', znsSendLog);
           if (znsSendLog.error !== 0) throw znsSendLog.message;
-          const firstStep = await fuelSDKClient.insertZaloOASendLog(
+          const firstStep = await fuelRestController.insertDEZaloOASendLog(
             JSON.stringify({
               items: [
                 {
@@ -128,7 +128,7 @@ class SFMCCAController {
           const znsSendLog = response.body;
           console.log('\nznsSendLog:', znsSendLog);
           if (znsSendLog.error !== 0) throw znsSendLog.message;
-          const firstStep = await fuelSDKClient.insertZaloOASendLog(
+          const firstStep = await fuelRestController.insertEDZaloOASendLog(
             JSON.stringify({
               items: [
                 {
@@ -231,4 +231,4 @@ class SFMCCAController {
   };
 }
 
-module.exports = new SFMCCAController();
+module.exports = new SFMCJBController();

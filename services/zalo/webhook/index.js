@@ -1,7 +1,7 @@
 'use strict';
 
 require('dotenv').config();
-const fuelSDKClient = require('../../../config/sfmc/fuel-sdk/fuel-sdk.config');
+const fuelRestController = require('../../fuel-rest/index');
 const superagent = require('superagent');
 const refreshZaloToken = require('../refreshZaloToken');
 
@@ -12,7 +12,7 @@ const ZaloWebhook = async (req, res) => {
     case 'user_received_message': {
       console.log('User received message');
       try {
-        const data = await fuelSDKClient.insertDEZaloUserActionTracking(
+        const data = await fuelRestController.insertDEZaloUserActionTracking(
           JSON.stringify({
             items: [
               {
@@ -44,7 +44,7 @@ const ZaloWebhook = async (req, res) => {
             `userTrackingInfo.message.msg_ids[${i}]: `,
             userTrackingInfo.message.msg_ids[i]
           );
-          await fuelSDKClient.insertDEZaloUserActionTracking(
+          await fuelRestController.insertDEZaloUserActionTracking(
             JSON.stringify({
               items: [
                 {
@@ -81,7 +81,7 @@ const ZaloWebhook = async (req, res) => {
           .set('access_token', tmpAccessToken);
         response = JSON.parse(response.text);
         console.log('response', response);
-        const insertData = fuelSDKClient.insertDEZaloUserActionTracking(
+        const insertData = fuelRestController.insertDEZaloUserActionTracking(
           JSON.stringify({
             items: [
               {
@@ -95,7 +95,7 @@ const ZaloWebhook = async (req, res) => {
             ],
           })
         );
-        const upsertData = fuelSDKClient.upsertDEOAFollowers(
+        const upsertData = fuelRestController.upsertDEOAFollowers(
           JSON.stringify({
             items: [
               {
@@ -130,7 +130,7 @@ const ZaloWebhook = async (req, res) => {
           .set('access_token', tmpAccessToken);
         response = JSON.parse(response.text);
         console.log('response', response);
-        const insertData = fuelSDKClient.insertDEZaloUserActionTracking(
+        const insertData = fuelRestController.insertDEZaloUserActionTracking(
           JSON.stringify({
             items: [
               {
@@ -144,7 +144,7 @@ const ZaloWebhook = async (req, res) => {
             ],
           })
         );
-        const upsertData = fuelSDKClient.upsertDEOAFollowers(
+        const upsertData = fuelRestController.upsertDEOAFollowers(
           JSON.stringify({
             items: [
               {
@@ -170,7 +170,7 @@ const ZaloWebhook = async (req, res) => {
     case 'user_send_text': {
       console.log('User send text message');
       try {
-        const data = await fuelSDKClient.insertDEZaloUserActionTracking(
+        const data = await fuelRestController.insertDEZaloUserActionTracking(
           JSON.stringify({
             items: [
               {
@@ -195,7 +195,7 @@ const ZaloWebhook = async (req, res) => {
           nameRegex.lastIndex = 0;
           phoneRegex.lastIndex = 0;
           addressRegex.lastIndex = 0;
-          const data = await fuelSDKClient.insertDEZaloRequestUserInfoLog(
+          const data = await fuelRestController.insertDEZaloRequestUserInfoLog(
             JSON.stringify({
               items: [
                 {
@@ -217,7 +217,7 @@ const ZaloWebhook = async (req, res) => {
           input = JSON.parse(input);
           if (input.EventDefinitionKey) {
             console.log('User triggered journey');
-            const result = await fuelSDKClient.triggerJourneyBuilder(
+            const result = await fuelRestController.triggerJourneyBuilder(
               JSON.stringify({
                 ContactKey: userTrackingInfo.sender.id,
                 EventDefinitionKey: input.EventDefinitionKey,
@@ -251,7 +251,7 @@ const ZaloWebhook = async (req, res) => {
         const znsSendLog = response.body;
         console.log('\nznsSendLog:', znsSendLog);
         if (znsSendLog.error !== 0) throw znsSendLog.message;
-        const firstStep = await fuelSDKClient.insertDEZaloOASendLog(
+        const firstStep = await fuelRestController.insertDEZaloOASendLog(
           JSON.stringify({
             items: [
               {

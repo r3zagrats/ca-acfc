@@ -14,7 +14,7 @@ class SFMCAPI {
     // try {
     //   var DEOptions = [];
     //   const props = ['Name', 'CustomerKey', 'ObjectID'];
-    //   fuelSDKClient.SDKClient.dataExtension({
+    //   fuelSDKClient.dataExtension({
     //     props,
     //     filter: {
     //       //remove filter for all.
@@ -48,7 +48,7 @@ class SFMCAPI {
         rightOperand: 'CC67F80E-EA7F-429E-89DE-B9D48C0F51C6',
       },
     };
-    var de = fuelSDKClient.SDKClient.dataExtension(options);
+    var de = fuelSDKClient.dataExtension(options);
 
     de.get(function (err, response) {
       if (err) {
@@ -95,7 +95,7 @@ class SFMCAPI {
         },
         //*/
       };
-      fuelSDKClient.SDKClient.dataExtensionColumn(options).get((err, data) => {
+      fuelSDKClient.dataExtensionColumn(options).get((err, data) => {
         const _data = data.body.Results;
         _data.sort(dynamicSort('Name'));
         res.status(200).send(_data);
@@ -121,7 +121,7 @@ class SFMCAPI {
         filter: null,
         //*/
       };
-      fuelSDKClient.SDKClient.dataExtensionRow(options).get((err, data) => {
+      fuelSDKClient.dataExtensionRow(options).get((err, data) => {
         const _data = data.body.Results;
         _data.sort(dynamicSort('Name'));
         res.status(200).send(_data);
@@ -246,7 +246,7 @@ class SFMCAPI {
       if (req.body.key != '' || req.body.key != null) {
         const data = await fuelSDKClient.getJourney(req.body.key);
         const props = ['Name', 'CustomerKey', 'ObjectID'];
-        fuelSDKClient.SDKClient.dataExtension({
+        fuelSDKClient.dataExtension({
           props,
           filter: {
             //remove filter for all.
@@ -282,7 +282,7 @@ class SFMCAPI {
               },
               //*/
             };
-            fuelSDKClient.SDKClient.dataExtensionColumn(options).get((err, dataCol) => {
+            fuelSDKClient.dataExtensionColumn(options).get((err, dataCol) => {
               const _data = dataCol.body.Results;
               _data.sort(dynamicSort('Name'));
               res.status(200).send({

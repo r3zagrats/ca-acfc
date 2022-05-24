@@ -1,12 +1,12 @@
 'use strict';
 
 const router = require('express').Router();
-const SFMCCAController = require('../controllers/sfmcjb.controllers');
+const SFMCJBController = require('../controllers/sfmcjb.controllers');
 
-router.use('/execute', SFMCCAController.execute);
-router.use('/save', SFMCCAController.save);
-router.use('/publish', SFMCCAController.publish);
-router.use('/validate', SFMCCAController.validate);
-router.use('/stop', SFMCCAController.stop);
+router.use('/execute', SFMCJBController.execute);
+router.use('/save', SFMCJBController.save);
+router.use('/publish', SFMCJBController.publish);
+router.use('/validate', SFMCJBController.validate);
+router.use('/stop', SFMCJBController.stop);
 
 module.exports = router;
