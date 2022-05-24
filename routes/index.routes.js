@@ -1,6 +1,6 @@
 'use strict';
 
-const SFMCCARouter = require('./sfmcjb.routes');
+const SFMCCARouter = require('./sfmcca.routes');
 const ChannelsRouter = require('./channels.routes');
 const ZOARouter = require('./ZOA.routes');
 const UsersRouter = require('./users.routes');
@@ -33,7 +33,7 @@ const Router = (app) => {
   app.get('/admin', MainRouter.admin);
   app.get('/favicon.ico', (req, res) => res.status(204));
   // SFMCCA Routes
-  app.use('/sfmcjb', SFMCCARouter);
+  // app.use('/sfmcca', SFMCCARouter);
 
   // Custom Content Block
   app.use('/sfmcccb', MainRouter.sfmcccb);

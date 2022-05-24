@@ -16,7 +16,7 @@ const fs = require('fs');
 const redisClient = require('../config/database/redis/redis.config');
 const refreshZaloToken = require('../services/zalo/refreshZaloToken');
 
-class SFMCJBController {
+class SFMCCAController {
   /**
    * The Journey Builder calls this method for each contact processed by the journey.
    * @param req
@@ -231,4 +231,4 @@ class SFMCJBController {
   };
 }
 
-module.exports = new SFMCJBController();
+module.exports = new SFMCCAController();

@@ -11,7 +11,7 @@
   },
   "arguments": {
     "execute": {
-      "url": "https://$DOMAIN/sfmcjb/execute",
+      "url": "https://$DOMAIN/sfmcca/execute",
       "verb": "POST",
       "body": "",
       "header": "",
@@ -24,22 +24,22 @@
   },
   "configurationArguments": {
     "save": {
-      "url": "https://$DOMAIN/sfmcjb/save",
+      "url": "https://$DOMAIN/sfmcca/save",
       "verb": "POST",
       "useJwt": true
     },
     "publish": {
-      "url": "https://$DOMAIN/sfmcjb/publish",
+      "url": "https://$DOMAIN/sfmcca/publish",
       "verb": "POST",
       "useJwt": true
     },
     "stop": {
-      "url": "https://$DOMAIN/sfmcjb/stop",
+      "url": "https://$DOMAIN/sfmcca/stop",
       "verb": "POST",
       "useJwt": true
     },
     "validate": {
-      "url": "https://$DOMAIN/sfmcjb/validate",
+      "url": "https://$DOMAIN/sfmcca/validate",
       "verb": "POST",
       "useJwt": true
     }
