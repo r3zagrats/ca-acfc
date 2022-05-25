@@ -81,10 +81,10 @@ const onRender = () => {
   });
 
   $('#SMSValidate').on('click', (e) => {
-    console.log($('#SMSSender')).val();
-    console.log($('#SMSReceiver')).val();
-    console.log($('#SMSContent')).val();
-    console.log($('#SMSBID')).val();
+    console.log($('#SMSSender'))
+    console.log($('#SMSReceiver'))
+    console.log($('#SMSContent'))
+    console.log($('#SMSBID'))
   })
 
   $('#Channels').on('change', (e) => {
