@@ -4,7 +4,7 @@ const JWT = require('../utils/jwtDecoder');
 //const queue = require('../routes/queue');
 // const admin = require('../firebase');
 const superagent = require('superagent');
-const fuelRestUtils = require('../config/sfmc/fuel-sdk/fuel-sdk.config');
+const FuelRestUtils = require('../services/fuel-rest');
 const fsPromises = require('fs/promises');
 // const { Storage } = require('@google-cloud/storage');
 // const bucketName = 'crucial-zodiac-341510.appspot.com';
@@ -96,7 +96,7 @@ class SFMCCAController {
           const znsSendLog = response.body;
           console.log('\nznsSendLog:', znsSendLog);
           if (znsSendLog.error !== 0) throw znsSendLog.message;
-          const firstStep = await fuelRestUtils.insertDEZaloOASendLog(
+          const firstStep = await FuelRestUtils.insertDEZaloOASendLog(
             JSON.stringify({
               items: [
                 {
@@ -128,7 +128,7 @@ class SFMCCAController {
           const znsSendLog = response.body;
           console.log('\nznsSendLog:', znsSendLog);
           if (znsSendLog.error !== 0) throw znsSendLog.message;
-          const firstStep = await fuelRestUtils.insertEDZaloOASendLog(
+          const firstStep = await FuelRestUtils.insertDEZaloOASendLog(
             JSON.stringify({
               items: [
                 {
