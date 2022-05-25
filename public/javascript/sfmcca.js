@@ -79,6 +79,14 @@ const onRender = () => {
   $('.ca-modal__validateResult').on('click', (e) => {
     e.stopPropagation();
   });
+
+  $('#SMSValidate').on('click', (e) => {
+    console.log($('#SMSSender')).val();
+    console.log($('#SMSReceiver')).val();
+    console.log($('#SMSContent')).val();
+    console.log($('#SMSBID')).val();
+  })
+
   $('#Channels').on('change', (e) => {
     // if ($('#Channels').val() === 'SMS') {
     //   displayCustomError('This channel is not supported yet. Please select another channel!');
