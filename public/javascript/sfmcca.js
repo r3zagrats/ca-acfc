@@ -418,7 +418,7 @@ const showStep = async (step, stepIndex) => {
       switch ($('#Channels').val()) {
         case 'Zalo Message': {
           try {
-            $('#SMSContent').hide();
+            $('#SMSContentContainer').hide();
             $('.ca-modal').show();
             $('.ca-modal__loading').show();
             $('.ca-modal__validateResult.failed').hide();
@@ -442,7 +442,7 @@ const showStep = async (step, stepIndex) => {
         }
         case 'Zalo Notification Service': {
           try {
-            $('#SMSContent').hide();
+            $('#SMSContentContainer').hide();
             $('.ca-modal').show();
             $('.ca-modal__loading').show();
             $('.ca-modal__validateResult.failed').hide();
@@ -478,7 +478,7 @@ const showStep = async (step, stepIndex) => {
         }
         case 'SMS': {
           $('#ContentOptions').empty();
-          $('#SMSContent').show();
+          $('#SMSContentContainer').show();
           break;
         }
       }
