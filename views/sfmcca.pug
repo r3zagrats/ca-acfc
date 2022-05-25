@@ -40,6 +40,15 @@ block content
           .slds-form-element__control
             .slds-select_container
               select#ContentOptions.slds-select.js-activity-setting(name='ContentOptions')
+          div
+            label.slds-form-element__label.slds-p-top_medium(for='Text')
+              abbr.slds-required(title='required')
+              | Content |
+            button#refreshButton(type="button") Refresh
+          br
+          .slds-form-element__control
+            textarea#ContentValue.slds-input.js-activity-setting( rows = '20' required='', placeholder='', name='text', disabled)
+            #DisplayContent
         #SMSContent
           #ccb-form-SMSSender-element.slds-form-element
             label.slds-form-element__label.ccb-label(for='SMSSender')
@@ -67,16 +76,6 @@ block content
               input#SMSBID.slds-input.ccb-textarea(type='text' name='SMSBID' maxlength='2000' placeholder='Enter your message. Maximum length: 2000 ')
           #ccb-form-SMSValidate-element.slds-form-element
             input(type="button" id="SMSValidate" value="Validate")
-
-        label.slds-form-element__label.slds-p-top_medium(for='Text')
-          abbr.slds-required(title='required')
-          | Content |
-        button#refreshButton(type="button") Refresh
-        br
-        .slds-form-element__control
-          textarea#ContentValue.slds-input.js-activity-setting( rows = '20' required='' placeholder='' name='text', disabled)
-          #DisplayContent
-          iframe#ca-frame(src="" width="100%" )
     footer.slds-card__footer
     .ca-modal
       .ca-modal__container
