@@ -475,7 +475,7 @@ const showStep = async (step, stepIndex) => {
               >
               <div class="slds-form-element__control">
                 <input
-                  class="slds-textarea ccb-textarea"
+                  class="slds-input ccb-textarea"
                   type="text"
                   id="SMSSender"
                   name="SMSSender"
@@ -491,7 +491,7 @@ const showStep = async (step, stepIndex) => {
               >
               <div class="slds-form-element__control">
                 <input
-                  class="slds-textarea ccb-textarea"
+                  class="slds-input ccb-textarea"
                   type="text"
                   id="SMSReceiver"
                   name="SMSReceiver"
@@ -522,7 +522,7 @@ const showStep = async (step, stepIndex) => {
               >
               <div class="slds-form-element__control">
                 <input
-                  class="slds-textarea ccb-textarea"
+                  class="slds-input ccb-textarea"
                   type="text"
                   id="SMSBID"
                   name="SMSBID"
@@ -629,6 +629,21 @@ const checkContent = async (type) => {
       default:
         break;
     }
+  } else if ($('#Channels')) {
+    console.log($('#SMSSender')).val()
+    console.log($('#SMSReceiver')).val()
+    console.log($('#SMSContent')).val()
+    console.log($('#SMSBID')).val()
+    const SMSContent = {
+      u: 'acfc',
+      pwd: 'Acfc@1234',
+      from: 'NIKE',
+      phone: '',
+      sms: '',
+      bid: '',
+      json: '1',
+    };
+    $('#ContentValue').val(JSON.stringify(SMSContent));
   } else {
     connection.trigger('updateButton', {
       button: 'next',
