@@ -40,43 +40,43 @@ block content
           .slds-form-element__control
             .slds-select_container
               select#ContentOptions.slds-select.js-activity-setting(name='ContentOptions')
-              #SMSContent
-                #ccb-form-SMSSender-element.slds-form-element
-                  label.slds-form-element__label.ccb-label(for='SMSSender')
-                    abbr.slds-required(title='required') * 
-                    | Sender:
-                  .slds-form-element__control
-                    input#SMSSender.slds-input.ccb-textarea(type='text' name='SMSSender' maxlength='2000' placeholder='Enter your message. Maximum length: 2000 ')
-                #ccb-form-SMSReceiver-element.slds-form-element
-                  label.slds-form-element__label.ccb-label(for='SMSReceiver')
-                    abbr.slds-required(title='required') * 
-                    | Receiver:
-                  .slds-form-element__control
-                    input#SMSReceiver.slds-input.ccb-textarea(type='text' name='SMSReceiver' maxlength='2000' placeholder='Enter your message. Maximum length: 2000 ')
-                #ccb-form-SMSContent-element.slds-form-element
-                  label.slds-form-element__label.ccb-label(for='SMSContent')
-                    abbr.slds-required(title='required') * 
-                    | Message:
-                  .slds-form-element__control
-                    textarea#SMSContent.slds-textarea.ccb-textarea(name='SMSContent' maxlength='2000' placeholder='Enter your message. Maximum length: 2000 ')
-                #ccb-form-SMSBID-element.slds-form-element
-                  label.slds-form-element__label.ccb-label(for='SMSBID')
-                    abbr.slds-required(title='required') * 
-                    | BID:
-                  .slds-form-element__control
-                    input#SMSBID.slds-input.ccb-textarea(type='text' name='SMSBID' maxlength='2000' placeholder='Enter your message. Maximum length: 2000 ')
-                #ccb-form-SMSValidate-element.slds-form-element
-                  input(type="button" id="SMSValidate" value="Validate")
-      div
+        #SMSContent
+          #ccb-form-SMSSender-element.slds-form-element
+            label.slds-form-element__label.ccb-label(for='SMSSender')
+              abbr.slds-required(title='required') * 
+              | Sender:
+            .slds-form-element__control
+              input#SMSSender.slds-input.ccb-textarea(type='text' name='SMSSender' maxlength='2000' placeholder='Enter your message. Maximum length: 2000 ')
+          #ccb-form-SMSReceiver-element.slds-form-element
+            label.slds-form-element__label.ccb-label(for='SMSReceiver')
+              abbr.slds-required(title='required') * 
+              | Receiver:
+            .slds-form-element__control
+              input#SMSReceiver.slds-input.ccb-textarea(type='text' name='SMSReceiver' maxlength='2000' placeholder='Enter your message. Maximum length: 2000 ')
+          #ccb-form-SMSContent-element.slds-form-element
+            label.slds-form-element__label.ccb-label(for='SMSContent')
+              abbr.slds-required(title='required') * 
+              | Message:
+            .slds-form-element__control
+              textarea#SMSContent.slds-textarea.ccb-textarea(name='SMSContent' maxlength='2000' placeholder='Enter your message. Maximum length: 2000 ')
+          #ccb-form-SMSBID-element.slds-form-element
+            label.slds-form-element__label.ccb-label(for='SMSBID')
+              abbr.slds-required(title='required') * 
+              | BID:
+            .slds-form-element__control
+              input#SMSBID.slds-input.ccb-textarea(type='text' name='SMSBID' maxlength='2000' placeholder='Enter your message. Maximum length: 2000 ')
+          #ccb-form-SMSValidate-element.slds-form-element
+            input(type="button" id="SMSValidate" value="Validate")
+
         label.slds-form-element__label.slds-p-top_medium(for='Text')
           abbr.slds-required(title='required')
           | Content |
         button#refreshButton(type="button") Refresh
-      br
-      .slds-form-element__control
-        textarea#ContentValue.slds-input.js-activity-setting( rows = '20' required='' placeholder='' name='text', disabled)
-        #DisplayContent
-        iframe#ca-frame(src="" width="100%" )
+        br
+        .slds-form-element__control
+          textarea#ContentValue.slds-input.js-activity-setting( rows = '20' required='' placeholder='' name='text', disabled)
+          #DisplayContent
+          iframe#ca-frame(src="" width="100%" )
     footer.slds-card__footer
     .ca-modal
       .ca-modal__container
