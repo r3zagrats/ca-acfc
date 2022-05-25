@@ -4,17 +4,18 @@
 const ChannelsRouter = require('./channels.routes');
 const ZOARouter = require('./ZOA.routes');
 const UsersRouter = require('./users.routes');
-const ZaloRouter = require('./zalo.routes');
-const SFMCRouter = require('./sfmc.routes');
+const ZaloApiRouter = require('./zaloapi.routes');
+const SFMCApiRouter = require('./sfmcapi.routes');
 const ZaloWebhook = require('../services/zalo/webhook');
 const MainRouter = require('../controllers/index.controllers');
+const SFMCCARouter = require('./sfmcca.routes')
 
 const Router = (app) => {
   // Zalo Routes
-  app.use('/api/zalo', ZaloRouter);
+  app.use('/api/zalo', ZaloApiRouter);
 
   // SFMC Routes
-  app.use('/api/sfmc', SFMCRouter);
+  app.use('/api/sfmc', SFMCApiRouter);
 
   // Channels Routes
   app.use('/api/channels', ChannelsRouter);
@@ -33,7 +34,7 @@ const Router = (app) => {
   app.get('/admin', MainRouter.admin);
   app.get('/favicon.ico', (req, res) => res.status(204));
   // SFMCCA Routes
-  // app.use('/sfmcca', SFMCCARouter);
+  app.use('/sfmcca/journey', SFMCCARouter);
 
   // Custom Content Block
   app.use('/sfmcccb', MainRouter.sfmcccb);
