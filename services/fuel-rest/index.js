@@ -81,6 +81,14 @@ class FuelRestUtils {
     });
   };
 
+  insertDESMSSendLog = async (data) =>
+    fuelRestClient.post({
+      uri: `data/v1/async/dataextensions/key:${process.env.DE_SMS_SEND_LOG}/rows`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: data,
+    });
   /**
    * Upsert DE
    * @param externalKey

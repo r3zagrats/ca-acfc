@@ -69,7 +69,7 @@ const onRender = () => {
   connection.trigger('requestSchema');
   $('.ca-modal__validateResult__button').on('click', (e) => {
     $('.ca-modal').hide();
-    console.log('this', $(this))
+    console.log('this', $(this));
   });
 
   $('.ca-modal').on('click', (e) => {
@@ -206,6 +206,9 @@ const onRender = () => {
           $('.ca-modal__loading').hide();
           $('.ca-modal__validateResult.failed').show();
         }
+        break;
+      }
+      case 'Zalo Notification Service': {
         break;
       }
     }
@@ -462,6 +465,10 @@ const showStep = async (step, stepIndex) => {
           }
           break;
         }
+        case 'SMS': {
+          $('#ContentOptions').empty().append('<textarea name="contentOptions" placeholder="SMS content"></textarea>');
+          break;
+        }
       }
       break;
   }
@@ -552,6 +559,9 @@ const checkContent = async (type) => {
         });
         break;
       }
+      case 'SMS': {
+        break;
+      }
       default:
         break;
     }
@@ -592,7 +602,9 @@ const getZNSTemplates = async (OAId) => {
 
 const getZNSTemplateDetail = async (TemplateId, OAId) => {
   try {
-    const response = await superagent.post('/api/zalo/getznstemplatedetail').send({ TemplateId, OAId });
+    const response = await superagent
+      .post('/api/zalo/getznstemplatedetail')
+      .send({ TemplateId, OAId });
     return response.text;
   } catch (error) {
     throw new Error(error.message);
