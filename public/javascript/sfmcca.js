@@ -80,16 +80,17 @@ const onRender = () => {
     e.stopPropagation();
   });
   $('#Channels').on('change', (e) => {
-    if ($('#Channels').val() === 'SMS') {
-      displayCustomError('This channel is not supported yet. Please select another channel!');
-      $('.ca-modal').show();
-      $('.ca-modal__loading').hide();
-      $('.ca-modal__validateResult.failed').show();
-      connection.trigger('updateButton', {
-        button: 'next',
-        enabled: false,
-      });
-    } else if ($('#Channels').val()) {
+    // if ($('#Channels').val() === 'SMS') {
+    //   displayCustomError('This channel is not supported yet. Please select another channel!');
+    //   $('.ca-modal').show();
+    //   $('.ca-modal__loading').hide();
+    //   $('.ca-modal__validateResult.failed').show();
+    //   connection.trigger('updateButton', {
+    //     button: 'next',
+    //     enabled: false,
+    //   });
+    // }
+    if ($('#Channels').val()) {
       connection.trigger('updateButton', {
         button: 'next',
         enabled: true,
@@ -466,7 +467,70 @@ const showStep = async (step, stepIndex) => {
           break;
         }
         case 'SMS': {
-          $('#ContentOptions').empty().append('<textarea name="contentOptions" placeholder="SMS content"></textarea>');
+          $('#ContentOptions').empty()
+            .append(`
+            <div class="slds-form-element" id="ccb-form-SMSSender-element">
+              <label class="slds-form-element__label ccb-label" for="SMSSender"
+                ><abbr class="slds-required" title="required">* </abbr>Sender:</label
+              >
+              <div class="slds-form-element__control">
+                <input
+                  class="slds-textarea ccb-textarea"
+                  type="text"
+                  id="SMSSender"
+                  name="SMSSender"
+                  maxlength="2000"
+                  placeholder="Enter your message. Maximum length: 2000 "
+                ></input>
+              </div>
+            </div>
+        
+            <div class="slds-form-element" id="ccb-form-SMSReceiver-element">
+              <label class="slds-form-element__label ccb-label" for="SMSReceiver"
+                ><abbr class="slds-required" title="required">* </abbr>Receiver:</label
+              >
+              <div class="slds-form-element__control">
+                <input
+                  class="slds-textarea ccb-textarea"
+                  type="text"
+                  id="SMSReceiver"
+                  name="SMSReceiver"
+                  maxlength="2000"
+                  placeholder="Enter your message. Maximum length: 2000 "
+                ></i>
+              </div>
+            </div>
+        
+            <div class="slds-form-element" id="ccb-form-SMSContent-element">
+              <label class="slds-form-element__label ccb-label" for="SMSContent"
+                ><abbr class="slds-required" title="required">* </abbr>Message:</label
+              >
+              <div class="slds-form-element__control">
+                <textarea
+                  class="slds-textarea ccb-textarea"
+                  id="SMSContent"
+                  name="SMSContent"
+                  maxlength="2000"
+                  placeholder="Enter your message. Maximum length: 2000 "
+                ></textarea>
+              </div>
+            </div>
+        
+            <div class="slds-form-element" id="ccb-form-SMSBID-element">
+              <label class="slds-form-element__label ccb-label" for="SMSBID"
+                ><abbr class="slds-required" title="required">* </abbr>BID:</label
+              >
+              <div class="slds-form-element__control">
+                <input
+                  class="slds-textarea ccb-textarea"
+                  type="text"
+                  id="SMSBID"
+                  name="SMSBID"
+                  maxlength="2000"
+                  placeholder="Enter your message. Maximum length: 2000 "
+                ></input>
+              </div>
+            </div>`);
           break;
         }
       }

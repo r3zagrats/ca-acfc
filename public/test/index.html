@@ -11,55 +11,68 @@
     <link rel="stylesheet" href="/styles/admin.css" />
   </head>
   <body>
-
-
-    <!-- <div id="main">
-      <header class="header">
-        <div class="container">
-          <div class="row">
-            <div class="col">
-              <div class="header-content">
-                <div class="user">
-                  <div class="noti">
-                    <i class="fa-solid fa-bell ca-bell"></i>
-                    <div class="noti-count-wrapper">
-                      <span class="noti-count">99</span>
-                    </div>
-                  </div>
-                  <div class="avatar-wrapper">
-                    <img class="avatar" src="/images/user.jpg" alt="avatar" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-      <div class="body">
-        <div class="container">
-          <div class="row">
-            <div class="col">
-              <div class="content">Content</div>
-            </div>
-          </div>
-        </div>
+    <div class="slds-form-element" id="ccb-form-SMSSender-element">
+      <label class="slds-form-element__label ccb-label" for="SMSSender"
+        ><abbr class="slds-required" title="required">* </abbr>Sender:</label
+      >
+      <div class="slds-form-element__control">
+        <input
+          class="slds-textarea ccb-textarea"
+          type="text"
+          id="SMSSender"
+          name="SMSSender"
+          maxlength="2000"
+          placeholder="Enter your message. Maximum length: 2000 "
+        ></input>
       </div>
-      <footer class="footer">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col">
-              <div class="footer-content">Footer</div>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
-    <div class="sidebar">
-      <div class="logo">
-        <img src="/images/icon.png" alt="logo" class="ca-logo" />
+
+    <div class="slds-form-element" id="ccb-form-SMSReceiver-element">
+      <label class="slds-form-element__label ccb-label" for="SMSReceiver"
+        ><abbr class="slds-required" title="required">* </abbr>Receiver:</label
+      >
+      <div class="slds-form-element__control">
+        <input
+          class="slds-textarea ccb-textarea"
+          type="text"
+          id="SMSReceiver"
+          name="SMSReceiver"
+          maxlength="2000"
+          placeholder="Enter your message. Maximum length: 2000 "
+        ></i>
       </div>
-      <ul class="menu"></ul>
-    </div> -->
+    </div>
+
+    <div class="slds-form-element" id="ccb-form-SMSContent-element">
+      <label class="slds-form-element__label ccb-label" for="SMSContent"
+        ><abbr class="slds-required" title="required">* </abbr>Message:</label
+      >
+      <div class="slds-form-element__control">
+        <textarea
+          class="slds-textarea ccb-textarea"
+          id="SMSContent"
+          name="SMSContent"
+          maxlength="2000"
+          placeholder="Enter your message. Maximum length: 2000 "
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="slds-form-element" id="ccb-form-SMSBID-element">
+      <label class="slds-form-element__label ccb-label" for="SMSBID"
+        ><abbr class="slds-required" title="required">* </abbr>BID:</label
+      >
+      <div class="slds-form-element__control">
+        <input
+          class="slds-textarea ccb-textarea"
+          type="text"
+          id="SMSBID"
+          name="SMSBID"
+          maxlength="2000"
+          placeholder="Enter your message. Maximum length: 2000 "
+        ></input>
+      </div>
+    </div>
     <script src="/javascript/libs/jquery.min.js"></script>
     <script src="/javascript/libs/bootstrap.bundle.min.js"></script>
     <script src="/javascript/admin.js"></script>

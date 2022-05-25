@@ -89,7 +89,7 @@ async function onRender() {
           <div class="slds-form-element" id="ccb-form-msgText-element">
             <label class="slds-form-element__label ccb-label" for="msgText"><abbr class="slds-required" title="required">* </abbr>Message:</label>
             <div class="slds-form-element__control">
-            <textarea class="slds-textarea ccb-textarea" type="text" id="msgText" name="msgText" maxlength="2000" placeholder="Enter your message. Maximum length: 2000 "></textarea>
+            <textarea class="slds-textarea ccb-textarea" id="msgText" name="msgText" maxlength="2000" placeholder="Enter your message. Maximum length: 2000 "></textarea>
             </div>
           </div>
         `);
@@ -474,7 +474,7 @@ const restoreData = () => {
         <div class="slds-form-element" id="ccb-form-msgText-element">
           <label class="slds-form-element__label ccb-label" for="msgText"><abbr class="slds-required" title="required">* </abbr>Message:</label>
           <div class="slds-form-element__control">
-          <textarea class="slds-textarea ccb-textarea" type="text" id="msgText" name="msgText" maxlength="2000" placeholder="Enter your message. Maximum length: 2000 "></textarea>
+          <textarea class="slds-textarea ccb-textarea" id="msgText" name="msgText" maxlength="2000" placeholder="Enter your message. Maximum length: 2000 "></textarea>
           </div>
         </div>
       `);
@@ -1273,7 +1273,7 @@ const renderZMText = () => {
     <div class="slds-form-element" id="ccb-form-msgText-element">
       <label class="slds-form-element__label ccb-label" for="msgText"><abbr class="slds-required" title="required">* </abbr>Message:</label>
       <div class="slds-form-element__control">
-        <textarea class="slds-textarea ccb-textarea" type="text" id="msgText" name="msgText" maxlength="2000" placeholder="Enter your message. Maximum length: 2000"></textarea>
+        <textarea class="slds-textarea ccb-textarea" id="msgText" name="msgText" maxlength="2000" placeholder="Enter your message. Maximum length: 2000"></textarea>
       </div>
     </div>
   `);
@@ -1313,7 +1313,7 @@ const renderZMImage = async () => {
     <div class="slds-form-element" id="ccb-form-msgText-element">
       <label class="slds-form-element__label ccb-label" for="msgText">Message:</label>
       <div class="slds-form-element__control">
-        <textarea class="slds-textarea ccb-textarea" type="text" id="msgText" name="msgText" maxlength="2000" placeholder="Enter your message. Maximum length: 2000"></textarea>
+        <textarea class="slds-textarea ccb-textarea" id="msgText" name="msgText" maxlength="2000" placeholder="Enter your message. Maximum length: 2000"></textarea>
       </div>
     </div>
   `);
@@ -1368,7 +1368,7 @@ const renderZMList = (elementList, isButtonList) => {
       <div class="slds-form-element" id="ccb-form-title${el.id}-element">
         <label class="slds-form-element__label ccb-label" for="title${el.id}"><abbr class="slds-required" title="required">* </abbr>Title:</label>
         <div class="slds-form-element__control">
-          <textarea class="slds-textarea ccb-textarea" type="text" id="title${el.id}" maxlength="100" name="title${el.id}" placeholder="Enter your title. Maximum length: 100"></textarea>
+          <textarea class="slds-textarea ccb-textarea" id="title${el.id}" maxlength="100" name="title${el.id}" placeholder="Enter your title. Maximum length: 100"></textarea>
         </div>
       </div>
     `);
@@ -1379,7 +1379,7 @@ const renderZMList = (elementList, isButtonList) => {
           <div class="slds-form-element" id="ccb-form-subTitle${el.id}-element">
             <label class="slds-form-element__label ccb-label" for="subTitle${el.id}"><abbr class="slds-required" title="required">* </abbr>Subtitle:</label>
             <div class="slds-form-element__control">
-              <textarea class="slds-textarea ccb-textarea" type="text" id="subTitle${el.id}" maxlength="500" name="subTitle${el.id}" placeholder="Enter your subtitle. Maximum length: 500"></textarea>
+              <textarea class="slds-textarea ccb-textarea" id="subTitle${el.id}" maxlength="500" name="subTitle${el.id}" placeholder="Enter your subtitle. Maximum length: 500"></textarea>
             </div>
           </div>
         `);
@@ -1491,7 +1491,7 @@ const renderActionTypes = (el, type) => {
         <div class="slds-form-element" id="ccb-form-payload${el.id}-element">
           <label class="slds-form-element__label ccb-label" for="payload${el.id}"><abbr class="slds-required" title="required">* </abbr>Payload:</label>
           <div class="slds-form-element__control">
-            <textarea class="slds-input ccb-textarea" type="text" id="payload${el.id}" maxlength="1000" name="payload${el.id}" placeholder="Enter your payload. Maximum length: 1000"></textarea>
+            <textarea class="slds-input ccb-textarea" id="payload${el.id}" maxlength="1000" name="payload${el.id}" placeholder="Enter your payload. Maximum length: 1000"></textarea>
           </div>
         </div>
       `);
@@ -1507,7 +1507,7 @@ const renderActionTypes = (el, type) => {
         <div class="slds-form-element" id="ccb-form-payload${el.id}-element">
           <label class="slds-form-element__label ccb-label" for="payload${el.id}"><abbr class="slds-required" title="required">* </abbr>Payload:</label>
           <div class="slds-form-element__control">
-            <textarea class="slds-input ccb-textarea" type="text" id="payload${el.id}" maxlength="1000" name="payload${el.id}" placeholder="Enter your payload. Maximum length: 1000"></textarea>
+            <textarea class="slds-input ccb-textarea" id="payload${el.id}" maxlength="1000" name="payload${el.id}" placeholder="Enter your payload. Maximum length: 1000"></textarea>
           </div>
         </div>
       `);
@@ -1523,7 +1523,7 @@ const renderActionTypes = (el, type) => {
         <div class="slds-form-element" id="ccb-form-smsContent${el.id}-element">
           <label class="slds-form-element__label ccb-label" for="smsContent${el.id}"><abbr class="slds-required" title="required">* </abbr>SMS message:</label>
           <div class="slds-form-element__control">
-            <textarea class="slds-textarea ccb-textarea" type="text" id="smsContent${el.id}" maxlength="160" name="smsContent${el.id}" placeholder="Enter your message. Maximum length: 160"></textarea>
+            <textarea class="slds-textarea ccb-textarea" id="smsContent${el.id}" maxlength="160" name="smsContent${el.id}" placeholder="Enter your message. Maximum length: 160"></textarea>
           </div>
         </div>
       `);
@@ -1638,13 +1638,13 @@ const renderZMRequestUserInfo = () => {
     <div class="slds-form-element" id="ccb-form-title-element">
       <label class="slds-form-element__label ccb-label" for="title"><abbr class="slds-required" title="required">* </abbr>Title:</label>
       <div class="slds-form-element__control">
-        <textarea class="slds-textarea ccb-textarea" type="text" id="title" name="title" maxlength="100" placeholder="Enter your title. Maximum length: 100"></textarea>
+        <textarea class="slds-textarea ccb-textarea" id="title" name="title" maxlength="100" placeholder="Enter your title. Maximum length: 100"></textarea>
       </div>
     </div>
     <div class="slds-form-element" id="ccb-form-subTitle-element">
       <label class="slds-form-element__label ccb-label" for="subTitle"><abbr class="slds-required" title="required">* </abbr>Subtitle:</label>
       <div class="slds-form-element__control">
-        <textarea class="slds-textarea ccb-textarea" type="text" id="subTitle" name="subTitle" maxlength="500" placeholder="Enter your subtitle. Maximum length: 500"></textarea>
+        <textarea class="slds-textarea ccb-textarea" id="subTitle" name="subTitle" maxlength="500" placeholder="Enter your subtitle. Maximum length: 500"></textarea>
       </div>
     </div>
   `);
