@@ -467,8 +467,8 @@ const showStep = async (step, stepIndex) => {
           break;
         }
         case 'SMS': {
-          $('#ContentOptions').empty()
-            .append(`
+          $('#ContentOptions').empty();
+          $('#SMSContent').empty().append(`
             <div class="slds-form-element" id="ccb-form-SMSSender-element">
               <label class="slds-form-element__label ccb-label" for="SMSSender"
                 ><abbr class="slds-required" title="required">* </abbr>Sender:</label
