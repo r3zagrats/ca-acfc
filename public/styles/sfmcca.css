@@ -128,3 +128,7 @@ html {
   min-height: 308px;
   display: none;
 }
+
+#SMSValidate {
+  display: none;
+}

@@ -41,34 +41,60 @@ block content
             .slds-select_container
               select#ContentOptions.slds-select.js-activity-setting(name='ContentOptions')
               #SMSContent
-          div
-            label.slds-form-element__label.slds-p-top_medium(for='Text')
-              abbr.slds-required(title='required')
-              | Content |
-            button#refreshButton(type="button") Refresh
-          br
-          .slds-form-element__control
-            textarea#ContentValue.slds-input.js-activity-setting( rows = '20' required='', placeholder='', name='text', disabled)
-            #DisplayContent
-        iframe#ca-frame(src=""  width="100%" )
+                #ccb-form-SMSSender-element.slds-form-element
+                  label.slds-form-element__label.ccb-label(for='SMSSender')
+                    abbr.slds-required(title='required') * 
+                    | Sender:
+                  .slds-form-element__control
+                    input#SMSSender.slds-input.ccb-textarea(type='text' name='SMSSender' maxlength='2000' placeholder='Enter your message. Maximum length: 2000 ')
+                #ccb-form-SMSReceiver-element.slds-form-element
+                  label.slds-form-element__label.ccb-label(for='SMSReceiver')
+                    abbr.slds-required(title='required') * 
+                    | Receiver:
+                  .slds-form-element__control
+                    input#SMSReceiver.slds-input.ccb-textarea(type='text' name='SMSReceiver' maxlength='2000' placeholder='Enter your message. Maximum length: 2000 ')
+                #ccb-form-SMSContent-element.slds-form-element
+                  label.slds-form-element__label.ccb-label(for='SMSContent')
+                    abbr.slds-required(title='required') * 
+                    | Message:
+                  .slds-form-element__control
+                    textarea#SMSContent.slds-textarea.ccb-textarea(name='SMSContent' maxlength='2000' placeholder='Enter your message. Maximum length: 2000 ')
+                #ccb-form-SMSBID-element.slds-form-element
+                  label.slds-form-element__label.ccb-label(for='SMSBID')
+                    abbr.slds-required(title='required') * 
+                    | BID:
+                  .slds-form-element__control
+                    input#SMSBID.slds-input.ccb-textarea(type='text' name='SMSBID' maxlength='2000' placeholder='Enter your message. Maximum length: 2000 ')
+                #ccb-form-SMSBID-element.slds-form-element
+                  input(type="button" id="SMSValidate" value="Validate")
+      div
+        label.slds-form-element__label.slds-p-top_medium(for='Text')
+          abbr.slds-required(title='required')
+          | Content |
+        button#refreshButton(type="button") Refresh
+      br
+      .slds-form-element__control
+        textarea#ContentValue.slds-input.js-activity-setting( rows = '20' required='' placeholder='' name='text', disabled)
+        #DisplayContent
+        iframe#ca-frame(src="" width="100%" )
     footer.slds-card__footer
     .ca-modal
-        .ca-modal__container
-          .ca-modal__loading
-            svg.spinner(viewbox='0 0 50 50')
-              circle.path(cx='25' cy='25' r='20' fill='none' stroke-width='5')
-            p.ca-modal__text Loading data...
-          .ca-modal__validateResult.success
-            .ca-modal__validateResult__title
-              p Congratulations
-            .ca-modal__validateResult__desc
-              i.fa-solid.fa-check
-              p.ca-modal__validateResult__error-message Your changes have been submitted successfully
-            button.slds-button.slds-button_brand.ca-modal__validateResult__button OK
-          .ca-modal__validateResult.failed
-            .ca-modal__validateResult__title
-              p Error
-            .ca-modal__validateResult__desc
-              i.fa-solid.fa-xmark
-              p.ca-modal__validateResult__error-message An error occurred while submitting the form. Please try again
-            button.slds-button.slds-button_brand.ca-modal__validateResult__button OK
+      .ca-modal__container
+        .ca-modal__loading
+          svg.spinner(viewbox='0 0 50 50')
+            circle.path(cx='25' cy='25' r='20' fill='none' stroke-width='5')
+          p.ca-modal__text Loading data...
+        .ca-modal__validateResult.success
+          .ca-modal__validateResult__title
+            p Congratulations
+          .ca-modal__validateResult__desc
+            i.fa-solid.fa-check
+            p.ca-modal__validateResult__error-message Your changes have been submitted successfully
+          button.slds-button.slds-button_brand.ca-modal__validateResult__button OK
+        .ca-modal__validateResult.failed
+          .ca-modal__validateResult__title
+            p Error
+          .ca-modal__validateResult__desc
+            i.fa-solid.fa-xmark
+            p.ca-modal__validateResult__error-message An error occurred while submitting the form. Please try again
+          button.slds-button.slds-button_brand.ca-modal__validateResult__button OK

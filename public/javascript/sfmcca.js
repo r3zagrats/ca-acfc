@@ -410,6 +410,7 @@ const showStep = async (step, stepIndex) => {
       switch ($('#Channels').val()) {
         case 'Zalo Message': {
           try {
+            $('#SMSContent').hide();
             $('.ca-modal').show();
             $('.ca-modal__loading').show();
             $('.ca-modal__validateResult.failed').hide();
@@ -433,6 +434,7 @@ const showStep = async (step, stepIndex) => {
         }
         case 'Zalo Notification Service': {
           try {
+            $('#SMSContent').hide();
             $('.ca-modal').show();
             $('.ca-modal__loading').show();
             $('.ca-modal__validateResult.failed').hide();
@@ -468,69 +470,7 @@ const showStep = async (step, stepIndex) => {
         }
         case 'SMS': {
           $('#ContentOptions').empty();
-          $('#SMSContent').empty().append(`
-            <div class="slds-form-element" id="ccb-form-SMSSender-element">
-              <label class="slds-form-element__label ccb-label" for="SMSSender"
-                ><abbr class="slds-required" title="required">* </abbr>Sender:</label
-              >
-              <div class="slds-form-element__control">
-                <input
-                  class="slds-input ccb-textarea"
-                  type="text"
-                  id="SMSSender"
-                  name="SMSSender"
-                  maxlength="2000"
-                  placeholder="Enter your message. Maximum length: 2000 "
-                ></input>
-              </div>
-            </div>
-        
-            <div class="slds-form-element" id="ccb-form-SMSReceiver-element">
-              <label class="slds-form-element__label ccb-label" for="SMSReceiver"
-                ><abbr class="slds-required" title="required">* </abbr>Receiver:</label
-              >
-              <div class="slds-form-element__control">
-                <input
-                  class="slds-input ccb-textarea"
-                  type="text"
-                  id="SMSReceiver"
-                  name="SMSReceiver"
-                  maxlength="2000"
-                  placeholder="Enter your message. Maximum length: 2000 "
-                ></i>
-              </div>
-            </div>
-        
-            <div class="slds-form-element" id="ccb-form-SMSContent-element">
-              <label class="slds-form-element__label ccb-label" for="SMSContent"
-                ><abbr class="slds-required" title="required">* </abbr>Message:</label
-              >
-              <div class="slds-form-element__control">
-                <textarea
-                  class="slds-textarea ccb-textarea"
-                  id="SMSContent"
-                  name="SMSContent"
-                  maxlength="2000"
-                  placeholder="Enter your message. Maximum length: 2000 "
-                ></textarea>
-              </div>
-            </div>
-        
-            <div class="slds-form-element" id="ccb-form-SMSBID-element">
-              <label class="slds-form-element__label ccb-label" for="SMSBID"
-                ><abbr class="slds-required" title="required">* </abbr>BID:</label
-              >
-              <div class="slds-form-element__control">
-                <input
-                  class="slds-input ccb-textarea"
-                  type="text"
-                  id="SMSBID"
-                  name="SMSBID"
-                  maxlength="2000"
-                  placeholder="Enter your message. Maximum length: 2000 "
-                ></input>
-              </div>
-            </div>`);
+          $('#SMSContent').show();
           break;
         }
       }
@@ -630,10 +570,10 @@ const checkContent = async (type) => {
         break;
     }
   } else if ($('#Channels')) {
-    console.log($('#SMSSender')).val()
-    console.log($('#SMSReceiver')).val()
-    console.log($('#SMSContent')).val()
-    console.log($('#SMSBID')).val()
+    console.log($('#SMSSender')).val();
+    console.log($('#SMSReceiver')).val();
+    console.log($('#SMSContent')).val();
+    console.log($('#SMSBID')).val();
     const SMSContent = {
       u: 'acfc',
       pwd: 'Acfc@1234',
