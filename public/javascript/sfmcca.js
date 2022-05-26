@@ -567,7 +567,7 @@ const checkContent = async (type) => {
             let message;
             while (
               (message = regex.exec(
-                type == 'process' ? value.meta.options.customBlockData.payloadData : $('#ContentValue').val()
+                type == 'process' ? JSON.stringify(value.meta.options.customBlockData.payloadData) : $('#ContentValue').val()
               )) !== null
             ) {
               if (message.index === regex.lastIndex) {
