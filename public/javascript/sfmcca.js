@@ -83,11 +83,11 @@ const onRender = () => {
   });
 
   $('#SMSValidate').on('click', (e) => {
-    console.log($('#SMSSender').val());
-    console.log($('#SMSReceiver').val());
     console.log($('#SMSContent').val());
     console.log($('#SMSBID').val());
     const msg = {
+      from: '%%Senders%%',
+      phone: '%%Phone%%',
       sms: $('#SMSContent').val(),
       bid: $('#SMSBID').val(),
     };

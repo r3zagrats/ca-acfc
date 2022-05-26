@@ -173,14 +173,6 @@ class SFMCCAController {
           break;
         }
         case 'SMS': {
-          // const data = new FormData();
-          // data.append('from', Content.from);
-          // data.append('u', Content.u);
-          // data.append('pwd', Content.pwd);
-          // data.append('phone', Content.phone);
-          // data.append('sms', Content.sms);
-          // data.append('bid', Content.bid);
-          // data.append('json', Content.json);
           let result = await superagent
             .post('https://cloudsms.vietguys.biz:4438/api/index.php')
             .field('from', Content.from)
