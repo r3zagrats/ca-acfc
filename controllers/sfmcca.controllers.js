@@ -179,9 +179,9 @@ class SFMCCAController {
           data.append('sms', Content.sms);
           data.append('bid', Content.bid);
           data.append('json', Content.json);
-          const result = await (
-            await superagent.post('https://cloudsms.vietguys.biz:4438/api/index.php')
-          ).send(data);
+          const result = await superagent
+            .post('https://cloudsms.vietguys.biz:4438/api/index.php')
+            .send(data);
           console.log('result', result.text);
 
           // const insertData = await FuelRestUtils.insertDESMSSendLog(
