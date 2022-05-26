@@ -553,6 +553,7 @@ const checkContent = async (type) => {
   console.log('tmpContents:', tmpContents);
   console.log(contentOptions);
   if (type !== 'refresh') $('#ContentOptions').val(contentOptions);
+  if (channels !== $('#channels').val()) $('#ContentOptions').val('');
   console.log($('#ContentOptions').val());
   if ($('#ContentOptions').val()) {
     switch ($('#Channels').val()) {
