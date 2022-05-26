@@ -85,6 +85,16 @@ const onRender = () => {
     console.log($('#SMSReceiver').val());
     console.log($('#SMSContent').val());
     console.log($('#SMSBID').val());
+    const msg = {
+      u: 'acfc',
+      pwd: '22tpj',
+      from: $('#SMSSender').val(),
+      phone: $('#SMSReceiver').val(),
+      sms: $('#SMSContent').val(),
+      bid: $('#SMSBID').val(),
+      json: '1',
+    }
+    $('#ContentValue').val(JSON.stringify(msg));
   });
 
   $('#Channels').on('change', (e) => {
@@ -217,7 +227,7 @@ const onRender = () => {
         }
         break;
       }
-      case 'Zalo Notification Service': {
+      case 'SMS': {
         break;
       }
     }
