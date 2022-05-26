@@ -97,7 +97,7 @@ class SFMCCAController {
           const znsSendLog = response.body;
           console.log('\nznsSendLog:', znsSendLog);
           if (znsSendLog.error !== 0) throw znsSendLog.message;
-          const firstStep = await FuelRestUtils.insertDEZaloOASendLog(
+          const insertDEResponse = await FuelRestUtils.insertDEZaloOASendLog(
             JSON.stringify({
               items: [
                 {
@@ -113,6 +113,7 @@ class SFMCCAController {
               ],
             })
           );
+          console.log(insertDEResponse.text)
           res.status(200).send({ Status: 'Successfull' });
           break;
         }
@@ -129,7 +130,7 @@ class SFMCCAController {
           const znsSendLog = response.body;
           console.log('\nznsSendLog:', znsSendLog);
           if (znsSendLog.error !== 0) throw znsSendLog.message;
-          const firstStep = await FuelRestUtils.insertDEZaloOASendLog(
+          const insertDEResponse = await FuelRestUtils.insertDEZaloOASendLog(
             JSON.stringify({
               items: [
                 {
@@ -144,6 +145,7 @@ class SFMCCAController {
               ],
             })
           );
+          console.log(insertDEResponse.text)
           res.status(200).send({ Status: 'Successfull' });
           break;
         }
@@ -179,7 +181,7 @@ class SFMCCAController {
           // data.append('sms', Content.sms);
           // data.append('bid', Content.bid);
           // data.append('json', Content.json);
-          const result = await superagent
+          let result = await superagent
             .post('https://cloudsms.vietguys.biz:4438/api/index.php')
             .field('from', Content.from)
             .field('u', Content.u)
@@ -188,19 +190,26 @@ class SFMCCAController {
             .field('sms', Content.sms)
             .field('bid', Content.bid)
             .field('json', Content.json)
-          console.log('result', result.text);
-
-          // const insertData = await FuelRestUtils.insertDESMSSendLog(
-          //   JSON.stringify({
-          //     items: [
-          //       {
-          //         UTCTime: new Date().toUTCString(),
-          //         Timestamp: new Date().getTime(),
-          //         StatusCode: znsSendLog.error,
-          //       },
-          //     ],
-          //   })
-          // );
+          result = JSON.parse(result)
+          console.log('result', result);
+          const insertDEResponse = await FuelRestUtils.insertDESMSSendLog(
+            JSON.stringify({
+              items: [
+                {
+                  Sender: Content.from,
+                  Receiver: Content.phone,
+                  Content: Content.sms,
+                  MsgId: result.msgid,
+                  Status: result.error === '0' ? 'success' : 'error',
+                  ErrorCode: result.error,
+                  ErrorMsg: result.log,
+                  UTCTime: new Date().toUTCString(),
+                  Timestamp: new Date().getTime(),
+                },
+              ],
+            })
+          );
+          console.log(insertDEResponse.text)
           res.status(200).send({ Status: 'Successful' });
           break;
         }

@@ -1,7 +1,6 @@
 'use strict';
 
 const superagent = require('superagent');
-require('dotenv').config();
 const refreshZaloToken = require('../../services/zalo/refreshZaloToken');
 
 class ZaloAPI {

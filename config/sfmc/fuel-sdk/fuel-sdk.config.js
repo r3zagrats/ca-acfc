@@ -1,4 +1,5 @@
 
+require('dotenv').config();
 const ET_Client = require('sfmc-fuelsdk-node');
 
 const origin = `https://${process.env.SFMC_SUBDOMAIN}.rest.marketingcloudapis.com/`;

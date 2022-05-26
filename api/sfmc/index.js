@@ -3,7 +3,6 @@
 const fuelSDKClient = require('../../config/sfmc/fuel-sdk/fuel-sdk.config');
 const fuelRestUtils = require('../../services/fuel-rest');
 const superagent = require('superagent');
-require('dotenv').config();
 
 class SFMCAPI {
   /**
