@@ -274,6 +274,7 @@ function initialize(data) {
   });
   console.log('channels', channels);
   console.log('senders', senders);
+  console.log($('#Senders').val())
   console.log('contentOptions', contentOptions);
   console.log('contentValue', contentValue);
 }
