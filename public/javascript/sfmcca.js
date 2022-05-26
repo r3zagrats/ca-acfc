@@ -83,8 +83,6 @@ const onRender = () => {
   });
 
   $('#SMSValidate').on('click', (e) => {
-    console.log($('#SMSContent').val());
-    console.log($('#SMSBID').val());
     const msg = {
       from: '%%Senders%%',
       phone: '%%Phone%%',
@@ -405,6 +403,9 @@ const showStep = async (step, stepIndex) => {
           $.each(tmpSMSSendersList, (index, SMSSenders) => {
             $('#Senders').append(`<option value=${SMSSenders.Name}>${SMSSenders.Name}</option>`);
           });
+          if (senders) {
+            $('#Senders').val(senders);
+          } else $('#Senders').val('');
           break;
         }
       }
