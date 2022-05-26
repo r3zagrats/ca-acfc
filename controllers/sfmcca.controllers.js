@@ -33,8 +33,8 @@ class SFMCCAController {
     for (const [key, value] of Object.entries(data.inArguments[0])) {
       Content = Content.replaceAll(`%%${key}%%`, value);
     }
-    console.log('\nContent', Content);
     Content = JSON.parse(Content);
+    console.log('\nContent', Content);
     try {
       switch (data.inArguments[0].Channels) {
         case 'Zalo Message': {
