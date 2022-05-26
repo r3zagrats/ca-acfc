@@ -563,11 +563,12 @@ const checkContent = async (type) => {
       case 'Zalo Message': {
         tmpContents.forEach((value) => {
           if (value.id == $('#ContentOptions').val()) {
+            const payloadData = JSON.stringify(value.meta.options.customBlockData);
             const regex = /%%([\s\S]*?)%%/gm;
             let message;
             while (
               (message = regex.exec(
-                type == 'process' ? value.content : $('#ContentValue').val()
+                type == 'process' ? payloadData : $('#ContentValue').val()
               )) !== null
             ) {
               if (message.index === regex.lastIndex) {
@@ -579,9 +580,7 @@ const checkContent = async (type) => {
                 errorContent.push(message[0]);
               }
             }
-            const payloadData = value.meta.options.customBlockData;
-            console.log('payloadData', payloadData);
-            $('#ContentValue').val(JSON.stringify(payloadData));
+            $('#ContentValue').val(payloadData);
             $('#DisplayContent').empty().append(value.content);
           }
         });
