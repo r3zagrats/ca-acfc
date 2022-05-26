@@ -95,6 +95,11 @@ const onRender = () => {
       json: '1',
     }
     $('#ContentValue').val(JSON.stringify(msg));
+    console.log($('#ContentValue').val());
+    connection.trigger('updateButton', {
+      button: 'next',
+      enabled: true,
+    });
   });
 
   $('#Channels').on('change', (e) => {
@@ -587,21 +592,21 @@ const checkContent = async (type) => {
       default:
         break;
     }
-  } else if ($('#Channels')) {
-    console.log($('#SMSSender')).val();
-    console.log($('#SMSReceiver')).val();
-    console.log($('#SMSContent')).val();
-    console.log($('#SMSBID')).val();
-    const SMSContent = {
-      u: 'acfc',
-      pwd: 'Acfc@1234',
-      from: 'NIKE',
-      phone: '',
-      sms: '',
-      bid: '',
-      json: '1',
-    };
-    $('#ContentValue').val(JSON.stringify(SMSContent));
+  } else if ($('#Channels').val() === 'SMS') {
+    // console.log($('#SMSSender')).val();
+    // console.log($('#SMSReceiver')).val();
+    // console.log($('#SMSContent')).val();
+    // console.log($('#SMSBID')).val();
+    // const SMSContent = {
+    //   u: 'acfc',
+    //   pwd: 'Acfc@1234',
+    //   from: 'NIKE',
+    //   phone: '',
+    //   sms: '',
+    //   bid: '',
+    //   json: '1',
+    // };
+    // $('#ContentValue').val(JSON.stringify(SMSContent));
   } else {
     connection.trigger('updateButton', {
       button: 'next',
