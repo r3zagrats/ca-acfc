@@ -553,7 +553,7 @@ const checkContent = async (type) => {
   console.log('tmpContents:', tmpContents);
   console.log(contentOptions);
   if (type === 'process') $('#ContentOptions').val(contentOptions);
-  if (type !== 'init' && channels !== $('#channels').val()) $('#ContentOptions').val('');
+  if (type === 'init' && channels !== $('#channels').val()) $('#ContentOptions').val('');
   console.log($('#ContentOptions').val());
   if ($('#ContentOptions').val()) {
     switch ($('#Channels').val()) {
