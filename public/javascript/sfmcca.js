@@ -402,7 +402,7 @@ const showStep = async (step, stepIndex) => {
           $.each(tmpSMSSendersList, (index, SMSSenders) => {
             $('#Senders').append(`<option value=${SMSSenders.Name}>${SMSSenders.Name}</option>`);
           });
-          if (senders) {
+          if (senders && channels === $('#Channels').val()) {
             $('#Senders').val(senders);
           } else $('#Senders').val('');
           break;
