@@ -3,7 +3,7 @@ const connection = new Postmonger.Session();
 let authTokens = {};
 let payload = {};
 let channels = '';
-let endpoints = '';
+let senders = '';
 let contentOptions = '';
 let contentValue = '';
 let tmpContents = '';
@@ -256,7 +256,7 @@ function initialize(data) {
           break;
         }
         case 'Senders': {
-          endpoints = value;
+          senders = value;
           $('#Senders').val(value);
           break;
         }
@@ -273,7 +273,7 @@ function initialize(data) {
     });
   });
   console.log('channels', channels);
-  console.log('endpoints', endpoints);
+  console.log('senders', senders);
   console.log('contentOptions', contentOptions);
   console.log('contentValue', contentValue);
 }
@@ -290,9 +290,9 @@ function onGetTokens(tokens) {
 /**
  *
  *
- * @param {*} endpoints
+ * @param {*} senders
  */
-function onGetSenders(endpoints) {}
+function onGetEndpoints(senders) {}
 
 /**
  * Save settings
