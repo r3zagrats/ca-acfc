@@ -274,7 +274,6 @@ function initialize(data) {
   });
   console.log('channels', channels);
   console.log('senders', senders);
-  console.log($('#Senders').val())
   console.log('contentOptions', contentOptions);
   console.log('contentValue', contentValue);
 }
@@ -387,6 +386,9 @@ const showStep = async (step, stepIndex) => {
           $.each(tmpZOAList, (index, ZOA) => {
             $('#Senders').append(`<option value=${ZOA.OAId}>${ZOA.OAName}</option>`);
           });
+          if (senders) {
+            $('#Senders').val(senders);
+          } else $('#Senders').val('');
           break;
         }
         case 'SMS': {
@@ -614,20 +616,6 @@ const checkContent = async (type) => {
         break;
     }
   } else if ($('#Channels').val() === 'SMS') {
-    // console.log($('#SMSSender')).val();
-    // console.log($('#SMSReceiver')).val();
-    // console.log($('#SMSContent')).val();
-    // console.log($('#SMSBID')).val();
-    // const SMSContent = {
-    //   u: 'acfc',
-    //   pwd: 'Acfc@1234',
-    //   from: 'NIKE',
-    //   phone: '',
-    //   sms: '',
-    //   bid: '',
-    //   json: '1',
-    // };
-    // $('#ContentValue').val(JSON.stringify(SMSContent));
   } else {
     connection.trigger('updateButton', {
       button: 'next',
