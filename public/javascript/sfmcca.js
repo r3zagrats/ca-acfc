@@ -573,6 +573,7 @@ const checkContent = async (type) => {
               if (message.index === regex.lastIndex) {
                 regex.lastIndex++;
               }
+              console.log('message:', message);
               if (!deFields.includes(message[1])) {
                 error = true;
                 errorContent.push(message[0]);
