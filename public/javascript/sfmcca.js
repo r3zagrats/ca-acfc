@@ -9,6 +9,8 @@ let contentValue = '';
 let tmpContents = '';
 let deFields = [];
 let eventDefinitionKey = '';
+let tmpZOAList = [];
+let tmpSMSSendersList = [];
 
 let steps = [
   { label: 'Channels', key: 'step1' },
@@ -54,7 +56,7 @@ const requestedInteractionHandler = async (settings) => {
 
 connection.on('initActivity', initialize);
 connection.on('requestedTokens', onGetTokens);
-connection.on('requestedEndpoints', onGetEndpoints);
+connection.on('requestedSenders', onGetSenders);
 connection.on('requestedInteraction', requestedInteractionHandler);
 connection.on('clickedNext', next);
 connection.on('clickedBack', prev);
@@ -64,7 +66,7 @@ connection.on('requestedSchema', function (data) {});
 const onRender = () => {
   connection.trigger('ready');
   connection.trigger('requestTokens');
-  connection.trigger('requestEndpoints');
+  connection.trigger('requestSenders');
   connection.trigger('requestInteraction');
   connection.trigger('requestSchema');
   $('.ca-modal__validateResult__button').on('click', (e) => {
@@ -120,14 +122,14 @@ const onRender = () => {
       });
     }
   });
-  $('#Endpoints').on('change', async (e) => {
-    if ($('#Endpoints').val()) {
+  $('#Senders').on('change', async (e) => {
+    if ($('#Senders').val()) {
       if ($('#Channels').val() === 'Zalo Notification Service') {
         try {
           $('.ca-modal').show();
           $('.ca-modal__loading').show();
           $('.ca-modal__validateResult.failed').hide();
-          let customContent = await getZNSTemplates($('#Endpoints').val());
+          let customContent = await getZNSTemplates($('#Senders').val());
           $('.ca-modal').hide();
           customContent = JSON.parse(customContent);
           console.log('customContent:', customContent);
@@ -197,7 +199,7 @@ const onRender = () => {
           $('.ca-modal').show();
           $('.ca-modal__loading').show();
           $('.ca-modal__validateResult.failed').hide();
-          let customContent = await getZNSTemplates($('#Endpoints').val());
+          let customContent = await getZNSTemplates($('#Senders').val());
           $('.ca-modal').hide();
           customContent = JSON.parse(customContent);
           console.log('customContent:', customContent);
@@ -263,9 +265,9 @@ function initialize(data) {
           });
           break;
         }
-        case 'Endpoints': {
+        case 'Senders': {
           endpoints = value;
-          $('#Endpoints').val(value);
+          $('#Senders').val(value);
           break;
         }
         case 'ContentOptions': {
@@ -300,7 +302,7 @@ function onGetTokens(tokens) {
  *
  * @param {*} endpoints
  */
-function onGetEndpoints(endpoints) {}
+function onGetSenders(endpoints) {}
 
 /**
  * Save settings
@@ -377,7 +379,7 @@ const showStep = async (step, stepIndex) => {
       break;
     case 'step2':
       $('#step2').show();
-      $('#titleDynamic').empty().append('Endpoints');
+      $('#titleDynamic').empty().append('Senders');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
       switch ($('#Channels').val()) {
         case ('Zalo Message', 'Zalo Notification Service'): {
@@ -385,15 +387,35 @@ const showStep = async (step, stepIndex) => {
           $('.ca-modal__loading').show();
           $('.ca-modal__validateResult.failed').hide();
           const ZOAList = await getAllZOA();
-          console.log('ZOAList', ZOAList);
           $('.ca-modal').hide();
+          console.log('ZOAList', ZOAList);
+          tmpZOAList = ZOAList.data;
+          $('#Senders')
+            .empty()
+            .append(`<option value=''>--Select one of the following senders--</option>`);
+          $.each(tmpZOAList, (index, ZOA) => {
+            $('#Senders').append(`<option value=${ZOA.OAId}>${ZOA.OAName}</option>`);
+          });
           break;
         }
         case 'SMS': {
+          $('.ca-modal').show();
+          $('.ca-modal__loading').show();
+          $('.ca-modal__validateResult.failed').hide();
+          const SMSSenders = await getAllSMSSenders();
+          $('.ca-modal').hide();
+          console.log('SMSSenders', SMSSenders);
+          tmpSMSSenders = SMSSenders.data;
+          $('#Senders')
+            .empty()
+            .append(`<option value=''>--Select one of the following senders--</option>`);
+          $.each(tmpSMSSenders, (index, SMSSenders) => {
+            $('#Senders').append(`<option value=${SMSSenders.Name}>${SMSSenders.Name}</option>`);
+          });
           break;
         }
       }
-      if ($('#Endpoints').val()) {
+      if ($('#Senders').val()) {
         connection.trigger('updateButton', {
           button: 'next',
           enabled: true,
@@ -469,7 +491,7 @@ const showStep = async (step, stepIndex) => {
             $('.ca-modal').show();
             $('.ca-modal__loading').show();
             $('.ca-modal__validateResult.failed').hide();
-            let customContent = await getZNSTemplates($('#Endpoints').val());
+            let customContent = await getZNSTemplates($('#Senders').val());
             $('.ca-modal').hide();
             customContent = JSON.parse(customContent);
             console.log('customContent:', customContent);
@@ -571,7 +593,7 @@ const checkContent = async (type) => {
         $('.ca-modal__validateResult.failed').hide();
         let response = await getZNSTemplateDetail(
           $('#ContentOptions').val(),
-          $('#Endpoints').val()
+          $('#Senders').val()
         );
         $('.ca-modal').hide();
         response = JSON.parse(response);
