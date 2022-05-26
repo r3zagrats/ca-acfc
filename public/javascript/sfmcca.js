@@ -521,6 +521,10 @@ const showStep = async (step, stepIndex) => {
           $('#ContentOptions').empty();
           $('#ZaloContentContainer').hide();
           $('#SMSContentContainer').show();
+          if (contentValue) {
+            $('#SMSContent').val(JSON.parse(contentValue).sms);
+            $('#SMSBID').val(JSON.parse(contentValue).bid);
+          }
           break;
         }
       }
