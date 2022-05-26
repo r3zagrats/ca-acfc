@@ -364,7 +364,26 @@ const showStep = async (step, stepIndex) => {
       $('#titleDynamic').empty().append('Senders');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
       switch ($('#Channels').val()) {
-        case ('Zalo Message', 'Zalo Notification Service'): {
+        case ('Zalo Message'): {
+          $('.ca-modal').show();
+          $('.ca-modal__loading').show();
+          $('.ca-modal__validateResult.failed').hide();
+          const ZOAList = await getAllZOA();
+          $('.ca-modal').hide();
+          console.log('ZOAList', ZOAList);
+          tmpZOAList = ZOAList.data;
+          $('#Senders')
+            .empty()
+            .append(`<option value=''>--Select one of the following senders--</option>`);
+          $.each(tmpZOAList, (index, ZOA) => {
+            $('#Senders').append(`<option value=${ZOA.OAId}>${ZOA.OAName}</option>`);
+          });
+          if (senders && channels === $('#Channels').val()) {
+            $('#Senders').val(senders);
+          } else $('#Senders').val('');
+          break;
+        }
+        case ('Zalo Notification Service'): {
           $('.ca-modal').show();
           $('.ca-modal__loading').show();
           $('.ca-modal__validateResult.failed').hide();
