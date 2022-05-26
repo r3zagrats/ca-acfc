@@ -86,14 +86,9 @@ const onRender = () => {
     console.log($('#SMSContent').val());
     console.log($('#SMSBID').val());
     const msg = {
-      u: 'acfc',
-      pwd: '22tpj',
-      from: $('#SMSSender').val(),
-      phone: $('#SMSReceiver').val(),
       sms: $('#SMSContent').val(),
       bid: $('#SMSBID').val(),
-      json: '1',
-    }
+    };
     $('#ContentValue').val(JSON.stringify(msg));
     console.log($('#ContentValue').val());
     connection.trigger('updateButton', {
@@ -384,6 +379,20 @@ const showStep = async (step, stepIndex) => {
       $('#step2').show();
       $('#titleDynamic').empty().append('Endpoints');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
+      switch ($('#Channels').val()) {
+        case ('Zalo Message', 'Zalo Notification Service'): {
+          $('.ca-modal').show();
+          $('.ca-modal__loading').show();
+          $('.ca-modal__validateResult.failed').hide();
+          const ZOAList = await getAllZOA();
+          console.log('ZOAList', ZOAList);
+          $('.ca-modal').hide();
+          break;
+        }
+        case 'SMS': {
+          break;
+        }
+      }
       if ($('#Endpoints').val()) {
         connection.trigger('updateButton', {
           button: 'next',
@@ -429,7 +438,6 @@ const showStep = async (step, stepIndex) => {
         text: 'done',
         enabled: false,
       });
-      console.log($('#Endpoints').val());
       switch ($('#Channels').val()) {
         case 'Zalo Message': {
           try {
@@ -648,6 +656,24 @@ const getZNSTemplateDetail = async (TemplateId, OAId) => {
       .post('/api/zalo/getznstemplatedetail')
       .send({ TemplateId, OAId });
     return response.text;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+const getAllSMSSenders = async () => {
+  try {
+    const response = await superagent.get('/api/smssenders');
+    return response.body;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+const getAllZOA = async () => {
+  try {
+    const response = await superagent.get('/api/zoa');
+    return response.body;
   } catch (error) {
     throw new Error(error.message);
   }

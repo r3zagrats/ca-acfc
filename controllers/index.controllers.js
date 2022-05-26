@@ -46,10 +46,7 @@ class MainRouter {
       const { rows: Channels } = await pgClient.query(
         `SELECT * FROM "${process.env.PSQL_CHANNELS_TABLE}" ORDER BY "Id"`
       );
-      const { rows: Endpoints } = await pgClient.query(
-        `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" ORDER BY "OAId"`
-      );
-      res.render('sfmcca', { Channels, Endpoints });
+      res.render('sfmcca', { Channels});
     } else {
       res.status(500).send({ Status: 'Access is not allowed' });
     }

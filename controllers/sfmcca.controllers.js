@@ -113,7 +113,7 @@ class SFMCCAController {
               ],
             })
           );
-          console.log(insertDEResponse.text)
+          console.log(insertDEResponse.body)
           res.status(200).send({ Status: 'Successfull' });
           break;
         }
@@ -145,7 +145,7 @@ class SFMCCAController {
               ],
             })
           );
-          console.log(insertDEResponse.text)
+          console.log(insertDEResponse.body)
           res.status(200).send({ Status: 'Successfull' });
           break;
         }
@@ -184,12 +184,12 @@ class SFMCCAController {
           let result = await superagent
             .post('https://cloudsms.vietguys.biz:4438/api/index.php')
             .field('from', Content.from)
-            .field('u', Content.u)
-            .field('pwd', Content.pwd)
+            .field('u', process.env.SMS_USER)
+            .field('pwd', process.env.SMS_PWD)
             .field('phone', Content.phone)
             .field('sms', Content.sms)
             .field('bid', Content.bid)
-            .field('json', Content.json)
+            .field('json', '1')
           result = JSON.parse(result.text)
           console.log('result', result);
           const insertDEResponse = await FuelRestUtils.insertDESMSSendLog(
@@ -209,7 +209,7 @@ class SFMCCAController {
               ],
             })
           );
-          console.log(insertDEResponse.text)
+          console.log(insertDEResponse.body)
           res.status(200).send({ Status: 'Successful' });
           break;
         }

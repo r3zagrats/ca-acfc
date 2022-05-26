@@ -9,6 +9,7 @@ const SFMCApiRouter = require('./sfmcapi.routes');
 const ZaloWebhook = require('../services/zalo/webhook');
 const MainRouter = require('../controllers/index.controllers');
 const SFMCCARouter = require('./sfmcca.routes')
+const SMSSendersRouter = require('./SMSSenders.routes')
 
 const Router = (app) => {
   // Zalo Routes
@@ -23,8 +24,11 @@ const Router = (app) => {
   // Zalo OA Routes
   app.use('/api/zoa', ZOARouter);
 
-  // Channels Routes
+  // Users Routes
   app.use('/api/users', UsersRouter);
+
+  // SMSSenders Routes
+  app.use('/api/smssenders', SMSSendersRouter);
 
   // Zalo webhook
   app.post('/webhook/zalo', ZaloWebhook);
