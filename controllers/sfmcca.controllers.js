@@ -39,7 +39,7 @@ class SFMCCAController {
       switch (data.inArguments[0].Channels) {
         case 'Zalo Message': {
           // Query OA Info
-          const tmpAccessToken = await refreshZaloToken(data.inArguments[0].Endpoints);
+          const tmpAccessToken = await refreshZaloToken(data.inArguments[0].Senders);
           console.log('\ntmpAccessToken: ', tmpAccessToken);
           if (Content.type === 'AttachedFile') {
             // Check if file exists
@@ -101,7 +101,7 @@ class SFMCCAController {
             JSON.stringify({
               items: [
                 {
-                  OAId: data.inArguments[0].Endpoints,
+                  OAId: data.inArguments[0].Senders,
                   ZaloId: znsSendLog.error === 0 ? znsSendLog.data.user_id : '',
                   MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
                   UTCTime: new Date().toUTCString(),
@@ -118,7 +118,7 @@ class SFMCCAController {
           break;
         }
         case 'Zalo Notification Service': {
-          const tmpAccessToken = await refreshZaloToken(data.inArguments[0].Endpoints);
+          const tmpAccessToken = await refreshZaloToken(data.inArguments[0].Senders);
           console.log('\ntmpAccessToken: ', tmpAccessToken);
           console.log('ZNS content', { ...Content, tracking_id: Date.now() });
           const response = await superagent
@@ -134,7 +134,7 @@ class SFMCCAController {
             JSON.stringify({
               items: [
                 {
-                  OAId: data.inArguments[0].Endpoints,
+                  OAId: data.inArguments[0].Senders,
                   MsgId: znsSendLog.error === 0 ? znsSendLog.data.msg_id : '',
                   UTCTime: new Date().toUTCString(),
                   Timestamp: new Date().getTime(),
