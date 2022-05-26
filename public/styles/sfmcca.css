@@ -136,3 +136,8 @@ html {
 #ZaloContentContainer {
   display: none;
 }
+
+.ca-validate {
+  margin-top: 12px;
+  float: right;
+}
