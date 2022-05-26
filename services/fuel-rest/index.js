@@ -1,7 +1,6 @@
 'use strict';
 const fuelRestClient = require('../../config/sfmc/fuel-rest/fuel-rest.config');
 
-console.log('hello world', process.env.DE_SMS_SEND_LOG)
 class FuelRestUtils {
   /**
    * Get Content

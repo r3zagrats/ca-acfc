@@ -190,7 +190,7 @@ class SFMCCAController {
             .field('sms', Content.sms)
             .field('bid', Content.bid)
             .field('json', Content.json)
-          result = JSON.parse(result)
+          result = JSON.parse(result.text)
           console.log('result', result);
           const insertDEResponse = await FuelRestUtils.insertDESMSSendLog(
             JSON.stringify({
