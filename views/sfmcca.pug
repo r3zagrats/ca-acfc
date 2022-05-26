@@ -56,13 +56,13 @@ block content
               abbr.slds-required(title='required') * 
               | Message:
             .slds-form-element__control
-              textarea#SMSContent.slds-textarea.ccb-textarea(name='SMSContent' maxlength='2000' placeholder='Enter your message. Maximum length: 2000 ')
+              textarea#SMSContent.slds-textarea.ccb-textarea(name='SMSContent' placeholder='Enter your message')
           #ccb-form-SMSBID-element.slds-form-element
             label.slds-form-element__label.ccb-label(for='SMSBID')
               abbr.slds-required(title='required') * 
               | BID:
             .slds-form-element__control
-              input#SMSBID.slds-input.ccb-textarea(type='text' name='SMSBID' maxlength='2000' placeholder='Enter your message. Maximum length: 2000 ')
+              input#SMSBID.slds-input.ccb-textarea(type='text' name='SMSBID' maxlength='50' placeholder='Enter the BID. Maximum length: 50 ')
           #ccb-form-SMSValidate-element.slds-form-element
             input(type="button" id="SMSValidate" value="Validate")
     footer.slds-card__footer

@@ -100,16 +100,6 @@ const onRender = () => {
   });
 
   $('#Channels').on('change', (e) => {
-    // if ($('#Channels').val() === 'SMS') {
-    //   displayCustomError('This channel is not supported yet. Please select another channel!');
-    //   $('.ca-modal').show();
-    //   $('.ca-modal__loading').hide();
-    //   $('.ca-modal__validateResult.failed').show();
-    //   connection.trigger('updateButton', {
-    //     button: 'next',
-    //     enabled: false,
-    //   });
-    // }
     if ($('#Channels').val()) {
       connection.trigger('updateButton', {
         button: 'next',

@@ -25,7 +25,6 @@ class MainRouter {
     const file = path.join(__dirname, '..', 'public/sfmcca', 'config-template.json');
     const configTemplate = fs.readFileSync(file, 'utf-8');
     const config = JSON.parse(configTemplate.replace(/\$DOMAIN/g, domain));
-    console.log('config', config);
     res.json(config);
   };
 
@@ -35,13 +34,6 @@ class MainRouter {
    * @param res
    */
   sfmcca = async (req, res) => {
-    // const { rows: Channels } = await pgClient.query(
-    //   `SELECT * FROM "${process.env.PSQL_CHANNELS_TABLE}" ORDER BY "Id"`
-    // );
-    // const { rows: Endpoints } = await pgClient.query(
-    //   `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" ORDER BY "OAId"`
-    // );
-    // res.render('sfmcca', { Channels, Endpoints });
     if ((req.headers['referer'] ?? 'no end').includes('marketingcloudapps')) {
       const { rows: Channels } = await pgClient.query(
         `SELECT * FROM "${process.env.PSQL_CHANNELS_TABLE}" ORDER BY "Id"`
