@@ -86,14 +86,14 @@ class SFMCCAController {
             }
             await redisClient.quit();
           }
-          let znsContent = Content.payloadData;
-          console.log('\nznsContent:', JSON.stringify(znsContent));
+          let zmContent = Content.payloadData;
+          console.log('\nzmContent:', JSON.stringify(zmContent));
           // Send Message
           const response = await superagent
             .post('https://openapi.zalo.me/v2.0/oa/message')
             .set('Content-Type', 'application/json')
             .set('access_token', tmpAccessToken)
-            .send(JSON.stringify(znsContent));
+            .send(JSON.stringify(zmContent));
           const znsSendLog = response.body;
           console.log('\nznsSendLog:', znsSendLog);
           if (znsSendLog.error !== 0) throw znsSendLog.message;
@@ -108,7 +108,7 @@ class SFMCCAController {
                   Timestamp: new Date().getTime(),
                   StatusCode: znsSendLog.error,
                   ErrorMessage: znsSendLog.message,
-                  Message: JSON.stringify(znsContent.message),
+                  Message: JSON.stringify(zmContent.message),
                 },
               ],
             })
