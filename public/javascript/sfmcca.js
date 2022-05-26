@@ -56,7 +56,7 @@ const requestedInteractionHandler = async (settings) => {
 
 connection.on('initActivity', initialize);
 connection.on('requestedTokens', onGetTokens);
-connection.on('requestedSenders', onGetSenders);
+connection.on('requestedEndpoints', onGetEndpoints);
 connection.on('requestedInteraction', requestedInteractionHandler);
 connection.on('clickedNext', next);
 connection.on('clickedBack', prev);
