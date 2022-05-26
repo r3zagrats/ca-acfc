@@ -71,7 +71,6 @@ const onRender = () => {
   connection.trigger('requestSchema');
   $('.ca-modal__validateResult__button').on('click', (e) => {
     $('.ca-modal').hide();
-    console.log('this', $(this));
   });
 
   $('.ca-modal').on('click', (e) => {
@@ -384,7 +383,7 @@ const showStep = async (step, stepIndex) => {
           $.each(tmpZOAList, (index, ZOA) => {
             $('#Senders').append(`<option value=${ZOA.OAId}>${ZOA.OAName}</option>`);
           });
-          if (senders) {
+          if (senders && channels === $('#Channels').val()) {
             $('#Senders').val(senders);
           } else $('#Senders').val('');
           break;
