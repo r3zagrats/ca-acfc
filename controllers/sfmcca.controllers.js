@@ -15,6 +15,7 @@ const asyncGet = require('../utils/async-http-get');
 const fs = require('fs');
 const redisClient = require('../config/database/redis/redis.config');
 const refreshZaloToken = require('../services/zalo/refreshZaloToken');
+const FormData = require('form-data');
 
 class SFMCCAController {
   /**
@@ -170,7 +171,30 @@ class SFMCCAController {
           break;
         }
         case 'SMS': {
-          console.log('\nThis is SMS Channel.');
+          const data = new FormData();
+          data.append('from', Content.from);
+          data.append('u', Content.u);
+          data.append('pwd', Content.pwd);
+          data.append('phone', Content.phone);
+          data.append('sms', Content.sms);
+          data.append('bid', Content.bid);
+          data.append('json', Content.json);
+          const result = await (
+            await superagent.post('https://cloudsms.vietguys.biz:4438/api/index.php')
+          ).send(data);
+          console.log('result', result.text);
+
+          // const insertData = await FuelRestUtils.insertDESMSSendLog(
+          //   JSON.stringify({
+          //     items: [
+          //       {
+          //         UTCTime: new Date().toUTCString(),
+          //         Timestamp: new Date().getTime(),
+          //         StatusCode: znsSendLog.error,
+          //       },
+          //     ],
+          //   })
+          // );
           res.status(200).send({ Status: 'Successful' });
           break;
         }
