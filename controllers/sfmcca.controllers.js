@@ -171,17 +171,23 @@ class SFMCCAController {
           break;
         }
         case 'SMS': {
-          const data = new FormData();
-          data.append('from', Content.from);
-          data.append('u', Content.u);
-          data.append('pwd', Content.pwd);
-          data.append('phone', Content.phone);
-          data.append('sms', Content.sms);
-          data.append('bid', Content.bid);
-          data.append('json', Content.json);
+          // const data = new FormData();
+          // data.append('from', Content.from);
+          // data.append('u', Content.u);
+          // data.append('pwd', Content.pwd);
+          // data.append('phone', Content.phone);
+          // data.append('sms', Content.sms);
+          // data.append('bid', Content.bid);
+          // data.append('json', Content.json);
           const result = await superagent
             .post('https://cloudsms.vietguys.biz:4438/api/index.php')
-            .send(data);
+            .field('from', Content.from)
+            .field('u', Content.u)
+            .field('pwd', Content.pwd)
+            .field('phone', Content.phone)
+            .field('sms', Content.sms)
+            .field('bid', Content.bid)
+            .field('json', Content.json)
           console.log('result', result.text);
 
           // const insertData = await FuelRestUtils.insertDESMSSendLog(
