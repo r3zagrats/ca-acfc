@@ -36,19 +36,20 @@ block content
           label.slds-form-element__label(for="DEFields") Data Extension Fields
           div#DEFields(name='DEFields')
       form#step4.step.js-settings-form
-        .slds-form-element
-          .slds-form-element__control
-            .slds-select_container
-              select#ContentOptions.slds-select.js-activity-setting(name='ContentOptions')
-          div
-            label.slds-form-element__label.slds-p-top_medium(for='Text')
-              abbr.slds-required(title='required')
-              | Content |
-            button#refreshButton(type="button") Refresh
-          br
-          .slds-form-element__control
-            textarea#ContentValue.slds-input.js-activity-setting( rows = '20' required='', placeholder='', name='text', disabled)
-            #DisplayContent
+        #ZaloContentContainer
+          .slds-form-element
+            .slds-form-element__control
+              .slds-select_container
+                select#ContentOptions.slds-select.js-activity-setting(name='ContentOptions')
+            div
+              label.slds-form-element__label.slds-p-top_medium(for='Text')
+                abbr.slds-required(title='required')
+                | Content |
+              button#refreshButton(type="button") Refresh
+            br
+            .slds-form-element__control
+              textarea#ContentValue.slds-input.js-activity-setting( rows = '20' required='', placeholder='', name='text', disabled)
+              #DisplayContent
         #SMSContentContainer
           #ccb-form-SMSContent-element.slds-form-element
             label.slds-form-element__label.ccb-label(for='SMSContent')

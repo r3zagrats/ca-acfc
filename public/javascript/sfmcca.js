@@ -464,6 +464,7 @@ const showStep = async (step, stepIndex) => {
         case 'Zalo Message': {
           try {
             $('#SMSContentContainer').hide();
+            $('#ZaloContentContainer').show();
             $('.ca-modal').show();
             $('.ca-modal__loading').show();
             $('.ca-modal__validateResult.failed').hide();
@@ -488,6 +489,7 @@ const showStep = async (step, stepIndex) => {
         case 'Zalo Notification Service': {
           try {
             $('#SMSContentContainer').hide();
+            $('#ZaloContentContainer').show();
             $('.ca-modal').show();
             $('.ca-modal__loading').show();
             $('.ca-modal__validateResult.failed').hide();
@@ -523,6 +525,7 @@ const showStep = async (step, stepIndex) => {
         }
         case 'SMS': {
           $('#ContentOptions').empty();
+          $('#ZaloContentContainer').hide();
           $('#SMSContentContainer').show();
           break;
         }
@@ -591,10 +594,7 @@ const checkContent = async (type) => {
         $('.ca-modal').show();
         $('.ca-modal__loading').show();
         $('.ca-modal__validateResult.failed').hide();
-        let response = await getZNSTemplateDetail(
-          $('#ContentOptions').val(),
-          $('#Senders').val()
-        );
+        let response = await getZNSTemplateDetail($('#ContentOptions').val(), $('#Senders').val());
         $('.ca-modal').hide();
         response = JSON.parse(response);
         console.log('repsonse detail', response);
