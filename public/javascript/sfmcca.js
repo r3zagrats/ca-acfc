@@ -364,7 +364,7 @@ const showStep = async (step, stepIndex) => {
       $('#titleDynamic').empty().append('Senders');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
       switch ($('#Channels').val()) {
-        case ('Zalo Message'): {
+        case 'Zalo Message': {
           $('.ca-modal').show();
           $('.ca-modal__loading').show();
           $('.ca-modal__validateResult.failed').hide();
@@ -383,7 +383,7 @@ const showStep = async (step, stepIndex) => {
           } else $('#Senders').val('');
           break;
         }
-        case ('Zalo Notification Service'): {
+        case 'Zalo Notification Service': {
           $('.ca-modal').show();
           $('.ca-modal__loading').show();
           $('.ca-modal__validateResult.failed').hide();
@@ -553,7 +553,10 @@ const checkContent = async (type) => {
   console.log('tmpContents:', tmpContents);
   console.log(contentOptions);
   if (type === 'process') $('#ContentOptions').val(contentOptions);
-  if (type === 'init' && channels !== $('#channels').val()) $('#ContentOptions').val('');
+  if (type === 'init') {
+    if (channels !== $('#channels').val()) $('#ContentOptions').val('');
+    $('#ContentOptions').val(contentOptions);
+  }
   console.log($('#ContentOptions').val());
   if ($('#ContentOptions').val()) {
     switch ($('#Channels').val()) {
