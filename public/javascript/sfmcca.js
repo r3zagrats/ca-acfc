@@ -84,7 +84,7 @@ const onRender = () => {
   $('#SMSValidate').on('click', (e) => {
     const msg = {
       from: '%%Senders%%',
-      phone: '%%Phone%%',
+      phone: '',
       sms: $('#SMSContent').val(),
       bid: $('#SMSBID').val(),
     };
@@ -637,7 +637,7 @@ const checkContent = async (type) => {
         $('#ca-frame').show();
         $('#ca-frame').attr('src', response.data.previewUrl);
         contentValue = {
-          phone: '%%phone%%',
+          phone: '',
           template_id: response.data.templateId,
           template_data: {},
         };

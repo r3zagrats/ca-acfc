@@ -86,6 +86,7 @@ class SFMCCAController {
             }
             await redisClient.quit();
           }
+          Content.payloadData.recipient.user_id = data.inArguments[0].DEFields
           let zmContent = Content.payloadData;
           console.log('\nzmContent:', JSON.stringify(zmContent));
           // Send Message
@@ -118,6 +119,7 @@ class SFMCCAController {
           break;
         }
         case 'Zalo Notification Service': {
+          Content.phone = data.inArguments[0].DEFields
           const tmpAccessToken = await refreshZaloToken(data.inArguments[0].Senders);
           console.log('\ntmpAccessToken: ', tmpAccessToken);
           console.log('ZNS content', { ...Content, tracking_id: Date.now() });
@@ -178,7 +180,7 @@ class SFMCCAController {
             .field('from', Content.from)
             .field('u', process.env.SMS_USER)
             .field('pwd', process.env.SMS_PWD)
-            .field('phone', Content.phone)
+            .field('phone', data.inArguments[0].DEFields)
             .field('sms', Content.sms)
             .field('bid', Content.bid)
             .field('json', '1')

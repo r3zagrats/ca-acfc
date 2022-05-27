@@ -726,7 +726,7 @@ const reRenderUI = () => {
       case 'Text': {
         const payloadData = {
           recipient: {
-            user_id: '%%ZaloId%%',
+            user_id: '',
           },
           message: {
             text: msgText,
@@ -757,7 +757,7 @@ const reRenderUI = () => {
       case 'Image': {
         const payloadData = {
           recipient: {
-            user_id: '%%ZaloId%%',
+            user_id: '',
           },
           message: {
             text: msgText,
@@ -951,7 +951,7 @@ const reRenderUI = () => {
         console.log('normalList: ', normalList);
         const payloadData = {
           recipient: {
-            user_id: '%%ZaloId%%',
+            user_id: '',
           },
           message: {
             attachment: {
@@ -1029,7 +1029,7 @@ const reRenderUI = () => {
         localStorage.setItem('LSButtonList', JSON.stringify(buttonList));
         const payloadData = {
           recipient: {
-            user_id: '%%ZaloId%%',
+            user_id: '',
           },
           message: {
             text: msgText,
@@ -1082,7 +1082,7 @@ const reRenderUI = () => {
             `;
             payloadData = {
               recipient: {
-                user_id: '%%ZaloId%%',
+                user_id: '',
               },
               message: {
                 attachment: {
@@ -1118,7 +1118,7 @@ const reRenderUI = () => {
             `;
             payloadData = {
               recipient: {
-                user_id: '%%ZaloId%%',
+                user_id: '',
               },
               message: {
                 attachment: {
@@ -1148,7 +1148,7 @@ const reRenderUI = () => {
             `;
             payloadData = {
               recipient: {
-                user_id: '%%ZaloId%%',
+                user_id: '',
               },
               message: {
                 attachment: {
@@ -1178,7 +1178,7 @@ const reRenderUI = () => {
         });
         const payloadData = {
           recipient: {
-            user_id: '%%ZaloId%%',
+            user_id: '',
           },
           message: {
             attachment: {
