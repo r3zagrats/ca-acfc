@@ -448,7 +448,9 @@ const showStep = async (step, stepIndex) => {
       const deInfo = await getDEInfo(eventDefinitionKey);
       $('.ca-modal').hide();
       $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
-      $('#DEFields').empty().append(`<option value="">--Select one of the following fields--</option>`);
+      $('#DEFields')
+        .empty()
+        .append(`<option value="">--Select one of the following fields--</option>`);
       $.each(deInfo.deCol, (index, field) => {
         deFields.push(field.Name);
         $('#DEFields').append(
@@ -574,10 +576,11 @@ const checkContent = async (type) => {
   console.log(contentOptions);
   if (type === 'process') $('#ContentOptions').val(contentOptions);
   if (type === 'init') {
-    console.log(channels)
-    console.log($('#Channels').val())
-    if (channels !== $('#Channels').val()) $('#ContentOptions').val('');
-    $('#ContentOptions').val(contentOptions);
+    console.log(channels);
+    console.log($('#Channels').val());
+    if (channels !== $('#Channels').val()) {
+      $('#ContentOptions').val('');
+    } else $('#ContentOptions').val(contentOptions);
   }
   console.log($('#ContentOptions').val());
   if ($('#ContentOptions').val()) {
