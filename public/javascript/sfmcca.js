@@ -8,6 +8,7 @@ let contentOptions = '';
 let contentValue = '';
 let tmpContents = '';
 let deFields = [];
+let deKey = '';
 let eventDefinitionKey = '';
 let tmpZOAList = [];
 let tmpSMSSendersList = [];
@@ -23,28 +24,6 @@ let currentStep = steps[0].key;
 const requestedInteractionHandler = async (settings) => {
   if (settings.triggers[0]) {
     eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
-    try {
-      $('.ca-modal').show();
-      $('.ca-modal__loading').show();
-      $('.ca-modal__validateResult.failed').hide();
-      const deInfo = await getDEInfo(eventDefinitionKey);
-      $('.ca-modal').hide();
-      $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
-      $('#DEFields').empty().append(`<option value="">--Select one of the following fields--</option>`);
-      $.each(deInfo.deCol, (index, field) => {
-        deFields.push(field.Name);
-        $('#DEFields').append(
-          `<option value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</option>`
-        );
-        $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
-      });
-    } catch (error) {
-      displayCustomError('Please choose ENTRY EVENT and SAVE Journey before Continue');
-      $('.ca-modal').show();
-      $('.ca-modal__loading').hide();
-      $('.ca-modal__validateResult.failed').show();
-      connection.trigger('destroy');
-    }
   } else {
     displayCustomError('Please choose ENTRY EVENT and SAVE Journey before Continue');
     $('.ca-modal').show();
@@ -277,6 +256,10 @@ function initialize(data) {
           contentOptions = value;
           break;
         }
+        case 'DEFields': {
+          deKey = value;
+          break;
+        }
         case 'ContentValue': {
           contentValue = value;
           $('#ContentValue').val(value);
@@ -286,6 +269,7 @@ function initialize(data) {
     });
   });
   console.log('channels', channels);
+  console.log('deKey', deKey);
   console.log('senders', senders);
   console.log('contentOptions', contentOptions);
   console.log('contentValue', contentValue);
@@ -458,6 +442,23 @@ const showStep = async (step, stepIndex) => {
       $('#step3').show();
       $('#titleDynamic').empty().append('Data Extension');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
+      $('.ca-modal').show();
+      $('.ca-modal__loading').show();
+      $('.ca-modal__validateResult.failed').hide();
+      const deInfo = await getDEInfo(eventDefinitionKey);
+      $('.ca-modal').hide();
+      $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
+      $('#DEFields').empty().append(`<option value="">--Select one of the following fields--</option>`);
+      $.each(deInfo.deCol, (index, field) => {
+        deFields.push(field.Name);
+        $('#DEFields').append(
+          `<option value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</option>`
+        );
+        $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
+      });
+      if (deKey && channels === $('#Channels').val()) {
+        $('#DEFields').val(deKey);
+      } else $('#DEFields').val('');
       if ($('#DEFields').val()) {
         connection.trigger('updateButton', {
           button: 'next',
