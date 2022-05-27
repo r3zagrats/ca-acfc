@@ -97,7 +97,7 @@ class SFMCCAController {
             .send(JSON.stringify(zmContent));
           const znsSendLog = response.body;
           console.log('\nznsSendLog:', znsSendLog);
-          if (znsSendLog.error !== 0) throw znsSendLog.message;
+          // if (znsSendLog.error !== 0) throw znsSendLog.message;
           const insertDEResponse = await FuelRestUtils.insertDEZaloOASendLog(
             JSON.stringify({
               items: [
