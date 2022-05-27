@@ -192,7 +192,7 @@ class SFMCCAController {
                   Receiver: Content.phone,
                   Content: Content.sms,
                   MsgId: result.msgid,
-                  Status: result.error === '0' ? 'success' : 'error',
+                  Status: result.error === 0 ? 'success' : 'error',
                   ErrorCode: result.error,
                   ErrorMsg: result.log,
                   UTCTime: new Date().toUTCString(),

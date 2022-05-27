@@ -47,7 +47,9 @@ const Router = (app) => {
   app.use('/sfmcca', MainRouter.sfmcca);
 
   // app.use('/', MainRouter.sfmcca);
-
+  // app.get('/*', (req, res) => {
+  //   res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  // });
 };
 
 module.exports = Router;
