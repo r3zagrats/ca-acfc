@@ -22,23 +22,23 @@ body
           select#ccb-zmOptions-select.ccb-select.slds-select(name='zmOptions')
             each zmOption in zmOptions
               option(value=zmOption.value)=zmOption.name
-      .ccb-modal
-        .ccb-modal__container
-          .ccb-modal__loading
-            svg.spinner(viewbox='0 0 50 50')
-              circle.path(cx='25' cy='25' r='20' fill='none' stroke-width='5')
-            p.ccb-modal__text Loading data...
-          .ccb-modal__validateResult.success
-            .ccb-modal__validateResult__title
-              p Congratulations
-            .ccb-modal__validateResult__desc
-              i.fa-solid.fa-check
-              p.ccb-modal__validateResult__success-message Your changes have been validated successfully. Please click the SAVE button
-            button.slds-button.slds-button_brand.ccb-modal__validateResult__button OK
-          .ccb-modal__validateResult.failed
-            .ccb-modal__validateResult__title
-              p Error
-            .ccb-modal__validateResult__desc
-              i.fa-solid.fa-xmark
-              p.ccb-modal__validateResult__error-message An error occurred while validating the form. Please try again
-            button.slds-button.slds-button_brand.ccb-modal__validateResult__button OK
+    .ccb-modal
+      .ccb-modal__container
+        .ccb-modal__loading
+          svg.spinner(viewbox='0 0 50 50')
+            circle.path(cx='25' cy='25' r='20' fill='none' stroke-width='5')
+          p.ccb-modal__text Loading data...
+        .ccb-modal__validateResult.success
+          .ccb-modal__validateResult__title
+            p Congratulations
+          .ccb-modal__validateResult__desc
+            i.fa-solid.fa-check
+            p.ccb-modal__validateResult__success-message Your changes have been validated successfully. Please click the SAVE button
+          button.slds-button.slds-button_brand.ccb-modal__validateResult__button OK
+        .ccb-modal__validateResult.failed
+          .ccb-modal__validateResult__title
+            p Error
+          .ccb-modal__validateResult__desc
+            i.fa-solid.fa-xmark
+            p.ccb-modal__validateResult__error-message An error occurred while validating the form. Please try again
+          button.slds-button.slds-button_brand.ccb-modal__validateResult__button OK
