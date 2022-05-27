@@ -30,7 +30,7 @@ const requestedInteractionHandler = async (settings) => {
       const deInfo = await getDEInfo(eventDefinitionKey);
       $('.ca-modal').hide();
       $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
-      $('#DEFields').empty().append(`<option value="">Select one of the following fields</option>`);
+      $('#DEFields').empty().append(`<option value="">--Select one of the following fields--</option>`);
       $.each(deInfo.deCol, (index, field) => {
         deFields.push(field.Name);
         $('#DEFields').append(
@@ -442,14 +442,17 @@ const showStep = async (step, stepIndex) => {
       $('#step3').show();
       $('#titleDynamic').empty().append('Data Extension');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
-      connection.trigger('updateButton', {
-        button: 'next',
-        enabled: true,
-      });
-      connection.trigger('updateButton', {
-        button: 'back',
-        enabled: true,
-      });
+      if ($('#DEFields').val()) {
+        connection.trigger('updateButton', {
+          button: 'next',
+          enabled: true,
+        });
+      } else {
+        connection.trigger('updateButton', {
+          button: 'next',
+          enabled: false,
+        });
+      }
       break;
     case 'step4':
       $('#step4').show();
