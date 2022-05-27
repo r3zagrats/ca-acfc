@@ -34,7 +34,7 @@ const requestedInteractionHandler = async (settings) => {
       $.each(deInfo.deCol, (index, field) => {
         deFields.push(field.Name);
         $('#DEFields').append(
-          `<option value=${field.CustomerKey} id=${field.Name}>${field.Name}</option>`
+          `<option value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</option>`
         );
         $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
       });
