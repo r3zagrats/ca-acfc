@@ -9,10 +9,6 @@ html {
   font-size: 62.5%;
 }
 
-.ccb-content {
-  min-height: 100vh;
-}
-
 .ccb-textarea {
   font-size: 1.8rem;
   font-family: serif;
@@ -31,6 +27,7 @@ html {
 .ccb-form__wrapper {
   background-color: var(--primary-color);
   padding: 0 10px;
+  min-height: 100vh;
   position: relative;
 }
 

@@ -14,14 +14,13 @@ body
   script(src='javascript/libs/blocksdk.js')
   script(src="javascript/libs/superagent.min.js")
   script(src='javascript/sfmcccb.js' type='module')
-  .ccb-content
-    .ccb-form__wrapper
-      .ccb-form__header Custom Content
-      form#ccb-form
-        .ccb-form__Options-wrapper
-          select#ccb-zmOptions-select.ccb-select.slds-select(name='zmOptions')
-            each zmOption in zmOptions
-              option(value=zmOption.value)=zmOption.name
+  .ccb-form__wrapper
+    .ccb-form__header Custom Content
+    form#ccb-form
+      .ccb-form__Options-wrapper
+        select#ccb-zmOptions-select.ccb-select.slds-select(name='zmOptions')
+          each zmOption in zmOptions
+            option(value=zmOption.value)=zmOption.name
     .ccb-modal
       .ccb-modal__container
         .ccb-modal__loading
