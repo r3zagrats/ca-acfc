@@ -9,6 +9,10 @@ html {
   font-size: 62.5%;
 }
 
+.ccb-content {
+  min-height: 100vh;
+}
+
 .ccb-textarea {
   font-size: 1.8rem;
   font-family: serif;
@@ -27,12 +31,11 @@ html {
 .ccb-form__wrapper {
   background-color: var(--primary-color);
   padding: 0 10px;
-  min-height: 100vh;
   position: relative;
 }
 
 .ccb-modal {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -43,7 +46,6 @@ html {
 
 .ccb-modal__container {
   position: absolute;
-  width: 200px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
