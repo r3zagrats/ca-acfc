@@ -109,6 +109,7 @@ const onRender = () => {
       });
     }
   });
+
   $('#Senders').on('change', async (e) => {
     if ($('#Senders').val()) {
       if ($('#Channels').val() === 'Zalo Notification Service') {
@@ -148,6 +149,21 @@ const onRender = () => {
       });
     }
   });
+
+  $('#DEFields').on('change', (e) => {
+    if ($('#DEFields').val()) {
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: true,
+      });
+    } else {
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: false,
+      });
+    }
+  });
+
   $('#ContentOptions').on('change', async (e) => {
     contentOptions = $('#ContentOptions').val();
     checkContent('process');
