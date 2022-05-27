@@ -30,12 +30,9 @@ const requestedInteractionHandler = async (settings) => {
       const deInfo = await getDEInfo(eventDefinitionKey);
       $('.ca-modal').hide();
       $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
-      $('#DEFields').empty();
+      $('#DEFields').empty().append(`<option value="">Select one of the following fields</option>`);
       $.each(deInfo.deCol, (index, field) => {
         deFields.push(field.Name);
-        $('#DEFields').append(
-          `<option value="">Select one of the following fields</option>`
-        );
         $('#DEFields').append(
           `<option value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</option>`
         );
@@ -570,7 +567,9 @@ const checkContent = async (type) => {
             let message;
             while (
               (message = regex.exec(
-                type == 'process' ? JSON.stringify(value.meta.options.customBlockData.payloadData) : $('#ContentValue').val()
+                type == 'process'
+                  ? JSON.stringify(value.meta.options.customBlockData.payloadData)
+                  : $('#ContentValue').val()
               )) !== null
             ) {
               if (message.index === regex.lastIndex) {
