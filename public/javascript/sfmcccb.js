@@ -1659,7 +1659,7 @@ const renderZMRequestUserInfo = () => {
 
 const getImageContent = async () => {
   try {
-    const result = await superagent.get('/api/getimagecontent');
+    const result = await superagent.get('/api/sfmc/getimagecontent');
     return result.body;
   } catch (error) {
     console.log('error: ', error);
@@ -1669,7 +1669,7 @@ const getImageContent = async () => {
 
 const getMetaDataContent = async () => {
   try {
-    const result = await superagent.get('/api/getmetadatacontent');
+    const result = await superagent.get('/api/sfmc/getmetadatacontent');
     return result.body;
   } catch (error) {
     console.log('error: ', error);
