@@ -1,0 +1,23 @@
+.menu-list {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu-item-link,
+.menu-item-label {
+    width: 100%;
+    display: block;
+    cursor: pointer;
+}
+
+.menu-item-icon {
+    padding: 0px 8px;
+    cursor: pointer;
+    transition: transform 1s linear;
+
+    &.toggle {
+        transform: rotate(90deg);
+    }
+}

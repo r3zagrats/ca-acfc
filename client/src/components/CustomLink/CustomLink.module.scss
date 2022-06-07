@@ -1,0 +1,11 @@
+.custom-link {
+    width: 100%;
+    & a {
+        display: block;
+        color: white;
+
+        &:hover {
+            color: white;
+        }
+    }
+}
