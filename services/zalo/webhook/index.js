@@ -232,7 +232,7 @@ const ZaloWebhook = async (req, res) => {
             console.log('result:', result);
           }
         } catch (error) {
-          return;
+          // return;
         }
         const tmpAccessToken = await refreshZaloToken(userTrackingInfo.recipient.id);
         console.log('\ntmpAccessToken: ', tmpAccessToken);
