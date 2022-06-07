@@ -23,4 +23,4 @@ const SMSSendersController = {
   },
 };
 
-module.exports = new SMSSendersController();
+module.exports = SMSSendersController;
