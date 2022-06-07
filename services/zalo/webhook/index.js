@@ -197,7 +197,7 @@ const ZaloWebhook = async (req, res) => {
           nameRegex.lastIndex = 0;
           phoneRegex.lastIndex = 0;
           addressRegex.lastIndex = 0;
-          await fuelRestUtils.insertDEZaloRequestUserInfoLog(
+          await fuelRestUtils.insertDEZaloRequestUserInfo(
             JSON.stringify({
               items: [
                 {

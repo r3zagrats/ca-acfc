@@ -16,78 +16,79 @@ import Image from '../Image/Image';
 
 const cx = classNames.bind(styles);
 
+const MENU_LIST = [
+    {
+        icon: <FontAwesomeIcon icon={faGlobe} />,
+        title: 'Language',
+        children: {
+            title: 'Language1',
+            data: [
+                {
+                    code: 'vi',
+                    title: 'Tiếng Việt1',
+                    children: {
+                        title: 'Language2',
+                        data: [
+                            {
+                                code: 'vi',
+                                title: 'Tiếng Việt2',
+                                children: {
+                                    title: 'Language3',
+                                    data: [
+                                        {
+                                            code: 'vi',
+                                            title: 'Tiếng Việt3',
+                                        },
+                                        {
+                                            code: 'en',
+                                            title: 'English3',
+                                        },
+                                    ],
+                                },
+                            },
+                            {
+                                code: 'en',
+                                title: 'English2',
+                            },
+                        ],
+                    },
+                },
+                {
+                    code: 'en',
+                    title: 'English1',
+                },
+            ],
+        },
+    },
+    {
+        icon: <FontAwesomeIcon icon={faCircleQuestion} />,
+        title: 'Feedback and help',
+        to: '/feedback',
+    },
+];
+
+const currentUser = true;
+
+const userMenu = [
+    {
+        icon: <FontAwesomeIcon icon={faUser} />,
+        title: 'Profile',
+        to: '/profile',
+    },
+    {
+        icon: <FontAwesomeIcon icon={faGear} />,
+        title: 'Settings',
+        to: '/settings',
+    },
+    ...MENU_LIST,
+    {
+        icon: <FontAwesomeIcon icon={faRightToBracket} />,
+        title: 'Log out',
+        separate: true,
+    },
+];
+
 const Header = () => {
-    const MENU_LIST = [
-        {
-            icon: <FontAwesomeIcon icon={faGlobe} />,
-            title: 'Language',
-            children: {
-                title: 'Language1',
-                data: [
-                    {
-                        code: 'vi',
-                        title: 'Tiếng Việt1',
-                        children: {
-                            title: 'Language2',
-                            data: [
-                                {
-                                    code: 'vi',
-                                    title: 'Tiếng Việt2',
-                                    children: {
-                                        title: 'Language3',
-                                        data: [
-                                            {
-                                                code: 'vi',
-                                                title: 'Tiếng Việt3',
-                                            },
-                                            {
-                                                code: 'en',
-                                                title: 'English3',
-                                            },
-                                        ],
-                                    },
-                                },
-                                {
-                                    code: 'en',
-                                    title: 'English2',
-                                },
-                            ],
-                        },
-                    },
-                    {
-                        code: 'en',
-                        title: 'English1',
-                    },
-                ],
-            },
-        },
-        {
-            icon: <FontAwesomeIcon icon={faCircleQuestion} />,
-            title: 'Feedback and help',
-            to: '/feedback',
-        },
-    ];
-
-    const currentUser = true;
-
-    const userMenu = [
-        {
-            icon: <FontAwesomeIcon icon={faUser} />,
-            title: 'Profile',
-            to: '/profile',
-        },
-        {
-            icon: <FontAwesomeIcon icon={faGear} />,
-            title: 'Settings',
-            to: '/settings',
-        },
-        ...MENU_LIST,
-        {
-            icon: <FontAwesomeIcon icon={faRightToBracket} />,
-            title: 'Log out',
-            separate: true,
-        },
-    ];
 
     const handleOnChange = (menuItem) => {
         console.log(menuItem);
