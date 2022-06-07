@@ -1,8 +1,14 @@
-'use strict';
-
 require('dotenv').config();
-const pgClient = require('../../config/database/postgresql/postgresql.config');
 const superagent = require('superagent');
+const pgClient = require('../../config/database/postgresql/postgresql.config');
+
+const IsExpiredToken = (timestamp) => {
+  console.log('\nCurrent Time: ', new Date(Date.now()).toUTCString());
+  console.log('Expired Time: ', new Date(timestamp).toUTCString());
+  console.log(timestamp - Date.now());
+  if (timestamp - Date.now() < 600000) return true;
+  return false;
+};
 
 const refreshZaloToken = async (OAId) => {
   try {
@@ -27,7 +33,7 @@ const refreshZaloToken = async (OAId) => {
       console.log(`\nAccessToken Response cua ${OAInfo.OAName}: "`, response);
       if (response && response.access_token) {
         tmpAccessToken = response.access_token;
-        let updateInfo = {
+        const updateInfo = {
           ...OAInfo,
           AccessToken: response.access_token,
           RefreshToken: response.refresh_token,
@@ -35,11 +41,13 @@ const refreshZaloToken = async (OAId) => {
           ExpiryDate: new Date(Date.now() + response.expires_in * 1000).toUTCString(),
         };
         console.log(`\nupdateInfo cua OA ${OAInfo.OAName}: `, updateInfo);
-        let valueList = [];
-        for (const [key, value] of Object.entries(updateInfo)) {
-          valueList.push(`"${key}" = '${value}'`);
-        }
-        const result = await pgClient.query(
+        const valueList = [];
+
+        Object.keys(updateInfo).forEach((key) => {
+          valueList.push(`"${key}" = '${updateInfo[key]}'`);
+        });
+
+        await pgClient.query(
           `UPDATE "${process.env.PSQL_ZALOOA_TABLE}" SET ${valueList} WHERE "OAId" = '${OAInfo.OAId}'`
         );
         console.log(`\nCap nhat db thanh cong cho OA ${OAInfo.OAName}:`);
@@ -54,14 +62,6 @@ const refreshZaloToken = async (OAId) => {
     console.log('error:', error);
     return error;
   }
-};
-
-const IsExpiredToken = (timestamp) => {
-  console.log('\nCurrent Time: ', new Date(Date.now()).toUTCString());
-  console.log('Expired Time: ', new Date(timestamp).toUTCString());
-  console.log(timestamp - Date.now());
-  if (timestamp - Date.now() < 600000) return true;
-  else return false;
 };
 
 module.exports = refreshZaloToken;

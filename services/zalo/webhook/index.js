@@ -1,8 +1,6 @@
-'use strict';
-
 require('dotenv').config();
-const fuelRestUtils = require('../../fuel-rest/index');
 const superagent = require('superagent');
+const fuelRestUtils = require('../../fuel-rest/index');
 const refreshZaloToken = require('../refreshZaloToken');
 
 const ZaloWebhook = async (req, res) => {
@@ -39,27 +37,31 @@ const ZaloWebhook = async (req, res) => {
     case 'user_seen_message': {
       console.log('User seen message');
       try {
-        for (let i = 0; i < userTrackingInfo.message.msg_ids.length; i++) {
+        const results = [];
+        for (let i = 0; i < userTrackingInfo.message.msg_ids.length; i += 1) {
           console.log(
             `userTrackingInfo.message.msg_ids[${i}]: `,
             userTrackingInfo.message.msg_ids[i]
           );
-          await fuelRestUtils.insertDEZaloUserActionTracking(
-            JSON.stringify({
-              items: [
-                {
-                  AppId: userTrackingInfo.app_id,
-                  OAId: userTrackingInfo.sender.id,
-                  ZaloId: userTrackingInfo.recipient.id,
-                  MsgId: userTrackingInfo.message.msg_ids[i],
-                  UTCTime: new Date(Number(userTrackingInfo.timestamp)).toUTCString(),
-                  Timestamp: userTrackingInfo.timestamp,
-                  EventName: userTrackingInfo.event_name,
-                },
-              ],
-            })
+          results.push(
+            fuelRestUtils.insertDEZaloUserActionTracking(
+              JSON.stringify({
+                items: [
+                  {
+                    AppId: userTrackingInfo.app_id,
+                    OAId: userTrackingInfo.sender.id,
+                    ZaloId: userTrackingInfo.recipient.id,
+                    MsgId: userTrackingInfo.message.msg_ids[i],
+                    UTCTime: new Date(Number(userTrackingInfo.timestamp)).toUTCString(),
+                    Timestamp: userTrackingInfo.timestamp,
+                    EventName: userTrackingInfo.event_name,
+                  },
+                ],
+              })
+            )
           );
         }
+        await Promise.all(results);
         res.status(200).send({ status: 'ok' });
       } catch (error) {
         console.log(error);
@@ -195,7 +197,7 @@ const ZaloWebhook = async (req, res) => {
           nameRegex.lastIndex = 0;
           phoneRegex.lastIndex = 0;
           addressRegex.lastIndex = 0;
-          const data = await fuelRestUtils.insertDEZaloRequestUserInfoLog(
+          await fuelRestUtils.insertDEZaloRequestUserInfoLog(
             JSON.stringify({
               items: [
                 {
@@ -229,11 +231,13 @@ const ZaloWebhook = async (req, res) => {
             );
             console.log('result:', result);
           }
-        } catch (error) {}
+        } catch (error) {
+          return;
+        }
         const tmpAccessToken = await refreshZaloToken(userTrackingInfo.recipient.id);
         console.log('\ntmpAccessToken: ', tmpAccessToken);
 
-        let znsContent = {
+        const znsContent = {
           recipient: {
             user_id: userTrackingInfo.sender.id,
           },
@@ -251,7 +255,7 @@ const ZaloWebhook = async (req, res) => {
         const znsSendLog = response.body;
         console.log('\nznsSendLog:', znsSendLog);
         if (znsSendLog.error !== 0) throw znsSendLog.message;
-        const firstStep = await fuelRestUtils.insertDEZaloOASendLog(
+        await fuelRestUtils.insertDEZaloOASendLog(
           JSON.stringify({
             items: [
               {

@@ -1,14 +1,13 @@
-'use strict';
 require('dotenv').config();
 const pgClient = require('../config/database/postgresql/postgresql.config');
 
-class ZOAController {
+const ZOAController = {
   /**
    * Get All ZOA Info
    * @param {*} req
    * @param {*} res
    */
-  getAllZOA = async (req, res) => {
+  getAllZOA: async (req, res) => {
     try {
       const { rows } = await pgClient.query(
         `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" ORDER BY "OAId"`
@@ -21,14 +20,14 @@ class ZOAController {
       console.log(err.stack);
       res.status(500).send({ error: err });
     }
-  };
+  },
 
   /**
    * Get ZOA Info by Id
    * @param {*} req
    * @param {*} res
    */
-  getZOAById = async (req, res) => {
+  getZOAById: async (req, res) => {
     try {
       const { rows } = await pgClient.query(
         `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${req.params.id}' ORDER BY "OAId"`
@@ -42,16 +41,16 @@ class ZOAController {
       console.log(err.stack);
       res.status(500).send({ error: err });
     }
-  };
+  },
 
   /**
    * Delete an ZOA
    * @param {*} req
    * @param {*} res
    */
-  deleteZOA = async (req, res) => {
+  deleteZOA: async (req, res) => {
     try {
-      const result = await pgClient.query(
+      await pgClient.query(
         `DELETE FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${req.body.id}'`
       );
       res.status(200).send({
@@ -62,7 +61,7 @@ class ZOAController {
       console.log(err.stack);
       res.status(500).send({ error: err });
     }
-  };
+  },
 
   /**
    * Create an ZOA
@@ -70,20 +69,25 @@ class ZOAController {
    * @param {*} res
    * @returns
    */
-  createZOA = async (req, res) => {
+  createZOA: async (req, res) => {
     console.log(req.body);
     const data = JSON.parse(req.body.data);
-    if (!data) return res.status(500).send({ status: 'error' });
-
-    let columnList = [];
-    let valueList = [];
-    for (const [key, value] of Object.entries(data)) {
-      if (value === '') continue;
-      columnList.push(`"${key}"`);
-      valueList.push(`'${value}'`);
+    if (!data) {
+      res.status(500).send({ status: 'error' });
+      return;
     }
+
+    const columnList = [];
+    const valueList = [];
+
+    Object.keys(data).forEach((key) => {
+      if (data[key] !== '') {
+        columnList.push(`"${key}"`);
+        valueList.push(`'${data[key]}'`);
+      }
+    });
     try {
-      const result = await pgClient.query(
+      await pgClient.query(
         `INSERT INTO "${process.env.PSQL_ZALOOA_TABLE}"(${columnList}) VALUES(${valueList})`
       );
       res.status(200).send({
@@ -93,7 +97,7 @@ class ZOAController {
     } catch (error) {
       res.status(500).send({ error: error.stack });
     }
-  };
+  },
 
   /**
    * Update an ZOA
@@ -101,18 +105,21 @@ class ZOAController {
    * @param {*} res
    * @returns
    */
-  updateZOA = async (req, res) => {
-    let data = JSON.parse(req.body.data);
+  updateZOA: async (req, res) => {
+    const data = JSON.parse(req.body.data);
     console.log('data', data);
-    if (!data) return res.status(500).send({ error: 'Invalid data' });
-
-    let valueList = [];
-    for (const [key, value] of Object.entries(data)) {
-      valueList.push(`"${key}" = '${value}'`);
+    if (!data) {
+      res.status(500).send({ error: 'Invalid data' });
+      return;
     }
+
+    const valueList = [];
+    Object.keys(data).forEach((key) => {
+      valueList.push(`"${key}" = '${data[key]}'`);
+    });
     console.log(valueList);
     try {
-      const result = await pgClient.query(
+      await pgClient.query(
         `UPDATE "${process.env.PSQL_ZALOOA_TABLE}" SET ${valueList} WHERE "OAId" = '${data.OAId}'`
       );
       res.status(200).send({
@@ -123,7 +130,7 @@ class ZOAController {
       console.log('error: ', error);
       res.status(200).send({ error: error.stack });
     }
-  };
-}
+  },
+};
 
-module.exports = new ZOAController();
+module.exports = ZOAController;

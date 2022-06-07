@@ -1,5 +1,3 @@
-'use strict';
-
 const router = require('express').Router();
 const channelsController = require('../controllers/channels.controllers');
 

@@ -1,20 +1,39 @@
-'use strict';
-
 require('dotenv').config();
 const pgClient = require('../config/database/postgresql/postgresql.config');
 
-class UsersController {
+/**
+ * Get User's Password
+ * @param {*} username
+ * @returns
+ */
+const getUserPassword = async (username) => {
+  let result;
+  try {
+    const { rows } = await pgClient.query(
+      `SELECT "Password" FROM "${process.env.PSQL_USER_TABLE}" WHERE "Username" = '${username}' ORDER BY "Id"`
+    );
+    result = rows;
+  } catch (err) {
+    console.log(err.stack);
+  }
+  return result;
+};
+
+const UsersController = {
   /**
    * Update User's Password
    * @param {*} req
    * @param {*} res
    * @returns
    */
-  updateUser = async (req, res) => {
-    if (!req.body) return res.status(500).send({ status: 'error' });
+  updateUser: async (req, res) => {
+    if (!req.body) {
+      res.status(500).send({ status: 'error' });
+      return
+    } 
     const { username, password } = req.body;
     try {
-      const result = await pgClient.query(
+      await pgClient.query(
         `UPDATE "${process.env.PSQL_USER_TABLE}" SET "Password" = '${password}'  WHERE "Username" = '${username}'`
       );
       res.status(200).send({
@@ -24,14 +43,14 @@ class UsersController {
       console.log(err.stack);
       res.status(500).send({ error: err });
     }
-  };
+  },
 
   /**
    * Get All User Info
    * @param {*} req
    * @param {*} res
    */
-  getAllUser = async (req, res) => {
+  getAllUser: async (req, res) => {
     try {
       const { rows } = await pgClient.query(
         `SELECT * FROM "${process.env.PSQL_USER_TABLE}" ORDER BY "Id"`
@@ -44,11 +63,11 @@ class UsersController {
       console.log(err.stack);
       res.status(500).send({ error: err });
     }
-  };
+  },
 
-  authenUser = async (req, res) => {
-    console.log('req', req.body)
-    var result = await getUserPassword('Admin');
+  authenUser: async (req, res) => {
+    console.log('req', req.body);
+    const result = await getUserPassword('Admin');
     const { username, password } = req.body;
     try {
       if (username === 'Admin' && password === result[0].Password) {
@@ -64,23 +83,7 @@ class UsersController {
       console.log('error: ', e);
       res.status(500).render('login', { error: true });
     }
-  };
-}
-
-/**
- * Get User's Password
- * @param {*} username
- * @returns
- */
-const getUserPassword = async (username) => {
-  try {
-    const { rows } = await pgClient.query(
-      `SELECT "Password" FROM "${process.env.PSQL_USER_TABLE}" WHERE "Username" = '${username}' ORDER BY "Id"`
-    );
-    return rows;
-  } catch (err) {
-    console.log(err.stack);
-  }
+  },
 };
 
 module.exports = new UsersController();

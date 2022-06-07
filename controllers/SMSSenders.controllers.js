@@ -1,14 +1,13 @@
-'use strict';
 require('dotenv').config();
 const pgClient = require('../config/database/postgresql/postgresql.config');
 
-class SMSSendersController {
+const SMSSendersController = {
   /**
    * Get All OA Info
    * @param {*} req
    * @param {*} res
    */
-  getAll = async (req, res) => {
+  getAll: async (req, res) => {
     try {
       const { rows } = await pgClient.query(
         `SELECT * FROM "${process.env.PSQL_SMSSENDERS_TABLE}" ORDER BY "Id"`
@@ -21,7 +20,7 @@ class SMSSendersController {
       console.log(err.stack);
       res.status(500).send({ error: err });
     }
-  };
-}
+  },
+};
 
 module.exports = new SMSSendersController();
