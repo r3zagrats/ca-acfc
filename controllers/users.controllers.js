@@ -10,7 +10,7 @@ const getUserPassword = async (username) => {
   let result;
   try {
     const { rows } = await pgClient.query(
-      `SELECT "Password" FROM "${process.env.PSQL_USERS_TABLE}" WHERE "Username" = '${username}' ORDER BY "Id"`
+      `SELECT "Password" FROM "${process.env.PSQL_USERS_TABLE}" WHERE "Name" = '${username}' ORDER BY "Id"`
     );
     result = rows;
   } catch (err) {
