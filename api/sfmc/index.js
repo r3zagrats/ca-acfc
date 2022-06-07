@@ -1,16 +1,30 @@
-'use strict';
-
 const fuelSDKClient = require('../../config/sfmc/fuel-sdk/fuel-sdk.config');
 const fuelRestUtils = require('../../services/fuel-rest');
-const superagent = require('superagent');
 
-class SFMCAPI {
+function dynamicSort(property) {
+  let sortOrder = 1;
+  if (property[0] === '-') {
+    sortOrder = -1;
+    // eslint-disable-next-line no-param-reassign
+    property = property.substr(1);
+  }
+  return (a, b) => {
+    /* next line works with strings and numbers,
+     * and you may want to customize it to your needs
+     */
+    // eslint-disable-next-line no-nested-ternary
+    const result = a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0;
+    return result * sortOrder;
+  };
+}
+
+const SFMCAPI = {
   /**
    * @param req
    * @param res
    *  @returns {Promise<void>}
    */
-  getDE = async (req, res) => {
+  getDE: async (req, res) => {
     // try {
     //   var DEOptions = [];
     //   const props = ['Name', 'CustomerKey', 'ObjectID'];
@@ -39,37 +53,36 @@ class SFMCAPI {
     //     status: 'Fail',
     //   });
     // }
-    var options = {
-      props: ['Name', 'CustomerKey', 'ObjectID', 'Status', 'Description'], //required
+    const options = {
+      props: ['Name', 'CustomerKey', 'ObjectID', 'Status', 'Description'],
       filter: {
-        //remove filter for all.
         leftOperand: 'CustomerKey',
         operator: 'equals',
         rightOperand: 'CC67F80E-EA7F-429E-89DE-B9D48C0F51C6',
       },
     };
-    var de = fuelSDKClient.dataExtension(options);
+    const de = fuelSDKClient.dataExtension(options);
 
-    de.get(function (err, response) {
+    de.get((err, response) => {
       if (err) {
         res.status(500).send(err);
       } else {
-        var statusCode =
+        const statusCode =
           response && response.res && response.res.statusCode ? response.res.statusCode : 200;
-        var result = response && response.body ? response.body : response;
-        response && res.status(statusCode).send(result);
+        const result = response && response.body ? response.body : response;
+        if (response) res.status(statusCode).send(result);
       }
     });
-  };
+  },
 
   /**
    * @param req
    * @param res
    *  @returns {Promise<void>}
    */
-  getDEColumn = async (req, res) => {
+  getDEColumn: async (req, res) => {
     try {
-      var options = {
+      const options = {
         props: [
           'ObjectID',
           'PartnerKey',
@@ -85,46 +98,41 @@ class SFMCAPI {
           'Scale',
           'Client.ID',
           'CustomerKey',
-        ], //required
-        ///*
+        ],
         filter: {
-          //remove filter for all.
           leftOperand: 'DataExtension.CustomerKey',
           operator: 'equals',
           rightOperand: '4B34E1DC-7751-4F28-A30E-0B8B1513D3C2',
         },
-        //*/
       };
       fuelSDKClient.dataExtensionColumn(options).get((err, data) => {
-        const _data = data.body.Results;
-        _data.sort(dynamicSort('Name'));
-        res.status(200).send(_data);
+        const result = data.body.Results;
+        result.sort(dynamicSort('Name'));
+        res.status(200).send(result);
       });
     } catch (e) {
       res.status(500).send({
         status: 'Fail',
       });
     }
-  };
+  },
 
   /**
    * @param req
    * @param res
    *  @returns {Promise<void>}
    */
-  getDERow = async (req, res) => {
+  getDERow: async (req, res) => {
     try {
-      var options = {
-        props: ['OAId', 'Name', 'ZaloId', 'Status'], //required
-        ///*
+      const options = {
+        props: ['OAId', 'Name', 'ZaloId', 'Status'],
         Name: 'OA Followers',
         filter: null,
-        //*/
       };
       fuelSDKClient.dataExtensionRow(options).get((err, data) => {
-        const _data = data.body.Results;
-        _data.sort(dynamicSort('Name'));
-        res.status(200).send(_data);
+        const result = data.body.Results;
+        result.sort(dynamicSort('Name'));
+        res.status(200).send(result);
       });
     } catch (e) {
       console.log(e);
@@ -132,14 +140,14 @@ class SFMCAPI {
         status: 'Fail',
       });
     }
-  };
+  },
 
   /**
    * @param req
    * @param res
    *  @returns {Promise<void>}
    */
-  getCustomContent = async (req, res) => {
+  getCustomContent: async (req, res) => {
     try {
       const data = await fuelRestUtils.getContent(
         JSON.stringify({
@@ -170,9 +178,9 @@ class SFMCAPI {
         message: error,
       });
     }
-  };
+  },
 
-  getImageContent = async (req, res) => {
+  getImageContent: async (req, res) => {
     try {
       const data = await fuelRestUtils.getContent(
         JSON.stringify({
@@ -202,9 +210,9 @@ class SFMCAPI {
         status: error,
       });
     }
-  };
+  },
 
-  getMetaDataContent = async (req, res) => {
+  getMetaDataContent: async (req, res) => {
     try {
       const data = await fuelRestUtils.getContent(
         JSON.stringify({
@@ -234,23 +242,22 @@ class SFMCAPI {
         status: error,
       });
     }
-  };
+  },
 
   /**
    * @param req
    * @param res
    *  @returns {Promise<void>}
    */
-  getDEInfo = async (req, res) => {
+  getDEInfo: async (req, res) => {
     try {
-      if (req.body.key != '' || req.body.key != null) {
+      if (req.body.key !== '' || req.body.key != null) {
         const data = await fuelRestUtils.getJourney(req.body.key);
         const props = ['Name', 'CustomerKey', 'ObjectID'];
         fuelSDKClient
           .dataExtension({
             props,
             filter: {
-              //remove filter for all.
               leftOperand: 'ObjectID',
               operator: 'equals',
               rightOperand: data.body.dataExtensionId,
@@ -258,7 +265,7 @@ class SFMCAPI {
           })
           .get((err, dataDE) => {
             if (dataDE.body.Results.length > 0) {
-              var options = {
+              const options = {
                 props: [
                   'ObjectID',
                   'PartnerKey',
@@ -274,27 +281,24 @@ class SFMCAPI {
                   'Scale',
                   'Client.ID',
                   'CustomerKey',
-                ], //required
-                ///*
+                ],
                 filter: {
-                  //remove filter for all.
                   leftOperand: 'DataExtension.CustomerKey',
                   operator: 'equals',
                   rightOperand: dataDE.body.Results[0].CustomerKey,
                 },
-                //*/
               };
-              fuelSDKClient.dataExtensionColumn(options).get((err, dataCol) => {
-                const _data = dataCol.body.Results;
-                _data.sort(dynamicSort('Name'));
+              fuelSDKClient.dataExtensionColumn(options).get((dataCol) => {
+                const result = dataCol.body.Results;
+                result.sort(dynamicSort('Name'));
                 res.status(200).send({
-                  deCol: _data,
+                  deCol: result,
                   dataExtension: dataDE.body.Results[0],
                 });
               });
-            } else res.status(500).send({ status: 'No Data Extension Found', message: error });
+            } else res.status(500).send({ status: 'No Data Extension Found' });
           });
-      } else res.status(500).send({ status: 'Key Required', message: error });
+      } else res.status(500).send({ status: 'Key Required' });
     } catch (error) {
       console.log('error:', error);
       res.status(500).send({
@@ -302,22 +306,7 @@ class SFMCAPI {
         message: error,
       });
     }
-  };
-}
+  },
+};
 
-function dynamicSort(property) {
-  var sortOrder = 1;
-  if (property[0] === '-') {
-    sortOrder = -1;
-    property = property.substr(1);
-  }
-  return function (a, b) {
-    /* next line works with strings and numbers,
-     * and you may want to customize it to your needs
-     */
-    var result = a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0;
-    return result * sortOrder;
-  };
-}
-
-module.exports = new SFMCAPI();
+module.exports = SFMCAPI;

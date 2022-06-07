@@ -10,7 +10,7 @@ const getUserPassword = async (username) => {
   let result;
   try {
     const { rows } = await pgClient.query(
-      `SELECT "Password" FROM "${process.env.PSQL_USER_TABLE}" WHERE "Username" = '${username}' ORDER BY "Id"`
+      `SELECT "Password" FROM "${process.env.PSQL_USERS_TABLE}" WHERE "Username" = '${username}' ORDER BY "Id"`
     );
     result = rows;
   } catch (err) {
@@ -34,7 +34,7 @@ const UsersController = {
     const { username, password } = req.body;
     try {
       await pgClient.query(
-        `UPDATE "${process.env.PSQL_USER_TABLE}" SET "Password" = '${password}'  WHERE "Username" = '${username}'`
+        `UPDATE "${process.env.PSQL_USERS_TABLE}" SET "Password" = '${password}'  WHERE "Username" = '${username}'`
       );
       res.status(200).send({
         status: 'OK',
@@ -53,7 +53,7 @@ const UsersController = {
   getAllUser: async (req, res) => {
     try {
       const { rows } = await pgClient.query(
-        `SELECT * FROM "${process.env.PSQL_USER_TABLE}" ORDER BY "Id"`
+        `SELECT * FROM "${process.env.PSQL_USERS_TABLE}" ORDER BY "Id"`
       );
       res.status(200).send({
         status: 'OK',

@@ -5,9 +5,7 @@
  */
 
 const debug = require("debug")("sfmc-custom-activity:server");
-const fs = require("fs");
 const http = require("http");
-const https = require("https");
 const app = require("../app");
 /**
  * Normalize a port into a number, string, or false.
@@ -38,7 +36,7 @@ app.set("port", port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+const server = http.createServer(app);
 //  /**
 //   * Listen on provided port, on all network interfaces.
 //   */

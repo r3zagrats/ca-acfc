@@ -1,10 +1,8 @@
-'use strict';
-
 const superagent = require('superagent');
 const refreshZaloToken = require('../../services/zalo/refreshZaloToken');
 
-class ZaloAPI {
-  getZNSTemplates = async (req, res) => {
+const ZaloAPI = {
+  getZNSTemplates: async (req, res) => {
     try {
       console.log('req body:', req.body.OAId);
       const token = await refreshZaloToken(req.body.OAId);
@@ -16,9 +14,9 @@ class ZaloAPI {
     } catch (error) {
       res.status(500).send(error.message);
     }
-  };
+  },
 
-  getZNSTemplateDetail = async (req, res) => {
+  getZNSTemplateDetail: async (req, res) => {
     try {
       console.log(
         'req body:',
@@ -34,7 +32,7 @@ class ZaloAPI {
     } catch (error) {
       res.status(500).send(error.message);
     }
-  };
-}
+  },
+};
 
-module.exports = new ZaloAPI();
+module.exports = ZaloAPI;
