@@ -251,8 +251,7 @@ const SFMCAPI = {
    */
   getDEInfo: async (req, res) => {
     try {
-      // eslint-disable-next-line eqeqeq
-      if (req.body.key != '' || req.body.key != null) {
+      if (req.body.key !== '' || req.body.key != null) {
         const data = await fuelRestUtils.getJourney(req.body.key);
         const props = ['Name', 'CustomerKey', 'ObjectID'];
         fuelSDKClient
@@ -264,7 +263,7 @@ const SFMCAPI = {
               rightOperand: data.body.dataExtensionId,
             },
           })
-          .get((err, dataDE) => {
+          .get((error, dataDE) => {
             if (dataDE.body.Results.length > 0) {
               const options = {
                 props: [
@@ -289,17 +288,17 @@ const SFMCAPI = {
                   rightOperand: dataDE.body.Results[0].CustomerKey,
                 },
               };
-              fuelSDKClient.dataExtensionColumn(options).get((dataCol) => {
-                const result = dataCol.body.Results;
-                result.sort(dynamicSort('Name'));
+              fuelSDKClient.dataExtensionColumn(options).get((err, dataCol) => {
+                const responseData = dataCol.body.Results;
+                responseData.sort(dynamicSort('Name'));
                 res.status(200).send({
-                  deCol: result,
+                  deCol: responseData,
                   dataExtension: dataDE.body.Results[0],
                 });
               });
-            } else res.status(500).send({ status: 'No Data Extension Found' });
+            } else res.status(500).send({ status: 'No Data Extension Found', message: error });
           });
-      } else res.status(500).send({ status: 'Key Required' });
+      } else res.status(500).send({ status: 'Key Required', message: 'error' });
     } catch (error) {
       console.log('error:', error);
       res.status(500).send({
