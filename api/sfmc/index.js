@@ -251,7 +251,8 @@ const SFMCAPI = {
    */
   getDEInfo: async (req, res) => {
     try {
-      if (req.body.key !== '' || req.body.key != null) {
+      // eslint-disable-next-line eqeqeq
+      if (req.body.key != '' || req.body.key != null) {
         const data = await fuelRestUtils.getJourney(req.body.key);
         const props = ['Name', 'CustomerKey', 'ObjectID'];
         fuelSDKClient
