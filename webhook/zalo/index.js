@@ -1,7 +1,7 @@
 require('dotenv').config();
 const superagent = require('superagent');
-const fuelRestUtils = require('../services/fuel-rest/index');
-const refreshZaloToken = require('../services/zalo/refreshZaloToken');
+const fuelRestUtils = require('../../services/fuel-rest/index');
+const refreshZaloToken = require('../../services/zalo/refreshZaloToken');
 
 const ZaloWebhook = async (req, res) => {
   const userTrackingInfo = req.body;
