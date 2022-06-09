@@ -63,7 +63,7 @@ const FuelRestUtils = {
 
   insertDEZaloRequestUserInfo: async (data) =>
     fuelRestClient.post({
-      uri: `data/v1/async/dataextensions/key:${process.env.DE_ZALO_REQUEST_USER_INFO_LOG}/rows`,
+      uri: `data/v1/async/dataextensions/key:${process.env.DE_ZALO_REQUEST_USER_INFO}/rows`,
       headers: {
         'Content-Type': 'application/json',
       },
