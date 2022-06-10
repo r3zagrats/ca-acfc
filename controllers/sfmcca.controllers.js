@@ -127,6 +127,7 @@ const SFMCCAController = {
                 case 'Zalo Notification Service': {
                     Content.phone = data.inArguments[0].DEFields;
                     console.log('Content:', Content)
+                    
                     // console.log('ZNS content', { ...Content, tracking_id: Date.now() });
                     // const response = await superagent
                     //     .post('https://cloud.vietguys.biz:4438/api/zalo/v1/send')

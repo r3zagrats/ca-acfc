@@ -184,7 +184,7 @@ const onRender = () => {
               .append(`<option value=''>--Select one of the following contents--</option>`);
             $.each(tmpContents, (index, content) => {
               $('#ContentOptions').append(
-                `<option value=${content.templateId}>${content.templateName}</option>`
+                `<option value=${content.templateId}>${content.templateName}(${content.price}d)</option>`
               );
             });
             checkContent('refresh');
@@ -516,7 +516,7 @@ const showStep = async (step, stepIndex) => {
                 .append(`<option value=''>--Select one of the following contents--</option>`);
               $.each(tmpContents, (index, content) => {
                 $('#ContentOptions').append(
-                  `<option value=${content.templateId}>${content.templateName}</option>`
+                  `<option value=${content.templateId}>${content.templateName}(${content.price}d)</option>`
                 );
               });
               checkContent('init');
@@ -620,6 +620,7 @@ const checkContent = async (type) => {
           template_id: response.data.templateId,
           template_data: {},
         };
+        
         $.each(response.data.listParams, (index, param) => {
           contentValue.template_data[param.name] = `%%${param.name}%%`;
         });
