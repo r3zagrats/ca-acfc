@@ -616,13 +616,18 @@ const checkContent = async (type) => {
         $('#ca-frame').show();
         $('#ca-frame').attr('src', response.data.previewUrl);
         contentValue = {
-          phone: '',
-          template_id: response.data.templateId,
-          template_data: {},
+          username: "acfc_zns",
+          mobile: '',
+          bid: new Date().getTime(),
+          zns: {
+            oa_id:'',
+            template_id: response.data.templateId,
+            template_data: {},
+          }
         };
         
         $.each(response.data.listParams, (index, param) => {
-          contentValue.template_data[param.name] = `%%${param.name}%%`;
+          contentValue.zns.template_data[param.name] = `%%${param.name}%%`;
         });
         $('#ContentValue').val(JSON.stringify(contentValue));
         console.log('contentValue', $('#ContentValue').val());
