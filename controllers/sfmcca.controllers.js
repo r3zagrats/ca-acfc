@@ -133,7 +133,7 @@ const SFMCCAController = {
                     // console.log('ZNS content', { ...Content, tracking_id: Date.now() });
                     const response = await superagent
                         .post('https://cloud.vietguys.biz:4438/api/zalo/v1/send')
-                        .set('Content-Type', 'application/json')
+                        .set('Authorization', `Bearer ${process.env.ACFC_ZNS_TOKEN}`)
                         .send(JSON.stringify({ ...Content }));
                     const znsSendLog = response.body;
                     console.log('\nznsSendLog:', znsSendLog);
