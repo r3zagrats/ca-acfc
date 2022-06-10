@@ -125,18 +125,18 @@ const SFMCCAController = {
                     break;
                 }
                 case 'Zalo Notification Service': {
+                    Content.username = process.env.ACFC_ZNS_USERNAME
                     Content.mobile = data.inArguments[0].DEFields;
                     Content.zns.oa_id = data.inArguments[0].Senders;
                     console.log('Content:', Content)
                     
                     // console.log('ZNS content', { ...Content, tracking_id: Date.now() });
-                    // const response = await superagent
-                    //     .post('https://cloud.vietguys.biz:4438/api/zalo/v1/send')
-                    //     .set('Content-Type', 'application/json')
-                    //     .send(JSON.stringify({ ...Content, tracking_id: Date.now() }));
-                    // console.log('response', response.body);
-                    // const znsSendLog = response.body;
-                    // console.log('\nznsSendLog:', znsSendLog);
+                    const response = await superagent
+                        .post('https://cloud.vietguys.biz:4438/api/zalo/v1/send')
+                        .set('Content-Type', 'application/json')
+                        .send(JSON.stringify({ ...Content }));
+                    const znsSendLog = response.body;
+                    console.log('\nznsSendLog:', znsSendLog);
                     // if (znsSendLog.error !== 0) throw znsSendLog.message;
                     // const insertDEResponse = await FuelRestUtils.insertDEZaloOASendLog(
                     //     JSON.stringify({
