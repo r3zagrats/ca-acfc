@@ -126,6 +126,7 @@ const SFMCCAController = {
                 }
                 case 'Zalo Notification Service': {
                     Content.mobile = data.inArguments[0].DEFields;
+                    Content.zns.oa_id = data.inArguments[0].Senders;
                     console.log('Content:', Content)
                     
                     // console.log('ZNS content', { ...Content, tracking_id: Date.now() });
