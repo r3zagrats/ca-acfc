@@ -126,38 +126,36 @@ const SFMCCAController = {
                 }
                 case 'Zalo Notification Service': {
                     Content.phone = data.inArguments[0].DEFields;
-                    const tmpAccessToken = await refreshZaloToken(data.inArguments[0].Senders);
-                    console.log('\ntmpAccessToken: ', tmpAccessToken);
-                    console.log('ZNS content', { ...Content, tracking_id: Date.now() });
-                    const response = await superagent
-                        .post('https://business.openapi.zalo.me/message/template')
-                        .set('Content-Type', 'application/json')
-                        .set('access_token', tmpAccessToken)
-                        .send(JSON.stringify({ ...Content, tracking_id: Date.now() }));
-                    console.log('response', response.body);
-                    const znsSendLog = response.body;
-                    console.log('\nznsSendLog:', znsSendLog);
-                    if (znsSendLog.error !== 0) throw znsSendLog.message;
-                    const insertDEResponse = await FuelRestUtils.insertDEZaloOASendLog(
-                        JSON.stringify({
-                            items: [
-                                {
-                                    OAId: data.inArguments[0].Senders,
-                                    MsgId: znsSendLog.error === 0 ? znsSendLog.data.msg_id : '',
-                                    UTCTime: new Date().toUTCString(),
-                                    Timestamp: new Date().getTime(),
-                                    StatusCode: znsSendLog.error,
-                                    ErrorMessage: znsSendLog.message,
-                                    Message: JSON.stringify({
-                                        ...Content,
-                                        tracking_id: Date.now(),
-                                    }),
-                                },
-                            ],
-                        })
-                    );
-                    console.log(insertDEResponse.body);
-                    res.status(200).send({ Status: 'Successfull' });
+                    console.log('Content:', Content)
+                    // console.log('ZNS content', { ...Content, tracking_id: Date.now() });
+                    // const response = await superagent
+                    //     .post('https://cloud.vietguys.biz:4438/api/zalo/v1/send')
+                    //     .set('Content-Type', 'application/json')
+                    //     .send(JSON.stringify({ ...Content, tracking_id: Date.now() }));
+                    // console.log('response', response.body);
+                    // const znsSendLog = response.body;
+                    // console.log('\nznsSendLog:', znsSendLog);
+                    // if (znsSendLog.error !== 0) throw znsSendLog.message;
+                    // const insertDEResponse = await FuelRestUtils.insertDEZaloOASendLog(
+                    //     JSON.stringify({
+                    //         items: [
+                    //             {
+                    //                 OAId: data.inArguments[0].Senders,
+                    //                 MsgId: znsSendLog.error === 0 ? znsSendLog.data.msg_id : '',
+                    //                 UTCTime: new Date().toUTCString(),
+                    //                 Timestamp: new Date().getTime(),
+                    //                 StatusCode: znsSendLog.error,
+                    //                 ErrorMessage: znsSendLog.message,
+                    //                 Message: JSON.stringify({
+                    //                     ...Content,
+                    //                     tracking_id: Date.now(),
+                    //                 }),
+                    //             },
+                    //         ],
+                    //     })
+                    // );
+                    // console.log(insertDEResponse.body);
+                    // res.status(200).send({ Status: 'Successfull' });
                     break;
                 }
                 case 'Web Push Notification': {
