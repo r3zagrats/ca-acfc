@@ -141,7 +141,7 @@ const SFMCCAController = {
               items: [
                 {
                   OAId: data.inArguments[0].Senders,
-                  MsgId: znsSendLog.resultCode === 0 ? znsSendLog.data.transaction_id : '',
+                  MsgId: znsSendLog.resultCode === 0 ? znsSendLog.transaction_id : '',
                   UTCTime: new Date().toUTCString(),
                   Timestamp: new Date().getTime(),
                   StatusCode: znsSendLog.resultCode,
