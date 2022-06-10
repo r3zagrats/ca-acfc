@@ -184,7 +184,7 @@ const onRender = () => {
               .append(`<option value=''>--Select one of the following contents--</option>`);
             $.each(tmpContents, (index, content) => {
               $('#ContentOptions').append(
-                `<option value=${content.templateId}>${content.templateName}(${content.price}d)</option>`
+                `<option value=${content.templateId}>${content.templateName}</option>`
               );
             });
             checkContent('refresh');
@@ -516,7 +516,7 @@ const showStep = async (step, stepIndex) => {
                 .append(`<option value=''>--Select one of the following contents--</option>`);
               $.each(tmpContents, (index, content) => {
                 $('#ContentOptions').append(
-                  `<option value=${content.templateId}>${content.templateName}(${content.price}d)</option>`
+                  `<option value=${content.templateId}>${content.templateName}</option>`
                 );
               });
               checkContent('init');
