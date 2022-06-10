@@ -687,6 +687,7 @@ const getDEInfo = async (key) => {
     const response = await superagent.post('/api/sfmc/getdeinfo').send({ key });
     return response.body;
   } catch (error) {
+    console.log(error.message);
     throw new Error(error.message);
   }
 };
