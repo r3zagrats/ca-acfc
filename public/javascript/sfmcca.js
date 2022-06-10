@@ -26,9 +26,6 @@ const requestedInteractionHandler = async (settings) => {
     eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
   } else {
     displayCustomError('Please choose ENTRY EVENT and SAVE Journey before Continue');
-    $('.ca-modal').show();
-    $('.ca-modal__loading').hide();
-    $('.ca-modal__validateResult.failed').show();
     connection.trigger('destroy');
   }
 };
@@ -107,9 +104,6 @@ const onRender = () => {
           });
         } catch (error) {
           displayCustomError(`${error}`);
-          $('.ca-modal').show();
-          $('.ca-modal__loading').hide();
-          $('.ca-modal__validateResult.failed').show();
           connection.trigger('updateButton', {
             button: 'next',
             enabled: false,
@@ -170,9 +164,6 @@ const onRender = () => {
           checkContent('refresh');
         } catch (error) {
           displayCustomError(`Error on fetching data: ${error.message}`);
-          $('.ca-modal').show();
-          $('.ca-modal__loading').hide();
-          $('.ca-modal__validateResult.failed').show();
         }
         break;
       }
@@ -199,15 +190,9 @@ const onRender = () => {
             checkContent('refresh');
           } else {
             displayCustomError(`${customContent.message}`);
-            $('.ca-modal').show();
-            $('.ca-modal__loading').hide();
-            $('.ca-modal__validateResult.failed').show();
           }
         } catch (error) {
           displayCustomError(`Error on fetching data: ${error.message}`);
-          $('.ca-modal').show();
-          $('.ca-modal__loading').hide();
-          $('.ca-modal__validateResult.failed').show();
         }
         break;
       }
@@ -509,9 +494,6 @@ const showStep = async (step, stepIndex) => {
             checkContent('init');
           } catch (error) {
             displayCustomError(`Error on fetching data: ${error.message}`);
-            $('.ca-modal').show();
-            $('.ca-modal__loading').hide();
-            $('.ca-modal__validateResult.failed').show();
           }
           break;
         }
@@ -540,15 +522,9 @@ const showStep = async (step, stepIndex) => {
               checkContent('init');
             } else {
               displayCustomError(`${customContent.message}`);
-              $('.ca-modal').show();
-              $('.ca-modal__loading').hide();
-              $('.ca-modal__validateResult.failed').show();
             }
           } catch (error) {
             displayCustomError(`Error on fetching data: ${error.message}`);
-            $('.ca-modal').show();
-            $('.ca-modal__loading').hide();
-            $('.ca-modal__validateResult.failed').show();
           }
           break;
         }
@@ -617,9 +593,6 @@ const checkContent = async (type) => {
               ', '
             )} trong Content không tồn tại trong Data Extension đã chọn!`
           );
-          $('.ca-modal').show();
-          $('.ca-modal__loading').hide();
-          $('.ca-modal__validateResult.failed').show();
           connection.trigger('updateButton', {
             button: 'next',
             enabled: false,
@@ -678,6 +651,7 @@ const getCustomContent = async () => {
     const response = await superagent.get('/api/sfmc/getcustomcontent');
     return response.body;
   } catch (error) {
+    displayCustomError(error.message);
     throw new Error(error.message);
   }
 };
@@ -687,7 +661,7 @@ const getDEInfo = async (key) => {
     const response = await superagent.post('/api/sfmc/getdeinfo').send({ key });
     return response.body;
   } catch (error) {
-    console.log(error.message);
+    displayCustomError(error.message);
     throw new Error(error.message);
   }
 };
@@ -697,6 +671,7 @@ const getZNSTemplates = async (OAId) => {
     const response = await superagent.post('/api/zalo/getznstemplates').send({ OAId });
     return response.text;
   } catch (error) {
+    displayCustomError(error.message);
     throw new Error(error.message);
   }
 };
@@ -708,6 +683,7 @@ const getZNSTemplateDetail = async (TemplateId, OAId) => {
       .send({ TemplateId, OAId });
     return response.text;
   } catch (error) {
+    displayCustomError(error.message);
     throw new Error(error.message);
   }
 };
@@ -717,6 +693,7 @@ const getAllSMSSenders = async () => {
     const response = await superagent.get('/api/smssenders');
     return response.body;
   } catch (error) {
+    displayCustomError(error.message);
     throw new Error(error.message);
   }
 };
@@ -726,11 +703,15 @@ const getAllZOA = async () => {
     const response = await superagent.get('/api/zoa');
     return response.body;
   } catch (error) {
+    displayCustomError(error.message);
     throw new Error(error.message);
   }
 };
 
 const displayCustomError = (message) => {
+  $('.ca-modal').show();
+  $('.ca-modal__loading').hide();
+  $('.ca-modal__validateResult.failed').show();
   if (message) {
     $('.ca-modal__validateResult__error-message').text(message);
   } else {
