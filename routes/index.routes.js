@@ -44,7 +44,9 @@ const Router = (app) => {
   // Custom Activity
   app.use('/sfmcca', MainRouter.sfmcca);
 
-  // app.use('/', MainRouter.sfmcca);
+  app.use('/', (req, res) => {
+    res.redirect('http://whitespace.vn/');
+  });
   // app.get('/*', (req, res) => {
   //   res.sendFile(path.join(__dirname, 'build', 'index.html'));
   // });
