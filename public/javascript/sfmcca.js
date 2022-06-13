@@ -625,16 +625,33 @@ const checkContent = async (type) => {
             template_data: {},
           },
         };
-
-        $.each(response.data.listParams, (index, param) => {
-          contentValue.zns.template_data[param.name] = `%%${param.name}%%`;
+        response.data.listParams.map((param) => {
+          if (!deFields.includes(param.name)) {
+            error = true;
+            errorContent.push(param.name);
+          }
         });
-        $('#ContentValue').val(JSON.stringify(contentValue));
-        console.log('contentValue', $('#ContentValue').val());
-        connection.trigger('updateButton', {
-          button: 'next',
-          enabled: true,
-        });
+        if (error == true) {
+          displayCustomError(
+            `Tồn tại giá trị ${errorContent.join(
+              ', '
+            )} trong Content không tồn tại trong Data Extension đã chọn!`
+          );
+          connection.trigger('updateButton', {
+            button: 'next',
+            enabled: false,
+          });
+        } else {
+          $.each(response.data.listParams, (index, param) => {
+            contentValue.zns.template_data[param.name] = `%%${param.name}%%`;
+          });
+          $('#ContentValue').val(JSON.stringify(contentValue));
+          console.log('contentValue', $('#ContentValue').val());
+          connection.trigger('updateButton', {
+            button: 'next',
+            enabled: true,
+          });
+        }
         break;
       }
       case 'SMS': {
