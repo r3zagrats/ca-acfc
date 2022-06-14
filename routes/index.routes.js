@@ -1,6 +1,6 @@
 // const SFMCCARouter = require('./sfmcca.routes');
 const ChannelsRouter = require('./channels.routes');
-const ZOARouter = require('./ZOA.routes');
+const ZOARouter = require('./zaloOA.routes');
 const UsersRouter = require('./users.routes');
 const ZaloApiRouter = require('./zaloapi.routes');
 const SFMCApiRouter = require('./sfmcapi.routes');
