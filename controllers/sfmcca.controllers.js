@@ -195,7 +195,7 @@ const SFMCCAController = {
               items: [
                 {
                   Sender: Content.from,
-                  Receiver: Content.phone,
+                  Receiver: data.inArguments[0].DEFields,
                   Content: Content.sms,
                   MsgId: result.msgid,
                   Status: result.error === 0 ? 'success' : 'error',
