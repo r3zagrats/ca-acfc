@@ -805,7 +805,6 @@ const reRenderUI = () => {
                   border-bottom-right-radius: 5px;
                   border-bottom-left-radius: 5px;
                   font-size: 18px;
-                  margin-top: -4px;
                   word-wrap: break-word;
                   font-family: serif;
                   white-space: break-spaces;
@@ -871,7 +870,6 @@ const reRenderUI = () => {
                     margin: 0;
                     background-color: white;
                     font-size: 18px;
-                    margin-top: -4px;
                     word-wrap: break-word;
                     font-family: serif;
                     white-space: break-spaces;
@@ -884,7 +882,6 @@ const reRenderUI = () => {
                     margin: 0;
                     background-color: white;
                     color: #666;
-                    margin-top: -4px;
                     word-wrap: break-word;
                     font-family: serif;
                     white-space: break-spaces;
@@ -1222,7 +1219,6 @@ const reRenderUI = () => {
                   margin-bottom: 2px;
                   background-color: white;
                   font-size: 18px;
-                  margin-top: -4px;
                   word-wrap: break-word;
                   font-family: serif;
                   white-space: break-spaces;
@@ -1235,7 +1231,6 @@ const reRenderUI = () => {
                   margin: 0;
                   background-color: white;
                   color: #666;
-                  margin-top: -4px;
                   word-wrap: break-word;
                   font-family: serif;
                   white-space: break-spaces;
