@@ -153,14 +153,7 @@ async function onRender() {
           hasError = true;
         }
         if (hasError) {
-          $('#ccb-form-msgText-element').addClass('slds-has-error');
-          $('#ccb-form-msgText-element').append(
-            `<div class="slds-form-element__help ccb-form__error" id="ccb-form-msgText-element-text-error">${errorMsg}</div>`
-          );
-          $('#msgText').on('keydown', (e) => {
-            $('#ccb-form-msgText-element').removeClass('slds-has-error');
-            $('#ccb-form-msgText-element-text-error').remove();
-          });
+          displayCustomInputError(errorMsg, 'msgText', 'keydown');
         }
         break;
       }
@@ -172,25 +165,11 @@ async function onRender() {
         if (imageUrl === '') {
           hasError = true;
           errorMsg = 'This field is required';
-          $('#ccb-form-imageUrl-element').addClass('slds-has-error');
-          $('#ccb-form-imageUrl-element').append(
-            `<div class="slds-form-element__help ccb-form__error" id="ccb-form-imageUrl-element-text-error">${errorMsg}</div>`
-          );
-          $('#imageUrl').on('keydown change', (e) => {
-            $('#ccb-form-imageUrl-element').removeClass('slds-has-error');
-            $('#ccb-form-imageUrl-element-text-error').remove();
-          });
+          displayCustomInputError(errorMsg, 'imageUrl', 'keydown change');
         } else if (imageOption === '') {
           hasError = true;
           errorMsg = 'This field is required';
-          $('#ccb-form-imageOption-element').addClass('slds-has-error');
-          $('#ccb-form-imageOption-element').append(
-            `<div class="slds-form-element__help ccb-form__error" id="ccb-form-imageOption-element-text-error">${errorMsg}</div>`
-          );
-          $('#imageOption').on('change', (e) => {
-            $('#ccb-form-imageOption-element').removeClass('slds-has-error');
-            $('#ccb-form-imageOption-element-text-error').remove();
-          });
+          displayCustomInputError(errorMsg, 'imageOption', 'change');
         } else {
           let tmpSize;
           $.each(contentBuilderImages, (i, item) => {
@@ -201,14 +180,7 @@ async function onRender() {
           if (tmpSize > 1048576) {
             errorMsg = 'File size must be less than 1MB';
             hasError = true;
-            $('#ccb-form-imageUrl-element').addClass('slds-has-error');
-            $('#ccb-form-imageUrl-element').append(
-              `<div class="slds-form-element__help ccb-form__error" id="ccb-form-imageUrl-element-text-error">${errorMsg}</div>`
-            );
-            $('#imageUrl').on('change', (e) => {
-              $('#ccb-form-imageUrl-element').removeClass('slds-has-error');
-              $('#ccb-form-imageUrl-element-text-error').remove();
-            });
+            displayCustomInputError(errorMsg, 'imageUrl', 'change');
           }
         }
         break;
@@ -248,14 +220,7 @@ async function onRender() {
           }
         }
         if (hasError) {
-          $('#ccb-form-attachedFile-element').addClass('slds-has-error');
-          $('#ccb-form-attachedFile-element').append(
-            `<div class="slds-form-element__help ccb-form__error" id="ccb-form-attachedFile-element-text-error">${errorMsg}</div>`
-          );
-          $('#attachedFile').on('change', (e) => {
-            $('#ccb-form-attachedFile-element').removeClass('slds-has-error');
-            $('#ccb-form-attachedFile-element-text-error').remove();
-          });
+          displayCustomInputError(errorMsg, 'attachedFile', 'change');
         }
         break;
       }
@@ -271,49 +236,21 @@ async function onRender() {
         if (title === '') {
           errorMsg = 'This field is required';
           hasError = true;
-          $('#ccb-form-title-element').addClass('slds-has-error');
-          $('#ccb-form-title-element').append(
-            `<div class="slds-form-element__help ccb-form__error" id="ccb-form-title-element-text-error">${errorMsg}</div>`
-          );
-          $('#title').on('keydown', (e) => {
-            $('#ccb-form-title-element').removeClass('slds-has-error');
-            $('#ccb-form-title-element-text-error').remove();
-          });
+          displayCustomInputError(errorMsg, 'title', 'keydown');
         }
         if (subTitle === '') {
           errorMsg = 'This field is required';
           hasError = true;
-          $('#ccb-form-subTitle-element').addClass('slds-has-error');
-          $('#ccb-form-subTitle-element').append(
-            `<div class="slds-form-element__help ccb-form__error" id="ccb-form-subTitle-element-text-error">${errorMsg}</div>`
-          );
-          $('#subTitle').on('keydown', (e) => {
-            $('#ccb-form-subTitle-element').removeClass('slds-has-error');
-            $('#ccb-form-subTitle-element-text-error').remove();
-          });
+          displayCustomInputError(errorMsg, 'subTitle', 'keydown');
         }
         if (imageUrl === '') {
           hasError = true;
           errorMsg = 'This field is required';
-          $('#ccb-form-imageUrl-element').addClass('slds-has-error');
-          $('#ccb-form-imageUrl-element').append(
-            `<div class="slds-form-element__help ccb-form__error" id="ccb-form-imageUrl-element-text-error">${errorMsg}</div>`
-          );
-          $('#imageUrl').on('keydown change', (e) => {
-            $('#ccb-form-imageUrl-element').removeClass('slds-has-error');
-            $('#ccb-form-imageUrl-element-text-error').remove();
-          });
+          displayCustomInputError(errorMsg, 'imageUrl', 'keydown change');
         } else if (imageOption === '') {
           hasError = true;
           errorMsg = 'This field is required';
-          $('#ccb-form-imageOption-element').addClass('slds-has-error');
-          $('#ccb-form-imageOption-element').append(
-            `<div class="slds-form-element__help ccb-form__error" id="ccb-form-imageOption-element-text-error">${errorMsg}</div>`
-          );
-          $('#imageOption').on('change', (e) => {
-            $('#ccb-form-imageOption-element').removeClass('slds-has-error');
-            $('#ccb-form-imageOption-element-text-error').remove();
-          });
+          displayCustomInputError(errorMsg, 'imageOption', 'change');
         } else {
           let tmpSize;
           $.each(contentBuilderImages, (i, item) => {
@@ -324,14 +261,7 @@ async function onRender() {
           if (tmpSize > 1048576) {
             errorMsg = 'File size must be less than 1MB';
             hasError = true;
-            $('#ccb-form-imageUrl-element').addClass('slds-has-error');
-            $('#ccb-form-imageUrl-element').append(
-              `<div class="slds-form-element__help ccb-form__error" id="ccb-form-imageUrl-element-text-error">${errorMsg}</div>`
-            );
-            $('#imageUrl').on('change', (e) => {
-              $('#ccb-form-imageUrl-element').removeClass('slds-has-error');
-              $('#ccb-form-imageUrl-element-text-error').remove();
-            });
+            displayCustomInputError(errorMsg, 'imageUrl', 'change');
           }
         }
         break;
@@ -343,11 +273,7 @@ async function onRender() {
       $('.ccb-modal__validateResult.success').show();
       $('.ccb-modal__validateResult.failed').hide();
     } else {
-      $('.ccb-modal').show();
-      $('.ccb-modal__loading').hide();
-      displayCustomError()
-      $('.ccb-modal__validateResult.failed').show();
-      $('.ccb-modal__validateResult.success').hide();
+      displayCustomModalError();
     }
   });
 
@@ -371,7 +297,7 @@ async function onRender() {
   $('#addNormalList').click(() => {
     normalList = JSON.parse(localStorage.getItem('LSNormalList'));
     if (normalList.length === 5) {
-      alert('Mỗi danh sách chỉ có tối đa 5 phần tử')
+      alert('Mỗi danh sách chỉ có tối đa 5 phần tử');
       return;
     }
     addNormalListElement(normalList);
@@ -385,7 +311,7 @@ async function onRender() {
   $('#addButtonList').click(() => {
     buttonList = JSON.parse(localStorage.getItem('LSButtonList'));
     if (buttonList.length === 5) {
-      alert('Mỗi danh sách chỉ có tối đa 5 phần tử')
+      alert('Mỗi danh sách chỉ có tối đa 5 phần tử');
       return;
     }
     addButtonListElement(buttonList);
@@ -607,14 +533,7 @@ const validateZMList = (formProps, hasError, errorMsg) => {
       if (tmpSize > 1048576) {
         errorMsg = 'File size must be less than 1MB';
         hasError = true;
-        $(`#ccb-form-${key}-element`).addClass('slds-has-error');
-        $(`#ccb-form-${key}-element`).append(
-          `<div class="slds-form-element__help ccb-form__error" id="ccb-form-${key}-element-text-error">${errorMsg}</div>`
-        );
-        $(`#${key}`).on('change', (e) => {
-          $(`#ccb-form-${key}-element`).removeClass('slds-has-error');
-          $(`#ccb-form-${key}-element-text-error`).remove();
-        });
+        displayCustomInputError(errorMsg, key, 'change');
       }
     } else {
       $(`#${key}`).on('keydown', (e) => {
@@ -1159,7 +1078,7 @@ const reRenderUI = () => {
             break;
           }
           default: {
-            alert('This type is not supported')
+            alert('This type is not supported');
           }
         }
         sdk.setContent(htmlScript);
@@ -1672,10 +1591,27 @@ const getMetaDataContent = async () => {
   }
 };
 
-const displayCustomError = (message) => {
+const displayCustomModalError = (message) => {
+  $('.ccb-modal').show();
+  $('.ccb-modal__loading').hide();
+  $('.ccb-modal__validateResult.failed').show();
+  $('.ccb-modal__validateResult.success').hide();
   if (message) {
-    $('.ccb-modal__validateResult__error-message').text(message)
+    $('.ccb-modal__validateResult__error-message').text(message);
   } else {
-    $('.ccb-modal__validateResult__error-message').text('An error occurred while submitting the form. Please try again')
+    $('.ccb-modal__validateResult__error-message').text(
+      'An error occurred while submitting the form. Please try again'
+    );
   }
-}
+};
+
+const displayCustomInputError = (message, selector, event) => {
+  $(`#ca-form-${selector}-element`).addClass('slds-has-error');
+  $(`#ca-form-${selector}-element`).append(
+    `<div class="slds-form-element__help ca-form__error" id="ca-form-${selector}-element-text-error">${message}</div>`
+  );
+  $(`#${selector}`).on(event, () => {
+    $(`#ca-form-${selector}-element`).removeClass('slds-has-error');
+    $(`#ca-form-${selector}-element-text-error`).remove();
+  });
+};
