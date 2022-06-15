@@ -12,7 +12,6 @@ let deKey = '';
 let eventDefinitionKey = '';
 let tmpZOAList = [];
 let tmpSMSSendersList = [];
-
 let steps = [
   { label: 'Channels', key: 'step1' },
   { label: 'Senders', key: 'step2' },
@@ -58,18 +57,7 @@ const onRender = () => {
   });
 
   $('#SMSValidate').on('click', (e) => {
-    const msg = {
-      from: '%%Senders%%',
-      phone: '',
-      sms: $('#SMSContent').val(),
-      bid: $('#SMSBID').val(),
-    };
-    $('#ContentValue').val(JSON.stringify(msg));
-    console.log($('#ContentValue').val());
-    connection.trigger('updateButton', {
-      button: 'next',
-      enabled: true,
-    });
+    checkContent('process');
   });
 
   $('#Channels').on('change', (e) => {
@@ -87,34 +75,32 @@ const onRender = () => {
   });
 
   $('#Senders').on('change', async (e) => {
-    if ($('#Senders').val()) {
-      if ($('#Channels').val() === 'Zalo Notification Service') {
-        try {
-          $('.ca-modal').show();
-          $('.ca-modal__loading').show();
-          $('.ca-modal__validateResult.failed').hide();
-          let customContent = await getZNSTemplates($('#Senders').val());
-          $('.ca-modal').hide();
-          customContent = JSON.parse(customContent);
-          console.log('customContent:', customContent);
-          if (customContent.resultCode !== 0) throw customContent.message;
-          connection.trigger('updateButton', {
-            button: 'next',
-            enabled: true,
-          });
-        } catch (error) {
-          displayCustomError(`${error}`);
-          connection.trigger('updateButton', {
-            button: 'next',
-            enabled: false,
-          });
-        }
-      } else {
+    if ($('#Senders').val() && $('#Channels').val() === 'Zalo Notification Service') {
+      try {
+        $('.ca-modal').show();
+        $('.ca-modal__loading').show();
+        $('.ca-modal__validateResult.failed').hide();
+        let customContent = await getZNSTemplates($('#Senders').val());
+        $('.ca-modal').hide();
+        customContent = JSON.parse(customContent);
+        console.log('customContent:', customContent);
+        if (customContent.error !== 0) throw customContent.message;
         connection.trigger('updateButton', {
           button: 'next',
           enabled: true,
         });
+      } catch (error) {
+        displayCustomModalError(`${error}`);
+        connection.trigger('updateButton', {
+          button: 'next',
+          enabled: false,
+        });
       }
+    } else if ($('#Senders').val()) {
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: true,
+      });
     } else {
       connection.trigger('updateButton', {
         button: 'next',
@@ -532,6 +518,10 @@ const showStep = async (step, stepIndex) => {
           $('#ContentOptions').empty();
           $('#ZaloContentContainer').hide();
           $('#SMSContentContainer').show();
+          $('#ca-form-SMSDEKeys-element').empty();
+          $.each(deFields, (index, field) => {
+            $('#ca-form-SMSDEKeys-element').append(`<div>${field}</div>`);
+          });
           if (contentValue) {
             $('#SMSContent').val(JSON.parse(contentValue).sms);
             $('#SMSBID').val(JSON.parse(contentValue).bid);
@@ -546,126 +536,189 @@ const checkContent = async (type) => {
   console.log('type: ', type);
   $('#ca-frame').hide();
   $('#DisplayContent').empty();
-  let error = false;
-  let errorContent = [];
-  console.log('tmpContents:', tmpContents);
-  console.log(contentOptions);
-  if (type === 'process') $('#ContentOptions').val(contentOptions);
-  if (type === 'init') {
-    console.log(channels);
-    console.log($('#Channels').val());
-    if (channels !== $('#Channels').val()) {
-      $('#ContentOptions').val('');
-    } else $('#ContentOptions').val(contentOptions);
-  }
-  console.log($('#ContentOptions').val());
-  if ($('#ContentOptions').val()) {
-    switch ($('#Channels').val()) {
-      case 'Zalo Message': {
-        tmpContents.forEach((value) => {
-          if (value.id == $('#ContentOptions').val()) {
-            const regex = /%%([\s\S]*?)%%/gm;
-            let message;
-            while (
-              (message = regex.exec(
-                type == 'process'
-                  ? JSON.stringify(value.meta.options.customBlockData.payloadData)
-                  : $('#ContentValue').val()
-              )) !== null
-            ) {
-              if (message.index === regex.lastIndex) {
-                regex.lastIndex++;
-              }
-              console.log('message:', message);
-              if (!deFields.includes(message[1])) {
-                error = true;
-                errorContent.push(message[0]);
-              }
-            }
-            const payloadData = JSON.stringify(value.meta.options.customBlockData);
-            $('#ContentValue').val(payloadData);
-            $('#DisplayContent').empty().append(value.content);
-          }
-        });
-        if (error == true) {
-          displayCustomError(
-            `Tồn tại giá trị ${errorContent.join(
-              ', '
-            )} trong Content không tồn tại trong Data Extension đã chọn!`
-          );
-          connection.trigger('updateButton', {
-            button: 'next',
-            enabled: false,
-          });
-        } else {
-          connection.trigger('updateButton', {
-            button: 'next',
-            enabled: true,
-          });
-        }
-        break;
+  let hasError = false;
+  let errorKeyList = [];
+  let errorMsg = '';
+  if ($('#Channels').val() === 'SMS') {
+    $('#ca-form-SMSContent-element').removeClass('slds-has-error');
+    $('#ca-form-SMSContent-element-text-error').remove();
+    $('#ca-form-SMSBID-element').removeClass('slds-has-error');
+    $('#ca-form-SMSBID-element-text-error').remove();
+    const regex = /%%([\s\S]*?)%%/gm;
+    let message;
+    if ($('#SMSContent').val() === '') {
+      hasError = true;
+      errorMsg = 'This field is required';
+      displayCustomInputError(errorMsg, 'SMSContent', 'keydown');
+    }
+    if ($('#SMSBID').val() === '') {
+      hasError = true;
+      errorMsg = 'This field is required';
+      displayCustomInputError(errorMsg, 'SMSBID', 'keydown');
+    }
+    while ((message = regex.exec($('#SMSContent').val())) !== null) {
+      if (message.index === regex.lastIndex) {
+        regex.lastIndex++;
       }
-      case 'Zalo Notification Service': {
-        $('.ca-modal').show();
-        $('.ca-modal__loading').show();
-        $('.ca-modal__validateResult.failed').hide();
-        let response = await getZNSTemplateDetail($('#ContentOptions').val(), $('#Senders').val());
-        $('.ca-modal').hide();
-        response = JSON.parse(response);
-        console.log('repsonse detail', response);
-        $('#ca-frame').show();
-        $('#ca-frame').attr('src', response.data.previewUrl);
-        contentValue = {
-          username: '',
-          mobile: '',
-          bid: new Date().getTime(),
-          zns: {
-            oa_id: '',
+      console.log('message:', message);
+      if (!deFields.includes(message[1])) {
+        hasError = true;
+        if (!deFields.includes(message[0])) {
+          errorKeyList.push(message[0]);
+        }
+      }
+    }
+    if (hasError) {
+      if (errorKeyList.length > 0) {
+        errorMsg = `Keyword ${errorKeyList.join(
+          ', '
+        )} trong Content không tồn tại trong Data Extension đã chọn!`;
+        displayCustomInputError(errorMsg, 'SMSContent', 'keydown');
+        displayCustomModalError(errorMsg);
+      } else {
+        displayCustomModalError();
+      }
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: false,
+      });
+    } else {
+      const msg = {
+        from: '%%Senders%%',
+        phone: '',
+        sms: $('#SMSContent').val(),
+        bid: $('#SMSBID').val(),
+      };
+      $('#ContentValue').val(JSON.stringify(msg));
+      console.log($('#ContentValue').val());
+      $('.ca-modal').show();
+      $('.ca-modal__loading').hide();
+      $('.ca-modal__validateResult.success').show();
+      $('.ca-modal__validateResult.failed').hide();
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: true,
+      });
+    }
+  } else {
+    console.log('tmpContents:', tmpContents);
+    console.log(contentOptions);
+    if (type === 'process') $('#ContentOptions').val(contentOptions);
+    if (type === 'init') {
+      console.log(channels);
+      console.log($('#Channels').val());
+      if (channels !== $('#Channels').val()) {
+        $('#ContentOptions').val('');
+      } else $('#ContentOptions').val(contentOptions);
+    }
+    console.log($('#ContentOptions').val());
+    if ($('#ContentOptions').val()) {
+      switch ($('#Channels').val()) {
+        case 'Zalo Message': {
+          tmpContents.forEach((value) => {
+            if (value.id == $('#ContentOptions').val()) {
+              const regex = /%%([\s\S]*?)%%/gm;
+              let message;
+              while (
+                (message = regex.exec(
+                  type == 'process'
+                    ? JSON.stringify(value.meta.options.customBlockData.payloadData)
+                    : $('#ContentValue').val()
+                )) !== null
+              ) {
+                if (message.index === regex.lastIndex) {
+                  regex.lastIndex++;
+                }
+                console.log('message:', message);
+                if (!deFields.includes(message[1])) {
+                  hasError = true;
+                  if (!errorKeyList.includes(message[0])) {
+                    errorKeyList.push(message[0]);
+                  }
+                }
+              }
+              const payloadData = JSON.stringify(value.meta.options.customBlockData);
+              $('#ContentValue').val(payloadData);
+              $('#DisplayContent').empty().append(value.content);
+            }
+          });
+          if (hasError == true) {
+            displayCustomModalError(
+              `Tồn tại giá trị ${errorKeyList.join(
+                ', '
+              )} trong Content không tồn tại trong Data Extension đã chọn!`
+            );
+            connection.trigger('updateButton', {
+              button: 'next',
+              enabled: false,
+            });
+          } else {
+            connection.trigger('updateButton', {
+              button: 'next',
+              enabled: true,
+            });
+          }
+          break;
+        }
+        case 'Zalo Notification Service': {
+          $('.ca-modal').show();
+          $('.ca-modal__loading').show();
+          $('.ca-modal__validateResult.failed').hide();
+          let response = await getZNSTemplateDetail(
+            $('#ContentOptions').val(),
+            $('#Senders').val()
+          );
+          $('.ca-modal').hide();
+          response = JSON.parse(response);
+          console.log('repsonse detail', response);
+          $('#ca-frame').show();
+          $('#ca-frame').attr('src', response.data.previewUrl);
+          contentValue = {
+            phone: '',
             template_id: response.data.templateId,
             template_data: {},
-          },
-        };
-        response.data.listParams.map((param) => {
-          if (!deFields.includes(param.name)) {
-            error = true;
-            errorContent.push(param.name);
+          };
+          response.data.listParams.map((param) => {
+            if (!deFields.includes(param.name)) {
+              hasError = true;
+              if (!errorKeyList.includes(`%%${param.name}%%`)) {
+                errorKeyList.push(`%%${param.name}%%`);
+              }
+            }
+          });
+          if (hasError == true) {
+            displayCustomModalError(
+              `Tồn tại giá trị ${errorKeyList.join(
+                ', '
+              )} trong Content không tồn tại trong Data Extension đã chọn!`
+            );
+            connection.trigger('updateButton', {
+              button: 'next',
+              enabled: false,
+            });
+          } else {
+            $.each(response.data.listParams, (index, param) => {
+              contentValue.zns.template_data[param.name] = `%%${param.name}%%`;
+            });
+            $('#ContentValue').val(JSON.stringify(contentValue));
+            console.log('contentValue', $('#ContentValue').val());
+            connection.trigger('updateButton', {
+              button: 'next',
+              enabled: true,
+            });
           }
-        });
-        if (error == true) {
-          displayCustomError(
-            `Tồn tại giá trị ${errorContent.join(
-              ', '
-            )} trong Content không tồn tại trong Data Extension đã chọn!`
-          );
-          connection.trigger('updateButton', {
-            button: 'next',
-            enabled: false,
-          });
-        } else {
-          $.each(response.data.listParams, (index, param) => {
-            contentValue.zns.template_data[param.name] = `%%${param.name}%%`;
-          });
-          $('#ContentValue').val(JSON.stringify(contentValue));
-          console.log('contentValue', $('#ContentValue').val());
-          connection.trigger('updateButton', {
-            button: 'next',
-            enabled: true,
-          });
+          break;
         }
-        break;
+
+        default:
+          break;
       }
-      case 'SMS': {
-        break;
-      }
-      default:
-        break;
+    } else {
+      connection.trigger('updateButton', {
+        button: 'next',
+        enabled: false,
+      });
     }
-  } else if ($('#Channels').val() === 'SMS') {
-  } else {
-    connection.trigger('updateButton', {
-      button: 'next',
-      enabled: false,
-    });
   }
 };
 
@@ -743,4 +796,15 @@ const displayCustomError = (message) => {
       'An error occurred while submitting the form. Please try again'
     );
   }
+};
+
+const displayCustomInputError = (message, selector, event) => {
+  $(`#ca-form-${selector}-element`).addClass('slds-has-error');
+  $(`#ca-form-${selector}-element`).append(
+    `<div class="slds-form-element__help ca-form__error" id="ca-form-${selector}-element-text-error">${message}</div>`
+  );
+  $(`#${selector}`).on(event, () => {
+    $(`#ca-form-${selector}-element`).removeClass('slds-has-error');
+    $(`#ca-form-${selector}-element-text-error`).remove();
+  });
 };
