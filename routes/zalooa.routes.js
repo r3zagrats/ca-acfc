@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const ZaloOAController = require('../controllers/zalooa.controller');
+const ZaloOAController = require('../controllers/zalooa.controllers');
 
 
 router.get('/', ZaloOAController.getAllZaloOA);

@@ -1,13 +1,13 @@
 // const SFMCCARouter = require('./sfmcca.routes');
 const ChannelsRouter = require('./channels.routes');
-const ZaloOARouter = require('./zalooa.route');
+const ZaloOARouter = require('./zalooa.routes');
 const UsersRouter = require('./users.routes');
 const ZaloApiRouter = require('./zaloapi.routes');
 const SFMCApiRouter = require('./sfmcapi.routes');
 const ZaloWebhook = require('../webhooks/zalo');
 const MainRouter = require('../controllers/index.controllers');
 const SFMCCARouter = require('./sfmcca.routes');
-const SMSSendersRouter = require('./smssenders.route');
+const SMSSendersRouter = require('./smssenders.routes');
 
 // console.log(ZaloOARouter)
 
