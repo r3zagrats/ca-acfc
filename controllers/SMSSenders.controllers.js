@@ -1,6 +1,6 @@
 require('dotenv').config();
 const pgClient = require('../config/database/postgresql/postgresql.config');
-
+ 
 const SMSSendersController = {
   /**
    * Get All OA Info

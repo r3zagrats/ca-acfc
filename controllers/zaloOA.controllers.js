@@ -1,6 +1,6 @@
 require('dotenv').config();
 const pgClient = require('../config/database/postgresql/postgresql.config');
-
+ 
 const ZaloOAController = {
   /**
    * Get All ZaloOA Info

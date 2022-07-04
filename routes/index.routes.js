@@ -1,6 +1,6 @@
 // const SFMCCARouter = require('./sfmcca.routes');
 const ChannelsRouter = require('./channels.routes');
-// const ZaloOARouter = require('./zalooa.routes');
+const ZaloOARouter = require('./zalooa.routes');
 const UsersRouter = require('./users.routes');
 const ZaloApiRouter = require('./zaloapi.routes');
 const SFMCApiRouter = require('./sfmcapi.routes');
@@ -22,7 +22,7 @@ const Router = (app) => {
   app.use('/api/channels', ChannelsRouter);
 
   // Zalo OA Routes
-  // app.use('/api/zalooa', ZaloOARouter);
+  app.use('/api/zalooa', ZaloOARouter);
 
   // Users Routes
   app.use('/api/users', UsersRouter);
