@@ -24,7 +24,7 @@ const requestedInteractionHandler = async (settings) => {
   if (settings.triggers[0]) {
     eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
   } else {
-    displayCustomError('Please choose ENTRY EVENT and SAVE Journey before Continue');
+    displayCustomModalError('Please choose ENTRY EVENT and SAVE Journey before Continue');
     connection.trigger('destroy');
   }
 };
@@ -149,7 +149,7 @@ const onRender = () => {
           });
           checkContent('refresh');
         } catch (error) {
-          displayCustomError(`Error on fetching data: ${error.message}`);
+          displayCustomModalError(`Error on fetching data: ${error.message}`);
         }
         break;
       }
@@ -175,10 +175,10 @@ const onRender = () => {
             });
             checkContent('refresh');
           } else {
-            displayCustomError(`${customContent.message}`);
+            displayCustomModalError(`${customContent.message}`);
           }
         } catch (error) {
-          displayCustomError(`Error on fetching data: ${error.message}`);
+          displayCustomModalError(`Error on fetching data: ${error.message}`);
         }
         break;
       }
@@ -479,7 +479,7 @@ const showStep = async (step, stepIndex) => {
             });
             checkContent('init');
           } catch (error) {
-            displayCustomError(`Error on fetching data: ${error.message}`);
+            displayCustomModalError(`Error on fetching data: ${error.message}`);
           }
           break;
         }
@@ -507,10 +507,10 @@ const showStep = async (step, stepIndex) => {
               });
               checkContent('init');
             } else {
-              displayCustomError(`${customContent.message}`);
+              displayCustomModalError(`${customContent.message}`);
             }
           } catch (error) {
-            displayCustomError(`Error on fetching data: ${error.message}`);
+            displayCustomModalError(`Error on fetching data: ${error.message}`);
           }
           break;
         }
@@ -727,7 +727,7 @@ const getCustomContent = async () => {
     const response = await superagent.get('/api/sfmc/getcustomcontent');
     return response.body;
   } catch (error) {
-    displayCustomError(error.message);
+    displayCustomModalError(error.message);
     throw new Error(error.message);
   }
 };
@@ -737,7 +737,7 @@ const getDEInfo = async (key) => {
     const response = await superagent.post('/api/sfmc/getdeinfo').send({ key });
     return response.body;
   } catch (error) {
-    displayCustomError('Please choose ENTRY EVENT and SAVE Journey before Continue');
+    displayCustomModalError('Please choose ENTRY EVENT and SAVE Journey before Continue');
     connection.trigger('destroy');
     throw new Error(error.message);
   }
@@ -748,7 +748,7 @@ const getZNSTemplates = async (OAId) => {
     const response = await superagent.post('/api/zalo/getznstemplates').send({ OAId });
     return response.text;
   } catch (error) {
-    displayCustomError(error.message);
+    displayCustomModalError(error.message);
     throw new Error(error.message);
   }
 };
@@ -760,7 +760,7 @@ const getZNSTemplateDetail = async (TemplateId, OAId) => {
       .send({ TemplateId, OAId });
     return response.text;
   } catch (error) {
-    displayCustomError(error.message);
+    displayCustomModalError(error.message);
     throw new Error(error.message);
   }
 };
@@ -770,7 +770,7 @@ const getAllSMSSenders = async () => {
     const response = await superagent.get('/api/smssenders');
     return response.body;
   } catch (error) {
-    displayCustomError(error.message);
+    displayCustomModalError(error.message);
     throw new Error(error.message);
   }
 };
@@ -780,12 +780,12 @@ const getAllZaloOA = async () => {
     const response = await superagent.get('/api/zalooa');
     return response.body;
   } catch (error) {
-    displayCustomError(error.message);
+    displayCustomModalError(error.message);
     throw new Error(error.message);
   }
 };
 
-const displayCustomError = (message) => {
+const displayCustomModalError = (message) => {
   $('.ca-modal').show();
   $('.ca-modal__loading').hide();
   $('.ca-modal__validateResult.failed').show();
