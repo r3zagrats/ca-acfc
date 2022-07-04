@@ -1,6 +1,6 @@
 const superagent = require('superagent');
 
-const ZaloAPI = {
+const ZaloApi = {
   getZNSTemplates: async (req, res) => {
     try {
       const response = await superagent
@@ -35,4 +35,4 @@ const ZaloAPI = {
   },
 };
 
-module.exports = ZaloAPI;
+module.exports = ZaloApi;

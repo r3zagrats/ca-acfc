@@ -1,13 +1,13 @@
 require('dotenv').config();
 const pgClient = require('../config/database/postgresql/postgresql.config');
 
-const ZOAController = {
+const ZaloOAController = {
   /**
-   * Get All ZOA Info
+   * Get All ZaloOA Info
    * @param {*} req
    * @param {*} res
    */
-  getAllZOA: async (req, res) => {
+  getAllZaloOA: async (req, res) => {
     try {
       const { rows } = await pgClient.query(
         `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" ORDER BY "OAId"`
@@ -23,11 +23,11 @@ const ZOAController = {
   },
 
   /**
-   * Get ZOA Info by Id
+   * Get ZaloOA Info by Id
    * @param {*} req
    * @param {*} res
    */
-  getZOAById: async (req, res) => {
+  getZaloOAById: async (req, res) => {
     try {
       const { rows } = await pgClient.query(
         `SELECT * FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${req.params.id}' ORDER BY "OAId"`
@@ -44,11 +44,11 @@ const ZOAController = {
   },
 
   /**
-   * Delete an ZOA
+   * Delete an ZaloOA
    * @param {*} req
    * @param {*} res
    */
-  deleteZOA: async (req, res) => {
+  deleteZaloOA: async (req, res) => {
     try {
       await pgClient.query(
         `DELETE FROM "${process.env.PSQL_ZALOOA_TABLE}" WHERE "OAId" = '${req.body.id}'`
@@ -64,12 +64,12 @@ const ZOAController = {
   },
 
   /**
-   * Create an ZOA
+   * Create an ZaloOA
    * @param {*} req
    * @param {*} res
    * @returns
    */
-  createZOA: async (req, res) => {
+  createZaloOA: async (req, res) => {
     console.log(req.body);
     const data = JSON.parse(req.body.data);
     if (!data) {
@@ -100,12 +100,12 @@ const ZOAController = {
   },
 
   /**
-   * Update an ZOA
+   * Update an ZaloOA
    * @param {*} req
    * @param {*} res
    * @returns
    */
-  updateZOA: async (req, res) => {
+  updateZaloOA: async (req, res) => {
     const data = JSON.parse(req.body.data);
     console.log('data', data);
     if (!data) {
@@ -133,4 +133,4 @@ const ZOAController = {
   },
 };
 
-module.exports = ZOAController;
+module.exports = ZaloOAController;

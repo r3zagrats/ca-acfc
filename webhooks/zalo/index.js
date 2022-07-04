@@ -10,7 +10,7 @@ const ZaloWebhook = async (req, res) => {
     case 'user_received_message': {
       console.log('User received message');
       try {
-        const data = await fuelRestUtils.insertDEZaloUserActionTracking(
+        const data = await fuelRestUtils.insertDEZaloUserActionsTracking(
           JSON.stringify({
             items: [
               {
@@ -44,7 +44,7 @@ const ZaloWebhook = async (req, res) => {
             userTrackingInfo.message.msg_ids[i]
           );
           results.push(
-            fuelRestUtils.insertDEZaloUserActionTracking(
+            fuelRestUtils.insertDEZaloUserActionsTracking(
               JSON.stringify({
                 items: [
                   {
@@ -83,7 +83,7 @@ const ZaloWebhook = async (req, res) => {
           .set('access_token', tmpAccessToken);
         response = JSON.parse(response.text);
         console.log('response', response);
-        const insertData = fuelRestUtils.insertDEZaloUserActionTracking(
+        const insertData = fuelRestUtils.insertDEZaloUserActionsTracking(
           JSON.stringify({
             items: [
               {
@@ -132,7 +132,7 @@ const ZaloWebhook = async (req, res) => {
           .set('access_token', tmpAccessToken);
         response = JSON.parse(response.text);
         console.log('response', response);
-        const insertData = fuelRestUtils.insertDEZaloUserActionTracking(
+        const insertData = fuelRestUtils.insertDEZaloUserActionsTracking(
           JSON.stringify({
             items: [
               {
@@ -172,7 +172,7 @@ const ZaloWebhook = async (req, res) => {
     case 'user_send_text': {
       console.log('User send text message');
       try {
-        const data = await fuelRestUtils.insertDEZaloUserActionTracking(
+        const data = await fuelRestUtils.insertDEZaloUserActionsTracking(
           JSON.stringify({
             items: [
               {
@@ -197,7 +197,7 @@ const ZaloWebhook = async (req, res) => {
           nameRegex.lastIndex = 0;
           phoneRegex.lastIndex = 0;
           addressRegex.lastIndex = 0;
-          await fuelRestUtils.insertDEZaloRequestUserInfo(
+          await fuelRestUtils.insertDEZaloRequestedUserInfo(
             JSON.stringify({
               items: [
                 {

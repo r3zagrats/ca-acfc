@@ -1,12 +1,12 @@
 const router = require('express').Router();
-const SFMCAPI = require('../api/sfmc');
+const SFMCApi = require('../api/sfmc');
 
-router.use('/getde', SFMCAPI.getDE);
-router.use('/getdecol', SFMCAPI.getDEColumn);
-router.use('/getderow', SFMCAPI.getDERow);
-router.use('/getcustomcontent', SFMCAPI.getCustomContent);
-router.use('/getimagecontent', SFMCAPI.getImageContent);
-router.use('/getmetadatacontent', SFMCAPI.getMetaDataContent);
-router.post('/getdeinfo', SFMCAPI.getDEInfo);
+router.use('/getde', SFMCApi.getDE);
+router.use('/getdecol', SFMCApi.getDEColumn);
+router.use('/getderow', SFMCApi.getDERow);
+router.use('/getcustomcontent', SFMCApi.getCustomContent);
+router.use('/getimagecontent', SFMCApi.getImageContent);
+router.use('/getmetadatacontent', SFMCApi.getMetaDataContent);
+router.post('/getdeinfo', SFMCApi.getDEInfo);
 
 module.exports = router;

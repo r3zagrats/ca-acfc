@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const SMSSendersController = require('../controllers/SMSSenders.controllers');
+const SMSSendersController = require('../controllers/smssenders.controllers');
 
 router.get('/', SMSSendersController.getAll);
 

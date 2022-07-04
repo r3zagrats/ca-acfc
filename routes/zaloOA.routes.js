@@ -1,10 +1,10 @@
 const router = require('express').Router();
-const zaloOAController = require('../controllers/zaloOA.controllers');
+const zaloOAController = require('../controllers/zalooa.controllers');
 
-router.get('/', zaloOAController.getAllZOA);
-router.post('/', zaloOAController.createZOA);
-router.patch('/', zaloOAController.updateZOA);
-router.get('/:id', zaloOAController.getZOAById);
-router.delete('/', zaloOAController.deleteZOA);
+router.get('/', zaloOAController.getAllZaloOA);
+router.post('/', zaloOAController.createZaloOA);
+router.patch('/', zaloOAController.updateZaloOA);
+router.get('/:id', zaloOAController.getZaloOAById);
+router.delete('/', zaloOAController.deleteZaloOA);
 
 module.exports = router;

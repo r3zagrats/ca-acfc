@@ -10,7 +10,7 @@ let tmpContents = '';
 let deFields = [];
 let deKey = '';
 let eventDefinitionKey = '';
-let tmpZOAList = [];
+let tmpZaloOAList = [];
 let tmpSMSSendersList = [];
 let steps = [
   { label: 'Channels', key: 'step1' },
@@ -339,15 +339,15 @@ const showStep = async (step, stepIndex) => {
           $('.ca-modal').show();
           $('.ca-modal__loading').show();
           $('.ca-modal__validateResult.failed').hide();
-          const ZOAList = await getAllZOA();
+          const ZaloOAList = await getAllZaloOA();
           $('.ca-modal').hide();
-          console.log('ZOAList', ZOAList);
-          tmpZOAList = ZOAList.data;
+          console.log('ZaloOAList', ZaloOAList);
+          tmpZaloOAList = ZaloOAList.data;
           $('#Senders')
             .empty()
             .append(`<option value=''>--Select one of the following senders--</option>`);
-          $.each(tmpZOAList, (index, ZOA) => {
-            $('#Senders').append(`<option value=${ZOA.OAId}>${ZOA.OAName}</option>`);
+          $.each(tmpZaloOAList, (index, ZaloOA) => {
+            $('#Senders').append(`<option value=${ZaloOA.OAId}>${ZaloOA.OAName}</option>`);
           });
           if (senders && channels === $('#Channels').val()) {
             $('#Senders').val(senders);
@@ -358,15 +358,15 @@ const showStep = async (step, stepIndex) => {
           $('.ca-modal').show();
           $('.ca-modal__loading').show();
           $('.ca-modal__validateResult.failed').hide();
-          const ZOAList = await getAllZOA();
+          const ZaloOAList = await getAllZaloOA();
           $('.ca-modal').hide();
-          console.log('ZOAList', ZOAList);
-          tmpZOAList = ZOAList.data;
+          console.log('ZaloOAList', ZaloOAList);
+          tmpZaloOAList = ZaloOAList.data;
           $('#Senders')
             .empty()
             .append(`<option value=''>--Select one of the following senders--</option>`);
-          $.each(tmpZOAList, (index, ZOA) => {
-            $('#Senders').append(`<option value=${ZOA.OAId}>${ZOA.OAName}</option>`);
+          $.each(tmpZaloOAList, (index, ZaloOA) => {
+            $('#Senders').append(`<option value=${ZaloOA.OAId}>${ZaloOA.OAName}</option>`);
           });
           if (senders && channels === $('#Channels').val()) {
             $('#Senders').val(senders);
@@ -775,9 +775,9 @@ const getAllSMSSenders = async () => {
   }
 };
 
-const getAllZOA = async () => {
+const getAllZaloOA = async () => {
   try {
-    const response = await superagent.get('/api/zoa');
+    const response = await superagent.get('/api/zalooa');
     return response.body;
   } catch (error) {
     displayCustomError(error.message);

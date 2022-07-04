@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const zaloAPI = require('../api/zalo');
+const ZaloApi = require('../api/zalo');
 
-router.post('/getznstemplates', zaloAPI.getZNSTemplates);
-router.post('/getznstemplatedetail', zaloAPI.getZNSTemplateDetail);
-router.get('/getauthcode', zaloAPI.getAuthCode);
+router.post('/getznstemplates', ZaloApi.getZNSTemplates);
+router.post('/getznstemplatedetail', ZaloApi.getZNSTemplateDetail);
+router.get('/getauthcode', ZaloApi.getAuthCode);
 
 module.exports = router;

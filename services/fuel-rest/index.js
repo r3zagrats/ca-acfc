@@ -37,9 +37,9 @@ const FuelRestUtils = {
    * @param data
    * @returns {?Promise}
    */
-  insertDEZaloUserActionTracking: async (data) =>
+  insertDEZaloUserActionsTracking: async (data) =>
     fuelRestClient.post({
-      uri: `data/v1/async/dataextensions/key:${process.env.DE_ZALO_USER_ACTION_TRACKING}/rows`,
+      uri: `data/v1/async/dataextensions/key:${process.env.DE_ZALO_USER_ACTIONS_TRACKING}/rows`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -61,9 +61,9 @@ const FuelRestUtils = {
       body: data,
     }),
 
-  insertDEZaloRequestUserInfo: async (data) =>
+  insertDEZaloRequestedUserInfo: async (data) =>
     fuelRestClient.post({
-      uri: `data/v1/async/dataextensions/key:${process.env.DE_ZALO_REQUEST_USER_INFO}/rows`,
+      uri: `data/v1/async/dataextensions/key:${process.env.DE_ZALO_REQUESTED_USER_INFO}/rows`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -96,7 +96,7 @@ const FuelRestUtils = {
    */
   upsertDEZaloUserActionTracking: async (data) =>
     fuelRestClient.put({
-      uri: `data/v1/async/dataextensions/key:${process.env.DE_ZALO_USER_ACTION_TRACKING}/rows`,
+      uri: `data/v1/async/dataextensions/key:${process.env.DE_ZALO_USER_ACTIONS_TRACKING}/rows`,
       headers: {
         'Content-Type': 'application/json',
       },

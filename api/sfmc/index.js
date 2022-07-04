@@ -18,7 +18,7 @@ function dynamicSort(property) {
   };
 }
 
-const SFMCAPI = {
+const SFMCApi = {
   /**
    * @param req
    * @param res
@@ -309,4 +309,4 @@ const SFMCAPI = {
   },
 };
 
-module.exports = SFMCAPI;
+module.exports = SFMCApi;
