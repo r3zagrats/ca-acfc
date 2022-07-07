@@ -134,9 +134,7 @@ const SFMCCAController = {
               },
             },
           };
-
           console.log('znsPayload:', znsPayload);
-
           const response = await superagent
             .post('https://cloud.vietguys.biz:4438/api/zalo/v1/send')
             .set('Content-Type', 'application/json')
@@ -188,35 +186,35 @@ const SFMCCAController = {
           break;
         }
         case 'SMS': {
-          let result = await superagent
-            .post('https://cloudsms.vietguys.biz:4438/api/index.php')
-            .field('from', Content.from)
-            .field('u', process.env.SMS_USER)
-            .field('pwd', process.env.SMS_PWD)
-            .field('phone', data.inArguments[0].DEFields)
-            .field('sms', Content.sms)
-            .field('bid', Content.bid)
-            .field('json', '1');
-          result = JSON.parse(result.text);
-          console.log('result', result);
-          const insertDEResponse = await FuelRestUtils.insertDESMSSendLog(
-            JSON.stringify({
-              items: [
-                {
-                  Sender: Content.from,
-                  Receiver: data.inArguments[0].DEFields,
-                  Content: Content.sms,
-                  MsgId: result.msgid,
-                  Status: result.error === 0 ? 'success' : 'error',
-                  ErrorCode: result.error,
-                  ErrorMsg: result.log,
-                  UTCTime: new Date().toUTCString(),
-                  Timestamp: new Date().getTime(),
-                },
-              ],
-            })
-          );
-          console.log(insertDEResponse.body);
+          // let result = await superagent
+          //   .post('https://cloudsms.vietguys.biz:4438/api/index.php')
+          //   .field('from', Content.from)
+          //   .field('u', process.env.SMS_USER)
+          //   .field('pwd', process.env.SMS_PWD)
+          //   .field('phone', data.inArguments[0].DEFields)
+          //   .field('sms', Content.sms)
+          //   .field('bid', Content.bid)
+          //   .field('json', '1');
+          // result = JSON.parse(result.text);
+          // console.log('result', result);
+          // const insertDEResponse = await FuelRestUtils.insertDESMSSendLog(
+          //   JSON.stringify({
+          //     items: [
+          //       {
+          //         Sender: Content.from,
+          //         Receiver: data.inArguments[0].DEFields,
+          //         Content: Content.sms,
+          //         MsgId: result.msgid,
+          //         Status: result.error === 0 ? 'success' : 'error',
+          //         ErrorCode: result.error,
+          //         ErrorMsg: result.log,
+          //         UTCTime: new Date().toUTCString(),
+          //         Timestamp: new Date().getTime(),
+          //       },
+          //     ],
+          //   })
+          // );
+          // console.log(insertDEResponse.body);
           res.status(200).send({ Status: 'Successful' });
           break;
         }
