@@ -13,8 +13,8 @@ const SMSSendersController = {
       const { body: smsSenderList } = await superagent
         .get('https://cloudsms4.vietguys.biz:4438/api/template_list.php')
         .send({
-          u: process.env.ACFC_ZNS_USERNAME,
-          pwd: process.env.ACFC_ZNS_TOKEN,
+          u: process.env.ACFC_SMS_USERNAME,
+          pwd: process.env.ACFC_SMS_TOKEN,
         });
       res.status(200).send(smsSenderList);
     } catch (err) {
