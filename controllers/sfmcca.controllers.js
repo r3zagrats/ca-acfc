@@ -137,30 +137,30 @@ const SFMCCAController = {
 
           console.log('znsPayload:', znsPayload);
 
-          // const response = await superagent
-          //   .post('https://cloud.vietguys.biz:4438/api/zalo/v1/send')
-          //   .set('Content-Type', 'application/json')
-          //   .set('Authorization', `Bearer ${process.env.ACFC_ZNS_TOKEN}`)
-          //   .send(JSON.stringify(znsPayload));
-          // const znsSendLog = response.body;
-          // console.log('\nznsSendLog:', znsSendLog);
-          // //   if (znsSendLog.error !== 0) throw znsSendLog.message;
-          // const insertDEResponse = await FuelRestUtils.insertDEZaloOASendLog(
-          //   JSON.stringify({
-          //     items: [
-          //       {
-          //         OAId: data.inArguments[0].Senders,
-          //         MsgId: znsSendLog.resultCode === 0 ? znsSendLog.transaction_id : '',
-          //         UTCTime: new Date().toUTCString(),
-          //         Timestamp: new Date().getTime(),
-          //         StatusCode: znsSendLog.resultCode,
-          //         ErrorMessage: znsSendLog.resultDesc,
-          //         Message: JSON.stringify(znsPayload),
-          //       },
-          //     ],
-          //   })
-          // );
-          // console.log(insertDEResponse.body);
+          const response = await superagent
+            .post('https://cloud.vietguys.biz:4438/api/zalo/v1/send')
+            .set('Content-Type', 'application/json')
+            .set('Authorization', `Bearer ${process.env.ACFC_ZNS_TOKEN}`)
+            .send(JSON.stringify(znsPayload));
+          const znsSendLog = response.body;
+          console.log('\nznsSendLog:', znsSendLog);
+          //   if (znsSendLog.error !== 0) throw znsSendLog.message;
+          const insertDEResponse = await FuelRestUtils.insertDEZaloOASendLog(
+            JSON.stringify({
+              items: [
+                {
+                  OAId: data.inArguments[0].Senders,
+                  MsgId: znsSendLog.resultCode === 0 ? znsSendLog.transaction_id : '',
+                  UTCTime: new Date().toUTCString(),
+                  Timestamp: new Date().getTime(),
+                  StatusCode: znsSendLog.resultCode,
+                  ErrorMessage: znsSendLog.resultDesc,
+                  Message: JSON.stringify(znsPayload),
+                },
+              ],
+            })
+          );
+          console.log(insertDEResponse.body);
           res.status(200).send({ Status: 'Successfull' });
           break;
         }
