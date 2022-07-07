@@ -528,7 +528,7 @@ const showStep = async (step, stepIndex) => {
             .append(`<option value=''>--Select one of the following contents--</option>`);
           $.each(contentOptions[0].templates, (index, content) => {
             $('#ContentOptions').append(
-              `<option value=${contentOptions[0].name}_${index}}>${content}</option>`
+              `<option value=${content}>${content}</option>`
             );
           });
           if (contentValue) {
@@ -593,7 +593,7 @@ const checkContent = async (type) => {
       });
     } else {
       const msg = {
-        from: '%%Senders%%',
+        from: $('#Senders').val(),
         phone: '',
         sms: $('#ContentValue').val(),
         bid: Date.now(),
