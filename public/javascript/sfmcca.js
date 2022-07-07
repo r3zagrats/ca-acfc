@@ -397,15 +397,15 @@ const showStep = async (step, stepIndex) => {
           const SMSSenders = await getAllSMSSenders();
           $('.ca-modal').hide();
           console.log('SMSSenders', SMSSenders);
-          tmpSMSSendersList = [
-            ...SMSSenders.raw_data
-          ];
+          tmpSMSSendersList = [...SMSSenders.raw_data];
           console.log('SMSSenders list', tmpSMSSendersList);
           $('#Senders')
             .empty()
             .append(`<option value=''>--Select one of the following senders--</option>`);
           $.each(tmpSMSSendersList, (index, SMSSenders) => {
-            $('#Senders').append(`<option value=${SMSSenders.senderName}>${SMSSenders.senderName}</option>`);
+            $('#Senders').append(
+              `<option value=${SMSSenders.senderName}>${SMSSenders.senderName}</option>`
+            );
           });
           if (senders && channels === $('#Channels').val()) {
             $('#Senders').val(senders);
@@ -484,6 +484,8 @@ const showStep = async (step, stepIndex) => {
       switch ($('#Channels').val()) {
         case 'Zalo Message': {
           try {
+            $('#SMSContentContainer').hide();
+            $('#ZaloContentContainer').show();
             $('.ca-modal').show();
             $('.ca-modal__loading').show();
             $('.ca-modal__validateResult.failed').hide();
@@ -504,6 +506,8 @@ const showStep = async (step, stepIndex) => {
         }
         case 'Zalo Notification Service': {
           try {
+            $('#SMSContentContainer').hide();
+            $('#ZaloContentContainer').show();
             $('.ca-modal').show();
             $('.ca-modal__loading').show();
             $('.ca-modal__validateResult.failed').hide();
@@ -532,7 +536,13 @@ const showStep = async (step, stepIndex) => {
           break;
         }
         case 'SMS': {
+          $('#ZaloContentContainer').hide();
+          $('#SMSContentContainer').show();
           $('#ContentOptions').empty();
+          $('#ca-form-SMSDEKeys-element').empty();
+          $.each(deFields, (index, field) => {
+            $('#ca-form-SMSDEKeys-element').append(`<div>${field}</div>`);
+          });
           let tmpContentOptions = tmpSMSSendersList.filter(
             (smsSender) => smsSender.senderName === $('#Senders').val()
           );
