@@ -550,6 +550,10 @@ const showStep = async (step, stepIndex) => {
           });
           if (contentOptions) {
             $('#ContentOptions').val(contentOptions);
+            connection.trigger('updateButton', {
+              button: 'next',
+              enabled: true,
+            });
           } else {
             $('#ContentOptions').val('');
           }
