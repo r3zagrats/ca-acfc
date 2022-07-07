@@ -386,12 +386,14 @@ const showStep = async (step, stepIndex) => {
           const SMSSenders = await getAllSMSSenders();
           $('.ca-modal').hide();
           console.log('SMSSenders', SMSSenders);
-          Object.keys(SMSSenders.raw_data[0].templates).forEach((key) => {
-            tmpSMSSendersList.push({
-              name: key,
-              templates: SMSSenders.raw_data[0].templates[key],
+          if (tmpSMSSendersList.length === 0) {
+            Object.keys(SMSSenders.raw_data[0].templates).forEach((key) => {
+              tmpSMSSendersList.push({
+                name: key,
+                templates: SMSSenders.raw_data[0].templates[key],
+              });
             });
-          });
+          }
           console.log('SMSSenders list', tmpSMSSendersList);
           $('#Senders')
             .empty()
