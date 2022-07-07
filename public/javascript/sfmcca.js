@@ -527,9 +527,7 @@ const showStep = async (step, stepIndex) => {
             .empty()
             .append(`<option value=''>--Select one of the following contents--</option>`);
           $.each(contentOptions[0].templates, (index, content) => {
-            $('#ContentOptions').append(
-              `<option value=${content}>${content}</option>`
-            );
+            $('#ContentOptions').append(`<option value="${content}">${content}</option>`);
           });
           if (contentValue) {
             // $('#ContentValue').val(JSON.parse(contentValue).sms);
