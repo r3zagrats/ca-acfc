@@ -380,13 +380,16 @@ const showStep = async (step, stepIndex) => {
           const SMSSenders = await getAllSMSSenders();
           $('.ca-modal').hide();
           console.log('SMSSenders', SMSSenders);
-          tmpSMSSendersList = SMSSenders.data;
+          Object.keys(SMSSenders.raw_data[0].templates).forEach(key => {
+            tmpSMSSendersList.push(key)
+          })
+          console.log('SMSSenders list', tmpSMSSendersList)
           $('#Senders')
             .empty()
             .append(`<option value=''>--Select one of the following senders--</option>`);
-          $.each(tmpSMSSendersList, (index, SMSSenders) => {
-            $('#Senders').append(`<option value=${SMSSenders.Name}>${SMSSenders.Name}</option>`);
-          });
+          // $.each(tmpSMSSendersList, (index, SMSSenders) => {
+          //   $('#Senders').append(`<option value=${SMSSenders.Name}>${SMSSenders.Name}</option>`);
+          // });
           if (senders && channels === $('#Channels').val()) {
             $('#Senders').val(senders);
           } else $('#Senders').val('');
