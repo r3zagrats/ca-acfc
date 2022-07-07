@@ -1,4 +1,7 @@
 'use strict';
+
+const { crossOriginResourcePolicy } = require("helmet");
+
 const connection = new Postmonger.Session();
 let authTokens = {};
 let payload = {};
@@ -186,6 +189,7 @@ const onRender = () => {
         break;
       }
       case 'SMS': {
+        console.log(contentOptions)
         $('#ContentOptions')
           .empty()
           .append(`<option value=''>--Select one of the following contents--</option>`);
