@@ -697,6 +697,7 @@ const checkContent = async (type) => {
               enabled: false,
             });
           } else {
+            console.log('Content value', contentValue)
             $.each(response.data.listParams, (index, param) => {
               contentValue.zns.template_data[param.name] = `%%${param.name}%%`;
             });
