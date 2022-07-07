@@ -79,6 +79,7 @@ const onRender = () => {
       try {
         $('.ca-modal').show();
         $('.ca-modal__loading').show();
+        $('.ca-modal__validateResult.success').hide();
         $('.ca-modal__validateResult.failed').hide();
         let customContent = await getZNSTemplates($('#Senders').val());
         $('.ca-modal').hide();
@@ -137,6 +138,7 @@ const onRender = () => {
         try {
           $('.ca-modal').show();
           $('.ca-modal__loading').show();
+          $('.ca-modal__validateResult.success').hide();
           $('.ca-modal__validateResult.failed').hide();
           const customContent = await getCustomContent();
           $('.ca-modal').hide();
@@ -157,6 +159,7 @@ const onRender = () => {
         try {
           $('.ca-modal').show();
           $('.ca-modal__loading').show();
+          $('.ca-modal__validateResult.success').hide();
           $('.ca-modal__validateResult.failed').hide();
           let customContent = await getZNSTemplates($('#Senders').val());
           $('.ca-modal').hide();
@@ -338,6 +341,7 @@ const showStep = async (step, stepIndex) => {
         case 'Zalo Message': {
           $('.ca-modal').show();
           $('.ca-modal__loading').show();
+          $('.ca-modal__validateResult.success').hide();
           $('.ca-modal__validateResult.failed').hide();
           const ZaloOAList = await getAllZaloOA();
           $('.ca-modal').hide();
@@ -357,6 +361,7 @@ const showStep = async (step, stepIndex) => {
         case 'Zalo Notification Service': {
           $('.ca-modal').show();
           $('.ca-modal__loading').show();
+          $('.ca-modal__validateResult.success').hide();
           $('.ca-modal__validateResult.failed').hide();
           const ZaloOAList = await getAllZaloOA();
           $('.ca-modal').hide();
@@ -376,6 +381,7 @@ const showStep = async (step, stepIndex) => {
         case 'SMS': {
           $('.ca-modal').show();
           $('.ca-modal__loading').show();
+          $('.ca-modal__validateResult.success').hide();
           $('.ca-modal__validateResult.failed').hide();
           const SMSSenders = await getAllSMSSenders();
           $('.ca-modal').hide();
@@ -422,6 +428,7 @@ const showStep = async (step, stepIndex) => {
       $('.ca-modal').show();
       $('.ca-modal__loading').show();
       $('.ca-modal__validateResult.failed').hide();
+      $('.ca-modal__validateResult.success').hide();
       const deInfo = await getDEInfo(eventDefinitionKey);
       $('.ca-modal').hide();
       $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
@@ -530,8 +537,7 @@ const showStep = async (step, stepIndex) => {
             $('#ContentOptions').append(`<option value="${content}">${content}</option>`);
           });
           if (contentValue) {
-            // $('#ContentValue').val(JSON.parse(contentValue).sms);
-            // $('#SMSBID').val(JSON.parse(contentValue).bid);
+            $('#ContentValue').val(contentValue);
           }
           break;
         }
