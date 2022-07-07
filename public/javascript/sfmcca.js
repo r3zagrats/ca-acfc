@@ -595,8 +595,8 @@ const checkContent = async (type) => {
       const msg = {
         from: '%%Senders%%',
         phone: '',
-        sms: $('#SMSContent').val(),
-        bid: $('#SMSBID').val(),
+        sms: $('#ContentValue').val(),
+        bid: Date.now(),
       };
       $('#ContentValue').val(JSON.stringify(msg));
       console.log($('#ContentValue').val());
