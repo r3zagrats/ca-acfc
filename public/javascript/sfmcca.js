@@ -84,7 +84,7 @@ const onRender = () => {
         $('.ca-modal').hide();
         customContent = JSON.parse(customContent);
         console.log('customContent:', customContent);
-        if (customContent.error !== 0) throw customContent.message;
+        if (customContent.resultCode !== 0) throw customContent.message;
         connection.trigger('updateButton', {
           button: 'next',
           enabled: true,
