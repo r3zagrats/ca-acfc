@@ -700,7 +700,7 @@ const checkContent = async (type) => {
             $.each(response.data.listParams, (index, param) => {
               contentValue.template_data[param.name] = `%%${param.name}%%`;
             });
-            console.log('Content value', contentValue)
+            console.log('Content value', contentValue);
             $('#ContentValue').val(JSON.stringify(contentValue));
             console.log('contentValue', $('#ContentValue').val());
             connection.trigger('updateButton', {
@@ -767,13 +767,12 @@ const getZNSTemplateDetail = async (TemplateId, OAId) => {
 };
 
 const getAllSMSSenders = async () => {
-  try {
-    const response = await superagent.get('/api/smssenders');
-    return response.body;
-  } catch (error) {
-    displayCustomModalError(error.message);
-    throw new Error(error.message);
+  const { body: smsSenderList } = await superagent.get('/api/smssenders');
+  if (smsSenderList.error == 0) {
+    return smsSenderList;
   }
+  displayCustomModalError(error.log);
+  throw new Error(error.log);
 };
 
 const getAllZaloOA = async () => {

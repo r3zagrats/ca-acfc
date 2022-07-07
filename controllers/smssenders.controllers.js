@@ -1,6 +1,7 @@
 require('dotenv').config();
-const pgClient = require('../config/database/postgresql/postgresql.config');
- 
+const superagent = require('superagent');
+// const pgClient = require('../config/database/postgresql/postgresql.config');
+
 const SMSSendersController = {
   /**
    * Get All OA Info
@@ -9,16 +10,17 @@ const SMSSendersController = {
    */
   getAll: async (req, res) => {
     try {
-      const { rows } = await pgClient.query(
-        `SELECT * FROM "${process.env.PSQL_SMSSENDERS_TABLE}" ORDER BY "Id"`
-      );
-      res.status(200).send({
-        status: 'OK',
-        data: rows,
-      });
+      const { body: smsSenderList } = await superagent
+        .get('https://cloudsms4.vietguys.biz:4438/api/template_list.php')
+        .send({
+          u: process.env.ACFC_ZNS_USERNAME,
+          pwd: process.env.ACFC_ZNS_TOKEN,
+        });
+      console.log(smsSenderList);
+      res.status(200).send(smsSenderList);
     } catch (err) {
-      console.log(err.stack);
-      res.status(500).send({ error: err });
+      console.log(err);
+      res.status(500).json({ err });
     }
   },
 };
