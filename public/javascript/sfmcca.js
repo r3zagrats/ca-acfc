@@ -187,7 +187,10 @@ const onRender = () => {
         break;
       }
       case 'SMS': {
-        console.log(contentOptions);
+        contentOptions = tmpSMSSendersList.filter(
+          (smsSender) => smsSender.name === $('#Senders').val()
+        );
+        console.log('Content options: ', contentOptions);
         $('#ContentOptions')
           .empty()
           .append(`<option value=''>--Select one of the following contents--</option>`);
@@ -535,7 +538,6 @@ const showStep = async (step, stepIndex) => {
         }
         case 'SMS': {
           $('#ContentOptions').empty();
-          $('#ca-form-SMSDEKeys-element').empty();
           contentOptions = tmpSMSSendersList.filter(
             (smsSender) => smsSender.name === $('#Senders').val()
           );
@@ -733,7 +735,6 @@ const checkContent = async (type) => {
           }
           break;
         }
-
         default:
           break;
       }
