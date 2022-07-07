@@ -697,10 +697,10 @@ const checkContent = async (type) => {
               enabled: false,
             });
           } else {
-            console.log('Content value', contentValue)
             $.each(response.data.listParams, (index, param) => {
-              contentValue.zns.template_data[param.name] = `%%${param.name}%%`;
+              contentValue.template_data[param.name] = `%%${param.name}%%`;
             });
+            console.log('Content value', contentValue)
             $('#ContentValue').val(JSON.stringify(contentValue));
             console.log('contentValue', $('#ContentValue').val());
             connection.trigger('updateButton', {
