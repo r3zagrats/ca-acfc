@@ -122,37 +122,46 @@ const SFMCCAController = {
           break;
         }
         case 'Zalo Notification Service': {
-          Content.username = process.env.ACFC_ZNS_USERNAME;
-          Content.mobile = data.inArguments[0].DEFields;
-          Content.zns.oa_id = data.inArguments[0].Senders;
-          console.log('Content:', Content);
+          const znsPayload = {
+            username: process.env.ACFC_ZNS_USERNAME,
+            mobile: data.inArguments[0].DEFields,
+            bid: Date.now(),
+            zns: {
+              oa_id: data.inArguments[0].Senders,
+              template_id: Content.template_id,
+              template_data: {
+                ...Content.template_data,
+              },
+            },
+          };
 
-          // console.log('ZNS content', { ...Content, tracking_id: Date.now() });
-          const response = await superagent
-            .post('https://cloud.vietguys.biz:4438/api/zalo/v1/send')
-            .set('Content-Type', 'application/json')
-            .set('Authorization', `Bearer ${process.env.ACFC_ZNS_TOKEN}`)
-            .send(JSON.stringify(Content));
-          const znsSendLog = response.body;
-          console.log('\nznsSendLog:', znsSendLog);
-        //   if (znsSendLog.error !== 0) throw znsSendLog.message;
-          const insertDEResponse = await FuelRestUtils.insertDEZaloOASendLog(
-            JSON.stringify({
-              items: [
-                {
-                  OAId: data.inArguments[0].Senders,
-                  MsgId: znsSendLog.resultCode === 0 ? znsSendLog.transaction_id : '',
-                  UTCTime: new Date().toUTCString(),
-                  Timestamp: new Date().getTime(),
-                  StatusCode: znsSendLog.resultCode,
-                  ErrorMessage: znsSendLog.resultDesc,
-                  Message: JSON.stringify(Content),
-                },
-              ],
-            })
-          );
-          console.log(insertDEResponse.body);
-          res.status(200).send({ Status: 'Successfull' });
+          console.log('znsPayload:', znsPayload);
+
+          // const response = await superagent
+          //   .post('https://cloud.vietguys.biz:4438/api/zalo/v1/send')
+          //   .set('Content-Type', 'application/json')
+          //   .set('Authorization', `Bearer ${process.env.ACFC_ZNS_TOKEN}`)
+          //   .send(JSON.stringify(znsPayload));
+          // const znsSendLog = response.body;
+          // console.log('\nznsSendLog:', znsSendLog);
+          // //   if (znsSendLog.error !== 0) throw znsSendLog.message;
+          // const insertDEResponse = await FuelRestUtils.insertDEZaloOASendLog(
+          //   JSON.stringify({
+          //     items: [
+          //       {
+          //         OAId: data.inArguments[0].Senders,
+          //         MsgId: znsSendLog.resultCode === 0 ? znsSendLog.transaction_id : '',
+          //         UTCTime: new Date().toUTCString(),
+          //         Timestamp: new Date().getTime(),
+          //         StatusCode: znsSendLog.resultCode,
+          //         ErrorMessage: znsSendLog.resultDesc,
+          //         Message: JSON.stringify(znsPayload),
+          //       },
+          //     ],
+          //   })
+          // );
+          // console.log(insertDEResponse.body);
+          // res.status(200).send({ Status: 'Successfull' });
           break;
         }
         case 'Web Push Notification': {
