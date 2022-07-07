@@ -548,8 +548,8 @@ const showStep = async (step, stepIndex) => {
           $.each(contentOptions[0].templates, (index, content) => {
             $('#ContentOptions').append(`<option value="${content}">${content}</option>`);
           });
-          if (contentValue) {
-            $('#ContentValue').val(contentValue);
+          if (contentOptions) {
+            $('#ContentOptions').val(contentOptions);
           }
           break;
         }
