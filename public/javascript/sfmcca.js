@@ -187,14 +187,14 @@ const onRender = () => {
         break;
       }
       case 'SMS': {
-        contentOptions = tmpSMSSendersList.filter(
+        temContentOptions = tmpSMSSendersList.filter(
           (smsSender) => smsSender.name === $('#Senders').val()
         );
-        console.log('Content options: ', contentOptions);
+        console.log('Content options: ', temContentOptions);
         $('#ContentOptions')
           .empty()
           .append(`<option value=''>--Select one of the following contents--</option>`);
-        $.each(contentOptions[0].templates, (index, content) => {
+        $.each(temContentOptions[0].templates, (index, content) => {
           $('#ContentOptions').append(`<option value="${content}">${content}</option>`);
         });
         break;
@@ -538,18 +538,20 @@ const showStep = async (step, stepIndex) => {
         }
         case 'SMS': {
           $('#ContentOptions').empty();
-          contentOptions = tmpSMSSendersList.filter(
+          let temContentOptions = tmpSMSSendersList.filter(
             (smsSender) => smsSender.name === $('#Senders').val()
           );
-          console.log('Content options: ', contentOptions);
+          console.log('Content options: ', temContentOptions);
           $('#ContentOptions')
             .empty()
             .append(`<option value=''>--Select one of the following contents--</option>`);
-          $.each(contentOptions[0].templates, (index, content) => {
+          $.each(temContentOptions[0].templates, (index, content) => {
             $('#ContentOptions').append(`<option value="${content}">${content}</option>`);
           });
           if (contentOptions) {
             $('#ContentOptions').val(contentOptions);
+          } else {
+            $('#ContentOptions').val('');
           }
           break;
         }
