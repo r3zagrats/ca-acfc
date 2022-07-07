@@ -698,7 +698,7 @@ const checkContent = async (type) => {
             });
           } else {
             $.each(response.data.listParams, (index, param) => {
-              contentValue.zns.template_data[param.name] = `%%${param.name}%%`;
+              contentValue.template_data[param.name] = `%%${param.name}%%`;
             });
             console.log('Content value', contentValue)
             $('#ContentValue').val(JSON.stringify(contentValue));
