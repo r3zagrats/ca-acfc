@@ -534,7 +534,7 @@ const showStep = async (step, stepIndex) => {
         case 'SMS': {
           $('#ContentOptions').empty();
           let tmpContentOptions = tmpSMSSendersList.filter(
-            (smsSender) => smsSender.name === $('#Senders').val()
+            (smsSender) => smsSender.senderName === $('#Senders').val()
           );
           console.log('Content options: ', tmpContentOptions);
           $('#ContentOptions')
