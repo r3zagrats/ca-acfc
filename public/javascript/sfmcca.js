@@ -187,14 +187,14 @@ const onRender = () => {
         break;
       }
       case 'SMS': {
-        temContentOptions = tmpSMSSendersList.filter(
+        let tmpContentOptions = tmpSMSSendersList.filter(
           (smsSender) => smsSender.name === $('#Senders').val()
         );
-        console.log('Content options: ', temContentOptions);
+        console.log('Content options: ', tmpContentOptions);
         $('#ContentOptions')
           .empty()
           .append(`<option value=''>--Select one of the following contents--</option>`);
-        $.each(temContentOptions[0].templates, (index, content) => {
+        $.each(tmpContentOptions[0].templates, (index, content) => {
           $('#ContentOptions').append(`<option value="${content}">${content}</option>`);
         });
         break;
@@ -538,14 +538,14 @@ const showStep = async (step, stepIndex) => {
         }
         case 'SMS': {
           $('#ContentOptions').empty();
-          let temContentOptions = tmpSMSSendersList.filter(
+          let tmpContentOptions = tmpSMSSendersList.filter(
             (smsSender) => smsSender.name === $('#Senders').val()
           );
-          console.log('Content options: ', temContentOptions);
+          console.log('Content options: ', tmpContentOptions);
           $('#ContentOptions')
             .empty()
             .append(`<option value=''>--Select one of the following contents--</option>`);
-          $.each(temContentOptions[0].templates, (index, content) => {
+          $.each(tmpContentOptions[0].templates, (index, content) => {
             $('#ContentOptions').append(`<option value="${content}">${content}</option>`);
           });
           if (contentOptions) {
