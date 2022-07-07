@@ -520,7 +520,7 @@ const showStep = async (step, stepIndex) => {
           $('#ContentOptions').empty();
           $('#ca-form-SMSDEKeys-element').empty();
           contentOptions = tmpSMSSendersList.filter(
-            (smsSender) => smsSender.name === $('#Senders')
+            (smsSender) => smsSender.name === $('#Senders').val()
           );
           console.log('Content options: ', contentOptions);
           $('#ContentOptions')
