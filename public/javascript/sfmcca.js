@@ -521,13 +521,14 @@ const showStep = async (step, stepIndex) => {
           $('#ca-form-SMSDEKeys-element').empty();
           contentOptions = tmpSMSSendersList.filter(
             (smsSender) => smsSender.name === $('#Senders')
-          ).templates;
+          );
+          console.log('Content options: ', contentOptions);
           $('#ContentOptions')
             .empty()
             .append(`<option value=''>--Select one of the following contents--</option>`);
-          $.each(contentOptions, (index, content) => {
+          $.each(contentOptions[0].templates, (index, content) => {
             $('#ContentOptions').append(
-              `<option value=${index}}>${content}</option>`
+              `<option value=${contentOptions[0].name}_${index}}>${content}</option>`
             );
           });
           if (contentValue) {
