@@ -161,7 +161,7 @@ const SFMCCAController = {
           //   })
           // );
           // console.log(insertDEResponse.body);
-          // res.status(200).send({ Status: 'Successfull' });
+          res.status(200).send({ Status: 'Successfull' });
           break;
         }
         case 'Web Push Notification': {
