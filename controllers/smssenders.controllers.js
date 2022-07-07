@@ -16,10 +16,8 @@ const SMSSendersController = {
           u: process.env.ACFC_ZNS_USERNAME,
           pwd: process.env.ACFC_ZNS_TOKEN,
         });
-      console.log(smsSenderList);
       res.status(200).send(smsSenderList);
     } catch (err) {
-      console.log(err);
       res.status(500).json({ err });
     }
   },

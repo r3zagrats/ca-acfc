@@ -469,8 +469,6 @@ const showStep = async (step, stepIndex) => {
       switch ($('#Channels').val()) {
         case 'Zalo Message': {
           try {
-            $('#SMSContentContainer').hide();
-            $('#ZaloContentContainer').show();
             $('.ca-modal').show();
             $('.ca-modal__loading').show();
             $('.ca-modal__validateResult.failed').hide();
@@ -491,8 +489,6 @@ const showStep = async (step, stepIndex) => {
         }
         case 'Zalo Notification Service': {
           try {
-            $('#SMSContentContainer').hide();
-            $('#ZaloContentContainer').show();
             $('.ca-modal').show();
             $('.ca-modal__loading').show();
             $('.ca-modal__validateResult.failed').hide();
@@ -522,15 +518,21 @@ const showStep = async (step, stepIndex) => {
         }
         case 'SMS': {
           $('#ContentOptions').empty();
-          $('#ZaloContentContainer').hide();
-          $('#SMSContentContainer').show();
           $('#ca-form-SMSDEKeys-element').empty();
-          $.each(deFields, (index, field) => {
-            $('#ca-form-SMSDEKeys-element').append(`<div>${field}</div>`);
+          contentOptions = tmpSMSSendersList.filter(
+            (smsSender) => smsSender.name === $('#Senders')
+          ).templates;
+          $('#ContentOptions')
+            .empty()
+            .append(`<option value=''>--Select one of the following contents--</option>`);
+          $.each(contentOptions, (index, content) => {
+            $('#ContentOptions').append(
+              `<option value=${index}}>${content}</option>`
+            );
           });
           if (contentValue) {
-            $('#SMSContent').val(JSON.parse(contentValue).sms);
-            $('#SMSBID').val(JSON.parse(contentValue).bid);
+            // $('#ContentValue').val(JSON.parse(contentValue).sms);
+            // $('#SMSBID').val(JSON.parse(contentValue).bid);
           }
           break;
         }
