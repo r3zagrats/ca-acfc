@@ -83,10 +83,12 @@ const onRender = () => {
       .empty()
       .append(`<option value=''>--Select one of the following templates--</option>`);
     $.each(tmpSMSTemplateList[$('#MNOOptions').val()], (index, template) => {
-      $('#TemplateOptions').append(
-        `<option value="${$('#MNOOptions').val()}-${index}">${template}</option>`
-      );
+      $('#TemplateOptions').append(`<option value="${template}">${template}</option>`);
     });
+  });
+
+  $('#SMSMessage').on('change', () => {
+    $('#SMSMessage').empty().val($('#TemplateOptions').val());
   });
 
   $('#Senders').on('change', async (e) => {
