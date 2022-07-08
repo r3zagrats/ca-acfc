@@ -85,6 +85,7 @@ const onRender = () => {
     $.each(tmpSMSTemplateList[$('#MNOOptions').val()], (index, template) => {
       $('#TemplateOptions').append(`<option value="${template}">${template}</option>`);
     });
+    $('#SMSMessage').empty();
   });
 
   $('#TemplateOptions').on('change', () => {
