@@ -7,12 +7,14 @@ let channels = '';
 let senders = '';
 let contentOptions = '';
 let contentValue = '';
-let tmpContents = '';
 let deFields = [];
 let deKey = '';
 let eventDefinitionKey = '';
+let tmpContents = '';
+let tmpMNOList = [];
+let tmpSMSTemplateList = [];
 let tmpZaloOAList = [];
-let tmpSMSSendersList = [];
+let tmpSMSSenderList = [];
 let steps = [
   { label: 'Channels', key: 'step1' },
   { label: 'Senders', key: 'step2' },
@@ -187,7 +189,7 @@ const onRender = () => {
         break;
       }
       case 'SMS': {
-        let tmpContentOptions = tmpSMSSendersList.filter(
+        let tmpContentOptions = tmpSMSSenderList.filter(
           (smsSender) => smsSender.name === $('#Senders').val()
         );
         console.log('Content options: ', tmpContentOptions);
@@ -394,15 +396,13 @@ const showStep = async (step, stepIndex) => {
           $('.ca-modal__loading').show();
           $('.ca-modal__validateResult.success').hide();
           $('.ca-modal__validateResult.failed').hide();
-          const SMSSenders = await getAllSMSSenders();
+          let { raw_data: tmpSMSSenderList } = await getAllSMSSenders();
           $('.ca-modal').hide();
-          console.log('SMSSenders', SMSSenders);
-          tmpSMSSendersList = [...SMSSenders.raw_data];
-          console.log('SMSSenders list', tmpSMSSendersList);
+          console.log('SMSSenders list', tmpSMSSenderList);
           $('#Senders')
             .empty()
             .append(`<option value=''>--Select one of the following senders--</option>`);
-          $.each(tmpSMSSendersList, (index, SMSSenders) => {
+          $.each(tmpSMSSenderList, (index, SMSSenders) => {
             $('#Senders').append(
               `<option value=${SMSSenders.senderName}>${SMSSenders.senderName}</option>`
             );
@@ -543,14 +543,14 @@ const showStep = async (step, stepIndex) => {
           $.each(deFields, (index, field) => {
             $('#ca-form-SMSDEKeys-element').append(`<div>${field}</div>`);
           });
-          let tmpContentOptions = tmpSMSSendersList.filter(
+          let tmpMNOList = tmpSMSSenderList.filter(
             (smsSender) => smsSender.senderName === $('#Senders').val()
           );
-          console.log('Content options: ', tmpContentOptions);
+          console.log('Content options: ', tmpMNOList);
           $('#ContentOptions')
             .empty()
             .append(`<option value=''>--Select one of the following contents--</option>`);
-          $.each(tmpContentOptions[0].templates, (index, content) => {
+          $.each(tmpMNOList[0].templates, (index, content) => {
             $('#ContentOptions').append(`<option value="${content}">${content}</option>`);
           });
           if (contentOptions) {
