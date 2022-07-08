@@ -9,6 +9,8 @@ let contentOptions = '';
 let contentValue = '';
 let deFields = [];
 let deKey = '';
+let MNOOption = '';
+let TemplateOption = '';
 let eventDefinitionKey = '';
 let tmpContents = '';
 let tmpSMSMNOList = [];
@@ -266,6 +268,16 @@ function initialize(data) {
         case 'ContentValue': {
           contentValue = value;
           $('#ContentValue').val(value);
+          break;
+        }
+        case 'MNOOptions': {
+          MNOOption = value;
+          $('#MNOOptions').val(value);
+          break;
+        }
+        case 'TemplateOptions': {
+          templateOption = value;
+          $('#TemplateOptions').val(value);
           break;
         }
       }
