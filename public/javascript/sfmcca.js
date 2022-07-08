@@ -504,6 +504,7 @@ const showStep = async (step, stepIndex) => {
             $('#ZaloContentContainer').show();
             $('.ca-modal').show();
             $('.ca-modal__loading').show();
+            $('.ca-modal__validateResult.success').hide();
             $('.ca-modal__validateResult.failed').hide();
             const customContent = await getCustomContent();
             $('.ca-modal').hide();
@@ -526,6 +527,7 @@ const showStep = async (step, stepIndex) => {
             $('#ZaloContentContainer').show();
             $('.ca-modal').show();
             $('.ca-modal__loading').show();
+            $('.ca-modal__validateResult.success').hide();
             $('.ca-modal__validateResult.failed').hide();
             let customContent = await getZNSTemplates($('#Senders').val());
             $('.ca-modal').hide();
@@ -714,6 +716,7 @@ const checkContent = async (type) => {
         case 'Zalo Notification Service': {
           $('.ca-modal').show();
           $('.ca-modal__loading').show();
+          $('.ca-modal__validateResult.success').hide();
           $('.ca-modal__validateResult.failed').hide();
           let response = await getZNSTemplateDetail(
             $('#ContentOptions').val(),
@@ -838,6 +841,7 @@ const getAllZaloOA = async () => {
 const displayCustomModalError = (message) => {
   $('.ca-modal').show();
   $('.ca-modal__loading').hide();
+  $('.ca-modal__validateResult.success').hide();
   $('.ca-modal__validateResult.failed').show();
   if (message) {
     $('.ca-modal__validateResult__error-message').text(message);
