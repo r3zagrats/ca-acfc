@@ -10,7 +10,7 @@ let contentValue = '';
 let deFields = [];
 let deKey = '';
 let MNOOption = '';
-let TemplateOption = '';
+let templateOption = '';
 let eventDefinitionKey = '';
 let tmpContents = '';
 let tmpSMSMNOList = [];
@@ -651,13 +651,7 @@ const checkContent = async (type) => {
         enabled: false,
       });
     } else {
-      const msg = {
-        from: $('#Senders').val(),
-        phone: '',
-        sms: $('#SMSMessage').text(),
-        bid: Date.now(),
-      };
-      $('#ContentValue').val(JSON.stringify(msg));
+      $('#ContentValue').val($('#SMSMessage').text());
       console.log($('#ContentValue').val());
       $('.ca-modal').show();
       $('.ca-modal__loading').hide();
