@@ -544,12 +544,16 @@ const showStep = async (step, stepIndex) => {
           $.each(deFields, (index, field) => {
             $('#ca-form-SMSDEKeys-element').append(`<div>${field}</div>`);
           });
-          console.log($('#Senders').val());
-          console.log(tmpSMSSenderList);
           let tmpMNOList = tmpSMSSenderList.filter(
             (smsSender) => smsSender.senderName === $('#Senders').val()
           );
           console.log('Content options: ', tmpMNOList);
+          $('#MNOOptions')
+            .empty()
+            .append(`<option value=''>--Select one of the following contents--</option>`);
+          Object.keys(tmpMNOList[0].templates).forEach((el) => {
+            $('#MNOOptions').append(`<option value="${el}">${el}</option>`);
+          })
           $('#ContentOptions')
             .empty()
             .append(`<option value=''>--Select one of the following contents--</option>`);
