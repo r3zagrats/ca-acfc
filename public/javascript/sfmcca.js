@@ -543,6 +543,7 @@ const showStep = async (step, stepIndex) => {
           $.each(deFields, (index, field) => {
             $('#ca-form-SMSDEKeys-element').append(`<div>${field}</div>`);
           });
+          console.log($('#Senders').val())
           let tmpMNOList = tmpSMSSenderList.filter(
             (smsSender) => smsSender.senderName === $('#Senders').val()
           );
