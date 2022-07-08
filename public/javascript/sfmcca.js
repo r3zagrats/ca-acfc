@@ -267,17 +267,14 @@ function initialize(data) {
         }
         case 'ContentValue': {
           contentValue = value;
-          $('#ContentValue').val(value);
           break;
         }
         case 'MNOOptions': {
           MNOOption = value;
-          $('#MNOOptions').val(value);
           break;
         }
         case 'TemplateOptions': {
           templateOption = value;
-          $('#TemplateOptions').val(value);
           break;
         }
       }
@@ -590,8 +587,10 @@ const showStep = async (step, stepIndex) => {
           $('#TemplateOptions')
             .empty()
             .append(`<option value=''>--Select one of the following templates--</option>`);
-          if (contentOptions) {
-            $('#ContentOptions').val(contentOptions);
+          if (MNOOption && templateOption && contentValue) {
+            $('#MNOOptions').val(MNOOption);
+            $('#TemplateOptions').val(templateOption);
+            $('#ContentValue').val(contentValue);
             connection.trigger('updateButton', {
               button: 'next',
               enabled: true,
