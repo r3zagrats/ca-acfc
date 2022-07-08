@@ -643,8 +643,8 @@ const checkContent = async (type) => {
         sms: $('#SMSMessage').text(),
         bid: Date.now(),
       };
-      $('#SMSPayload').val(JSON.stringify(msg));
-      console.log($('#SMSPayload').val());
+      $('#ContentValue').val(JSON.stringify(msg));
+      console.log($('#ContentValue').val());
       $('.ca-modal').show();
       $('.ca-modal__loading').hide();
       $('.ca-modal__validateResult.success').show();

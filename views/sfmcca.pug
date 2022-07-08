@@ -46,7 +46,6 @@ block content
               button#refreshButton(type="button") Refresh
             br
             .slds-form-element__control
-              textarea#ContentValue.slds-input.js-activity-setting( rows = '20' required='' placeholder='' name='text', disabled)
               #DisplayContent
           iframe#ca-frame(src="" width="100%" )
         #SMSContentContainer
@@ -66,12 +65,11 @@ block content
               | Message:
             .slds-form-element__control
               textarea#SMSMessage.slds-textarea.ca-textarea(name='SMSMessage' placeholder='Enter your message')
-            .slds-form-element__control
-              textarea#SMSPayload.slds-input.js-activity-setting( rows = '20' required='' placeholder='' name='text', disabled)
           #ca-form-SMSDEKeys-element.slds-form-element
             .slds-form-element__label DE Fields:
           #ca-form-SMSValidate-element.slds-form-element
             input#SMSValidate.slds-button.slds-button_brand.ca-validate(type="button" value="Validate")
+        textarea#ContentValue.slds-input.js-activity-setting( rows = '20' required='' placeholder='' name='text', disabled)
     footer.slds-card__footer
     .ca-modal
       .ca-modal__container
