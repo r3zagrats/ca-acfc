@@ -146,6 +146,7 @@ const onRender = () => {
     contentOptions = $('#ContentOptions').val();
     checkContent('process');
   });
+
   $('#refreshButton').on('click', async () => {
     $('#ContentValue').val('');
     $('#ContentOptions').empty();
@@ -639,7 +640,7 @@ const checkContent = async (type) => {
       const msg = {
         from: $('#Senders').val(),
         phone: '',
-        sms: $('#SMSMessage').val(),
+        sms: $('#SMSMessage').text(),
         bid: Date.now(),
       };
       $('#ContentValue').val(JSON.stringify(msg));
