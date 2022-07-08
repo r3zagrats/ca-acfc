@@ -396,7 +396,8 @@ const showStep = async (step, stepIndex) => {
           $('.ca-modal__loading').show();
           $('.ca-modal__validateResult.success').hide();
           $('.ca-modal__validateResult.failed').hide();
-          let { raw_data: tmpSMSSenderList } = await getAllSMSSenders();
+          let { raw_data } = await getAllSMSSenders();
+          tmpSMSSenderList = raw_data;
           $('.ca-modal').hide();
           console.log('SMSSenders list', tmpSMSSenderList);
           $('#Senders')
@@ -543,8 +544,8 @@ const showStep = async (step, stepIndex) => {
           $.each(deFields, (index, field) => {
             $('#ca-form-SMSDEKeys-element').append(`<div>${field}</div>`);
           });
-          console.log($('#Senders').val())
-          console.log(tmpSMSSenderList)
+          console.log($('#Senders').val());
+          console.log(tmpSMSSenderList);
           let tmpMNOList = tmpSMSSenderList.filter(
             (smsSender) => smsSender.senderName === $('#Senders').val()
           );
