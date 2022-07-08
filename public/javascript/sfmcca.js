@@ -11,7 +11,7 @@ let deFields = [];
 let deKey = '';
 let eventDefinitionKey = '';
 let tmpContents = '';
-let tmpMNOList = [];
+let tmpSMSMNOList = [];
 let tmpSMSTemplateList = [];
 let tmpZaloOAList = [];
 let tmpSMSSenderList = [];
@@ -78,8 +78,16 @@ const onRender = () => {
   });
 
   $('#MNOOptions').on('change', () => {
-    console.log(tmpSMSTemplateList[$('#MNOOptions').val()])
-  })
+    console.log(tmpSMSTemplateList[$('#MNOOptions').val()]);
+    $('#TemplateOptions')
+      .empty()
+      .append(`<option value=''>--Select one of the following templates--</option>`);
+    $.each(tmpSMSTemplateList[$('#MNOOptions').val()], (index, template) => {
+      $('#TemplateOptions').append(
+        `<option value="${$('#MNOOptions').val()}-${index}">${template}</option>`
+      );
+    });
+  });
 
   $('#Senders').on('change', async (e) => {
     if ($('#Senders').val() && $('#Channels').val() === 'Zalo Notification Service') {
@@ -548,23 +556,23 @@ const showStep = async (step, stepIndex) => {
           $.each(deFields, (index, field) => {
             $('#ca-form-SMSDEKeys-element').append(`<div>${field}</div>`);
           });
-          let tmpMNOList = tmpSMSSenderList.filter(
+          let tmpSMSMNOList = tmpSMSSenderList.filter(
             (smsSender) => smsSender.senderName === $('#Senders').val()
           );
-          tmpSMSTemplateList = tmpMNOList[0].templates
-          console.log('Content options: ', tmpMNOList);
+          tmpSMSTemplateList = tmpSMSMNOList[0].templates;
+          console.log('Content options: ', tmpSMSMNOList);
           $('#MNOOptions')
             .empty()
-            .append(`<option value=''>--Select one of the following contents--</option>`);
-          Object.keys(tmpMNOList[0].templates).forEach((MNOName) => {
+            .append(`<option value=''>--Select one of the following MNO--</option>`);
+          Object.keys(tmpSMSMNOList[0].templates).forEach((MNOName) => {
             $('#MNOOptions').append(`<option value="${MNOName}">${MNOName}</option>`);
-          })
-          $('#ContentOptions')
-            .empty()
-            .append(`<option value=''>--Select one of the following contents--</option>`);
-          $.each(tmpMNOList[0].templates, (index, content) => {
-            $('#ContentOptions').append(`<option value="${content}">${content}</option>`);
           });
+          // $('#ContentOptions')
+          //   .empty()
+          //   .append(`<option value=''>--Select one of the following contents--</option>`);
+          // $.each(tmpSMSMNOList[0].templates, (index, content) => {
+          //   $('#ContentOptions').append(`<option value="${content}">${content}</option>`);
+          // });
           if (contentOptions) {
             $('#ContentOptions').val(contentOptions);
             connection.trigger('updateButton', {
