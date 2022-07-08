@@ -77,6 +77,10 @@ const onRender = () => {
     }
   });
 
+  $('#MNOOptions').on('change', () => {
+    console.log(tmpSMSTemplateList[$('#MNOOptions').val()])
+  })
+
   $('#Senders').on('change', async (e) => {
     if ($('#Senders').val() && $('#Channels').val() === 'Zalo Notification Service') {
       try {
@@ -547,12 +551,13 @@ const showStep = async (step, stepIndex) => {
           let tmpMNOList = tmpSMSSenderList.filter(
             (smsSender) => smsSender.senderName === $('#Senders').val()
           );
+          tmpSMSTemplateList = tmpMNOList[0].templates
           console.log('Content options: ', tmpMNOList);
           $('#MNOOptions')
             .empty()
             .append(`<option value=''>--Select one of the following contents--</option>`);
-          Object.keys(tmpMNOList[0].templates).forEach((el) => {
-            $('#MNOOptions').append(`<option value="${el}">${el}</option>`);
+          Object.keys(tmpMNOList[0].templates).forEach((MNOName) => {
+            $('#MNOOptions').append(`<option value="${MNOName}">${MNOName}</option>`);
           })
           $('#ContentOptions')
             .empty()
