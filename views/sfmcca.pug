@@ -51,15 +51,21 @@ block content
           iframe#ca-frame(src="" width="100%" )
         #SMSContentContainer
           #ca-form-SMSContent-element.slds-form-element
+            label.slds-form-element__label.ca-label(for='SMSMNO')
+              abbr.slds-required(title='required') * 
+              | MNO:
             .slds-form-element__control
               select#MNOOptions.slds-select.js-activity-setting(name='MNOOptions')
+            label.slds-form-element__label.ca-label(for='SMSTemplate')
+              abbr.slds-required(title='required') * 
+              | Template:
             .slds-form-element__control
               select#ContentOptions.slds-select.js-activity-setting(name='ContentOptions')
-            label.slds-form-element__label.ca-label(for='SMSContent')
+            label.slds-form-element__label.ca-label(for='SMSMessage')
               abbr.slds-required(title='required') * 
               | Message:
             .slds-form-element__control
-              textarea#SMSContent.slds-textarea.ca-textarea(name='SMSContent' placeholder='Enter your message')
+              textarea#SMSContent.slds-textarea.ca-textarea(name='SMSMessage' placeholder='Enter your message')
           #ca-form-SMSDEKeys-element.slds-form-element
             .slds-form-element__label DE Fields:
           #ca-form-SMSValidate-element.slds-form-element
