@@ -88,7 +88,7 @@ const onRender = () => {
   });
 
   $('#SMSMessage').on('change', () => {
-    $('#SMSMessage').empty().val($('#TemplateOptions').val());
+    $('#SMSMessage').empty().text($('#TemplateOptions').val());
   });
 
   $('#Senders').on('change', async (e) => {
@@ -569,12 +569,9 @@ const showStep = async (step, stepIndex) => {
           Object.keys(tmpSMSMNOList[0].templates).forEach((MNOName) => {
             $('#MNOOptions').append(`<option value="${MNOName}">${MNOName}</option>`);
           });
-          // $('#ContentOptions')
-          //   .empty()
-          //   .append(`<option value=''>--Select one of the following contents--</option>`);
-          // $.each(tmpSMSMNOList[0].templates, (index, content) => {
-          //   $('#ContentOptions').append(`<option value="${content}">${content}</option>`);
-          // });
+          $('#TemplateOptions')
+            .empty()
+            .append(`<option value=''>--Select one of the following templates--</option>`);
           if (contentOptions) {
             $('#ContentOptions').val(contentOptions);
             connection.trigger('updateButton', {
