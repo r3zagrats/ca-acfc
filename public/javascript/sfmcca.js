@@ -602,17 +602,12 @@ const checkContent = async (type) => {
     $('#ca-form-SMSBID-element-text-error').remove();
     const regex = /%%([\s\S]*?)%%/gm;
     let message;
-    if ($('#SMSContent').val() === '') {
+    if ($('#SMSMessage').val() === '') {
       hasError = true;
       errorMsg = 'This field is required';
-      displayCustomInputError(errorMsg, 'SMSContent', 'keydown');
+      displayCustomInputError(errorMsg, 'SMSMessage', 'keydown');
     }
-    if ($('#SMSBID').val() === '') {
-      hasError = true;
-      errorMsg = 'This field is required';
-      displayCustomInputError(errorMsg, 'SMSBID', 'keydown');
-    }
-    while ((message = regex.exec($('#SMSContent').val())) !== null) {
+    while ((message = regex.exec($('#SMSMessage').val())) !== null) {
       if (message.index === regex.lastIndex) {
         regex.lastIndex++;
       }
@@ -629,7 +624,7 @@ const checkContent = async (type) => {
         errorMsg = `Keyword ${errorKeyList.join(
           ', '
         )} trong Content không tồn tại trong Data Extension đã chọn!`;
-        displayCustomInputError(errorMsg, 'SMSContent', 'keydown');
+        displayCustomInputError(errorMsg, 'SMSMessage', 'keydown');
         displayCustomModalError(errorMsg);
       } else {
         displayCustomModalError();
@@ -642,7 +637,7 @@ const checkContent = async (type) => {
       const msg = {
         from: $('#Senders').val(),
         phone: '',
-        sms: $('#ContentOptions').val(),
+        sms: $('#SMSMessage').val(),
         bid: Date.now(),
       };
       $('#ContentValue').val(JSON.stringify(msg));
