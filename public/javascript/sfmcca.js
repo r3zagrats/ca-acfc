@@ -288,6 +288,8 @@ function initialize(data) {
   console.log('senders', senders);
   console.log('contentOptions', contentOptions);
   console.log('contentValue', contentValue);
+  console.log('MNOOption', MNOOption);
+  console.log('templateOption', templateOption);
 }
 
 /**
