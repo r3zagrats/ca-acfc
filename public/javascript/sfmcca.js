@@ -87,7 +87,7 @@ const onRender = () => {
     });
   });
 
-  $('#SMSMessage').on('change', () => {
+  $('#TemplateOptions').on('change', () => {
     $('#SMSMessage').empty().text($('#TemplateOptions').val());
   });
 
