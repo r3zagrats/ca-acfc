@@ -3,20 +3,25 @@
 const connection = new Postmonger.Session();
 let authTokens = {};
 let payload = {};
-let channels = '';
-let senders = '';
-let contentOptions = '';
-let contentValue = '';
-let deFields = [];
-let deKey = '';
-let MNOOption = '';
-let templateOption = '';
-let eventDefinitionKey = '';
+
+// Stored Data
+let storedChannel = '';
+let storedSender = '';
+let storedContentOption = '';
+let storedContentValue = '';
+let storedDEFields = [];
+let storedDEKey = '';
+let storedMNOOption = '';
+let storedTemplateOption = '';
+let storedEventDefinitionKey = '';
+
+// Temp Data
 let tmpContents = '';
 let tmpSMSMNOList = [];
 let tmpSMSTemplateList = [];
 let tmpZaloOAList = [];
 let tmpSMSSenderList = [];
+
 let steps = [
   { label: 'Channels', key: 'step1' },
   { label: 'Senders', key: 'step2' },
@@ -27,7 +32,7 @@ let currentStep = steps[0].key;
 
 const requestedInteractionHandler = async (settings) => {
   if (settings.triggers[0]) {
-    eventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
+    storedEventDefinitionKey = settings.triggers[0].metaData.storedEventDefinitionKey;
   } else {
     displayCustomModalError('Please choose ENTRY EVENT and SAVE Journey before Continue');
     connection.trigger('destroy');
@@ -97,12 +102,7 @@ const onRender = () => {
   $('#Senders').on('change', async (e) => {
     if ($('#Senders').val() && $('#Channels').val() === 'Zalo Notification Service') {
       try {
-        $('.ca-modal').show();
-        $('.ca-modal__loading').show();
-        $('.ca-modal__validateResult.success').hide();
-        $('.ca-modal__validateResult.failed').hide();
-        let customContent = await getZNSTemplates($('#Senders').val());
-        $('.ca-modal').hide();
+        let customContent = await loadingContent(getZNSTemplates, $('#Senders').val());
         customContent = JSON.parse(customContent);
         console.log('customContent:', customContent);
         if (customContent.resultCode != 0) throw customContent.resultDesc;
@@ -145,7 +145,7 @@ const onRender = () => {
   });
 
   $('#ContentOptions').on('change', async (e) => {
-    contentOptions = $('#ContentOptions').val();
+    storedContentOption = $('#ContentOptions').val();
     checkContent('process');
   });
 
@@ -157,12 +157,7 @@ const onRender = () => {
     switch ($('#Channels').val()) {
       case 'Zalo Message': {
         try {
-          $('.ca-modal').show();
-          $('.ca-modal__loading').show();
-          $('.ca-modal__validateResult.success').hide();
-          $('.ca-modal__validateResult.failed').hide();
-          const customContent = await getCustomContent();
-          $('.ca-modal').hide();
+          const customContent = await loadingContent(getCustomContent());
           tmpContents = customContent.items;
           $('#ContentOptions')
             .empty()
@@ -178,12 +173,7 @@ const onRender = () => {
       }
       case 'Zalo Notification Service': {
         try {
-          $('.ca-modal').show();
-          $('.ca-modal__loading').show();
-          $('.ca-modal__validateResult.success').hide();
-          $('.ca-modal__validateResult.failed').hide();
-          let customContent = await getZNSTemplates($('#Senders').val());
-          $('.ca-modal').hide();
+          let customContent = await loadingContent(getZNSTemplates, $('#Senders').val());
           customContent = JSON.parse(customContent);
           console.log('customContent:', customContent);
           if (customContent.resultCode === 0) {
@@ -229,7 +219,6 @@ $(window).ready(onRender);
  * @param data
  */
 function initialize(data) {
-  console.log('data: ', data);
   if (data) {
     payload = data;
   }
@@ -244,7 +233,7 @@ function initialize(data) {
     $.each(inArgument, (key, value) => {
       switch (key) {
         case 'Channels': {
-          channels = value;
+          storedChannel = value;
           $('#Channels').val(value);
           connection.trigger('updateButton', {
             button: 'next',
@@ -253,61 +242,48 @@ function initialize(data) {
           break;
         }
         case 'Senders': {
-          senders = value;
+          storedSender = value;
           $('#Senders').val(value);
           break;
         }
         case 'ContentOptions': {
-          contentOptions = value;
+          storedContentOption = value;
           break;
         }
         case 'DEFields': {
-          deKey = value;
+          storedDEKey = value;
           break;
         }
         case 'ContentValue': {
-          contentValue = value;
+          storedContentValue = value;
           break;
         }
         case 'MNOOptions': {
-          MNOOption = value;
+          storedMNOOption = value;
           break;
         }
         case 'TemplateOptions': {
-          templateOption = value;
+          storedTemplateOption = value;
           break;
         }
       }
     });
   });
-  console.log('channels', channels);
-  console.log('deKey', deKey);
-  console.log('senders', senders);
-  console.log('contentOptions', contentOptions);
-  console.log('contentValue', contentValue);
-  console.log('MNOOption', MNOOption);
-  console.log('templateOption', templateOption);
+  console.log('storedChannel', storedChannel);
+  console.log('storedDEKey', storedDEKey);
+  console.log('storedSender', storedSender);
+  console.log('storedContentOption', storedContentOption);
+  console.log('storedContentValue', storedContentValue);
+  console.log('storedMNOOption', storedMNOOption);
+  console.log('storedTemplateOption', storedTemplateOption);
 }
 
-/**
- *
- *
- * @param {*} tokens
- */
 function onGetTokens(tokens) {
   authTokens = tokens;
 }
 
-/**
- *
- *
- * @param {*} senders
- */
-function onGetEndpoints(senders) {}
+function onGetEndpoints(storedSender) {}
 
-/**
- * Save settings
- */
 function save() {
   payload['metaData'].isConfigured = true;
   payload['arguments'].execute.inArguments = [
@@ -315,7 +291,6 @@ function save() {
       contactKey: '{{Contact.Key}}',
     },
   ];
-  console.log('payload: ', payload);
   $('.js-activity-setting').each(function () {
     const setting = {
       id: $(this).attr('id'),
@@ -325,12 +300,9 @@ function save() {
       value[setting.id] = setting.value;
     });
   });
-  console.log('payload: ', payload);
   connection.trigger('updateActivity', payload);
 }
-/**
- * Next settings
- */
+
 function next() {
   if (currentStep.key === 'step4') {
     save();
@@ -338,9 +310,7 @@ function next() {
     connection.trigger('nextStep');
   }
 }
-/**
- * Back settings
- */
+
 function prev() {
   connection.trigger('prevStep');
 }
@@ -379,64 +349,49 @@ const showStep = async (step, stepIndex) => {
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
       switch ($('#Channels').val()) {
         case 'Zalo Message': {
-          $('.ca-modal').show();
-          $('.ca-modal__loading').show();
-          $('.ca-modal__validateResult.success').hide();
-          $('.ca-modal__validateResult.failed').hide();
-          const ZaloOAList = await getAllZaloOA();
-          $('.ca-modal').hide();
+          const ZaloOAList = await loadingContent(getAllZaloOA);
           console.log('ZaloOAList', ZaloOAList);
           tmpZaloOAList = ZaloOAList.data;
           $('#Senders')
             .empty()
-            .append(`<option value=''>--Select one of the following senders--</option>`);
+            .append(`<option value=''>--Select one of the following storedSender--</option>`);
           $.each(tmpZaloOAList, (index, ZaloOA) => {
             $('#Senders').append(`<option value=${ZaloOA.OAId}>${ZaloOA.OAName}</option>`);
           });
-          if (senders && channels === $('#Channels').val()) {
-            $('#Senders').val(senders);
+          if (storedSender && storedChannel === $('#Channels').val()) {
+            $('#Senders').val(storedSender);
           } else $('#Senders').val('');
           break;
         }
         case 'Zalo Notification Service': {
-          $('.ca-modal').show();
-          $('.ca-modal__loading').show();
-          $('.ca-modal__validateResult.success').hide();
-          $('.ca-modal__validateResult.failed').hide();
-          const ZaloOAList = await getAllZaloOA();
-          $('.ca-modal').hide();
+          const ZaloOAList = await loadingContent(getAllZaloOA);
           console.log('ZaloOAList', ZaloOAList);
           tmpZaloOAList = ZaloOAList.data;
           $('#Senders')
             .empty()
-            .append(`<option value=''>--Select one of the following senders--</option>`);
+            .append(`<option value=''>--Select one of the following storedSender--</option>`);
           $.each(tmpZaloOAList, (index, ZaloOA) => {
             $('#Senders').append(`<option value=${ZaloOA.OAId}>${ZaloOA.OAName}</option>`);
           });
-          if (senders && channels === $('#Channels').val()) {
-            $('#Senders').val(senders);
+          if (storedSender && storedChannel === $('#Channels').val()) {
+            $('#Senders').val(storedSender);
           } else $('#Senders').val('');
           break;
         }
         case 'SMS': {
-          $('.ca-modal').show();
-          $('.ca-modal__loading').show();
-          $('.ca-modal__validateResult.success').hide();
-          $('.ca-modal__validateResult.failed').hide();
-          let { raw_data } = await getAllSMSSenders();
+          let { raw_data } = await loadingContent(getAllSMSSenders());
           tmpSMSSenderList = raw_data;
-          $('.ca-modal').hide();
           console.log('SMSSenders list', tmpSMSSenderList);
           $('#Senders')
             .empty()
-            .append(`<option value=''>--Select one of the following senders--</option>`);
+            .append(`<option value=''>--Select one of the following storedSender--</option>`);
           $.each(tmpSMSSenderList, (index, SMSSenders) => {
             $('#Senders').append(
               `<option value=${SMSSenders.senderName}>${SMSSenders.senderName}</option>`
             );
           });
-          if (senders && channels === $('#Channels').val()) {
-            $('#Senders').val(senders);
+          if (storedSender && storedChannel === $('#Channels').val()) {
+            $('#Senders').val(storedSender);
           } else $('#Senders').val('');
           break;
         }
@@ -461,25 +416,20 @@ const showStep = async (step, stepIndex) => {
       $('#step3').show();
       $('#titleDynamic').empty().append('Data Extension');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
-      $('.ca-modal').show();
-      $('.ca-modal__loading').show();
-      $('.ca-modal__validateResult.failed').hide();
-      $('.ca-modal__validateResult.success').hide();
-      const deInfo = await getDEInfo(eventDefinitionKey);
-      $('.ca-modal').hide();
+      const deInfo = await loadingContent(getDEInfo, storedEventDefinitionKey);
       $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
       $('#DEFields')
         .empty()
         .append(`<option value="">--Select one of the following fields--</option>`);
       $.each(deInfo.deCol, (index, field) => {
-        deFields.push(field.Name);
+        storedDEFields.push(field.Name);
         $('#DEFields').append(
           `<option value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</option>`
         );
-        $(`#${field.Name}`).val(`{{Event.${eventDefinitionKey}.${field.Name}}}`);
+        $(`#${field.Name}`).val(`{{Event.${storedEventDefinitionKey}.${field.Name}}}`);
       });
-      if (deKey && channels === $('#Channels').val()) {
-        $('#DEFields').val(deKey);
+      if (storedDEKey && storedChannel === $('#Channels').val()) {
+        $('#DEFields').val(storedDEKey);
       } else $('#DEFields').val('');
       if ($('#DEFields').val()) {
         connection.trigger('updateButton', {
@@ -514,12 +464,7 @@ const showStep = async (step, stepIndex) => {
           try {
             $('#SMSContentContainer').hide();
             $('#ZaloContentContainer').show();
-            $('.ca-modal').show();
-            $('.ca-modal__loading').show();
-            $('.ca-modal__validateResult.success').hide();
-            $('.ca-modal__validateResult.failed').hide();
-            const customContent = await getCustomContent();
-            $('.ca-modal').hide();
+            const customContent = await loadingContent(getCustomContent);
             tmpContents = customContent.items;
             $('#ContentOptions')
               .empty()
@@ -537,12 +482,7 @@ const showStep = async (step, stepIndex) => {
           try {
             $('#SMSContentContainer').hide();
             $('#ZaloContentContainer').show();
-            $('.ca-modal').show();
-            $('.ca-modal__loading').show();
-            $('.ca-modal__validateResult.success').hide();
-            $('.ca-modal__validateResult.failed').hide();
-            let customContent = await getZNSTemplates($('#Senders').val());
-            $('.ca-modal').hide();
+            let customContent = await loading(getZNSTemplates, $('#Senders').val());
             customContent = JSON.parse(customContent);
             console.log('customContent:', customContent);
             if (customContent.resultCode === 0) {
@@ -570,7 +510,7 @@ const showStep = async (step, stepIndex) => {
           $('#SMSContentContainer').show();
           $('#ContentOptions').empty();
           $('#ca-form-SMSDEKeys-element').empty();
-          $.each(deFields, (index, field) => {
+          $.each(storedDEFields, (index, field) => {
             $('#ca-form-SMSDEKeys-element').append(`<div>${field}</div>`);
           });
           let tmpSMSMNOList = tmpSMSSenderList.filter(
@@ -587,10 +527,20 @@ const showStep = async (step, stepIndex) => {
           $('#TemplateOptions')
             .empty()
             .append(`<option value=''>--Select one of the following templates--</option>`);
-          if (MNOOption && templateOption && contentValue) {
-            $('#MNOOptions').val(MNOOption);
-            $('#TemplateOptions').val(templateOption);
-            $('#ContentValue').val(contentValue);
+          if (storedMNOOption && storedTemplateOption && storedContentValue) {
+            $('#MNOOptions').val(storedMNOOption);
+            let tmpSMSMNOList = tmpSMSSenderList.filter(
+              (smsSender) => smsSender.senderName === $('#Senders').val()
+            );
+            tmpSMSTemplateList = tmpSMSMNOList[0].templates;
+            $('#TemplateOptions')
+              .empty()
+              .append(`<option value=''>--Select one of the following templates--</option>`);
+            $.each(tmpSMSTemplateList[$('#MNOOptions').val()], (index, template) => {
+              $('#TemplateOptions').append(`<option value="${template}">${template}</option>`);
+            });
+            $('#TemplateOptions').val(storedTemplateOption);
+            $('#ContentValue').val(storedContentValue);
             connection.trigger('updateButton', {
               button: 'next',
               enabled: true,
@@ -628,9 +578,9 @@ const checkContent = async (type) => {
         regex.lastIndex++;
       }
       console.log('message:', message);
-      if (!deFields.includes(message[1])) {
+      if (!storedDEFields.includes(message[1])) {
         hasError = true;
-        if (!deFields.includes(message[0])) {
+        if (!storedDEFields.includes(message[0])) {
           errorKeyList.push(message[0]);
         }
       }
@@ -663,16 +613,17 @@ const checkContent = async (type) => {
     }
   } else {
     console.log('tmpContents:', tmpContents);
-    console.log(contentOptions);
-    if (type === 'process') $('#ContentOptions').val(contentOptions);
+    console.log(storedContentOption);
+    if (type === 'process') $('#ContentOptions').val(storedContentOption);
     if (type === 'init') {
-      console.log(channels);
+      console.log(storedChannel);
       console.log($('#Channels').val());
-      if (channels !== $('#Channels').val()) {
+      if (storedChannel !== $('#Channels').val()) {
         $('#ContentOptions').val('');
-      } else $('#ContentOptions').val(contentOptions);
+      } else $('#ContentOptions').val(storedContentOption);
     }
     console.log($('#ContentOptions').val());
+
     if ($('#ContentOptions').val()) {
       switch ($('#Channels').val()) {
         case 'Zalo Message': {
@@ -691,7 +642,7 @@ const checkContent = async (type) => {
                   regex.lastIndex++;
                 }
                 console.log('message:', message);
-                if (!deFields.includes(message[1])) {
+                if (!storedDEFields.includes(message[1])) {
                   hasError = true;
                   if (!errorKeyList.includes(message[0])) {
                     errorKeyList.push(message[0]);
@@ -722,26 +673,22 @@ const checkContent = async (type) => {
           break;
         }
         case 'Zalo Notification Service': {
-          $('.ca-modal').show();
-          $('.ca-modal__loading').show();
-          $('.ca-modal__validateResult.success').hide();
-          $('.ca-modal__validateResult.failed').hide();
-          let response = await getZNSTemplateDetail(
-            $('#ContentOptions').val(),
-            $('#Senders').val()
+          let response = await loadingContent(
+            getZNSTemplateDetail({
+              TemplateId: $('#ContentOptions').val(),
+              OAId: $('#Senders').val(),
+            })
           );
-          $('.ca-modal').hide();
-          response = JSON.parse(response);
           console.log('repsonse detail', response);
           $('#ca-frame').show();
           $('#ca-frame').attr('src', response.data.previewUrl);
-          contentValue = {
+          storedContentValue = {
             phone: '',
             template_id: response.data.templateId,
             template_data: {},
           };
           response.data.listParams.map((param) => {
-            if (!deFields.includes(param.name)) {
+            if (!storedDEFields.includes(param.name)) {
               hasError = true;
               if (!errorKeyList.includes(`%%${param.name}%%`)) {
                 errorKeyList.push(`%%${param.name}%%`);
@@ -760,11 +707,11 @@ const checkContent = async (type) => {
             });
           } else {
             $.each(response.data.listParams, (index, param) => {
-              contentValue.template_data[param.name] = `%%${param.name}%%`;
+              storedContentValue.template_data[param.name] = `%%${param.name}%%`;
             });
-            console.log('Content value', contentValue);
-            $('#ContentValue').val(JSON.stringify(contentValue));
-            console.log('contentValue', $('#ContentValue').val());
+            console.log('Content value', storedContentValue);
+            $('#ContentValue').val(JSON.stringify(storedContentValue));
+            console.log('storedContentValue', $('#ContentValue').val());
             connection.trigger('updateButton', {
               button: 'next',
               enabled: true,
@@ -808,19 +755,19 @@ const getDEInfo = async (key) => {
 const getZNSTemplates = async (OAId) => {
   try {
     const response = await superagent.post('/api/zalo/getznstemplates').send({ OAId });
-    return response.text;
+    return response.body;
   } catch (error) {
     displayCustomModalError(error.message);
     throw new Error(error.message);
   }
 };
 
-const getZNSTemplateDetail = async (TemplateId, OAId) => {
+const getZNSTemplateDetail = async ({ TemplateId, OAId }) => {
   try {
     const response = await superagent
       .post('/api/zalo/getznstemplatedetail')
       .send({ TemplateId, OAId });
-    return response.text;
+    return response.body;
   } catch (error) {
     displayCustomModalError(error.message);
     throw new Error(error.message);
@@ -828,7 +775,7 @@ const getZNSTemplateDetail = async (TemplateId, OAId) => {
 };
 
 const getAllSMSSenders = async () => {
-  const { body: smsSenderList } = await superagent.get('/api/smssenders');
+  const { body: smsSenderList } = await superagent.get('/api/smsstoredSender');
   if (smsSenderList.error == 0) {
     return smsSenderList;
   }
@@ -869,4 +816,19 @@ const displayCustomInputError = (message, selector, event) => {
     $(`#ca-form-${selector}-element`).removeClass('slds-has-error');
     $(`#ca-form-${selector}-element-text-error`).remove();
   });
+};
+
+const loadingContent = async (asyncFn, param) => {
+  $('.ca-modal').show();
+  $('.ca-modal__loading').show();
+  $('.ca-modal__validateResult.success').hide();
+  $('.ca-modal__validateResult.failed').hide();
+  if (param) {
+    const result = await asyncFn(param);
+    $('.ca-modal').hide();
+    return result;
+  }
+  const result = await asyncFn();
+  $('.ca-modal').hide();
+  return result;
 };
