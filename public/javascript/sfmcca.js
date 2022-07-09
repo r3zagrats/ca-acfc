@@ -823,12 +823,12 @@ const loadingContent = async (asyncFn, param) => {
   $('.ca-modal__loading').show();
   $('.ca-modal__validateResult.success').hide();
   $('.ca-modal__validateResult.failed').hide();
+  let result;
   if (param) {
-    const result = await asyncFn(param);
-    $('.ca-modal').hide();
-    return result;
+    result = await asyncFn(param);
+  } else {
+    result = await asyncFn();
   }
-  const result = await asyncFn();
   $('.ca-modal').hide();
   return result;
 };
