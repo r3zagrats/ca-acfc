@@ -379,7 +379,7 @@ const showStep = async (step, stepIndex) => {
           break;
         }
         case 'SMS': {
-          let { raw_data } = await loadingContent(getAllSMSSenders());
+          let { raw_data } = await loadingContent(getAllSMSSenders);
           tmpSMSSenderList = raw_data;
           console.log('SMSSenders list', tmpSMSSenderList);
           $('#Senders')
