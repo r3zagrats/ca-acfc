@@ -775,7 +775,7 @@ const getZNSTemplateDetail = async ({ TemplateId, OAId }) => {
 };
 
 const getAllSMSSenders = async () => {
-  const { body: smsSenderList } = await superagent.get('/api/smsstoredSender');
+  const { body: smsSenderList } = await superagent.get('/api/smssenders');
   if (smsSenderList.error == 0) {
     return smsSenderList;
   }
