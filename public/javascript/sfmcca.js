@@ -416,6 +416,7 @@ const showStep = async (step, stepIndex) => {
       $('#step3').show();
       $('#titleDynamic').empty().append('Data Extension');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
+      console.log('storedEventDefinitionKey', storedEventDefinitionKey);
       const deInfo = await loadingContent(getDEInfo, storedEventDefinitionKey);
       $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
       $('#DEFields')
