@@ -91,11 +91,11 @@ const onRender = () => {
     $.each(tmpSMSTemplateList[$('#MNOOptions').val()], (index, template) => {
       $('#TemplateOptions').append(`<option value="${template}">${template}</option>`);
     });
-    $('#SMSMessage').empty();
+    $('#SMSMessage').val('');
   });
 
   $('#TemplateOptions').on('change', () => {
-    $('#SMSMessage').empty().text($('#TemplateOptions').val());
+    $('#SMSMessage').val($('#TemplateOptions').val());
   });
 
   $('#Senders').on('change', async (e) => {
