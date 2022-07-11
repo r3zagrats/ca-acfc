@@ -603,7 +603,7 @@ const checkContent = async (type) => {
         enabled: false,
       });
     } else {
-      $('#ContentValue').val($('#SMSMessage').text());
+      $('#ContentValue').val($('#SMSMessage').val());
       console.log($('#ContentValue').val());
       $('.ca-modal').show();
       $('.ca-modal__loading').hide();
