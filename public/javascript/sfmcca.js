@@ -827,6 +827,7 @@ const loadingContent = async (asyncFn, param) => {
   $('.ca-modal__validateResult.success').hide();
   $('.ca-modal__validateResult.failed').hide();
   let result;
+  console.log('param', param);
   if (param) {
     result = await asyncFn(param);
   } else {
