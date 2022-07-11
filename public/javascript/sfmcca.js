@@ -31,7 +31,6 @@ let steps = [
 let currentStep = steps[0].key;
 
 const requestedInteractionHandler = async (settings) => {
-  console.log('setting', settings)
   if (settings.triggers[0]) {
     storedEventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
   } else {
@@ -542,6 +541,7 @@ const showStep = async (step, stepIndex) => {
               $('#TemplateOptions').append(`<option value="${template}">${template}</option>`);
             });
             $('#TemplateOptions').val(storedTemplateOption);
+            $('#SMSMessage').val(storedContentValue);
             $('#ContentValue').val(storedContentValue);
             connection.trigger('updateButton', {
               button: 'next',
