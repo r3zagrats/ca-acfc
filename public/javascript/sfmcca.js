@@ -756,6 +756,7 @@ const getDEInfo = async (key) => {
 const getZNSTemplates = async (OAId) => {
   try {
     const response = await superagent.post('/api/zalo/getznstemplates').send({ OAId });
+    console.log(response.body);
     return response.body;
   } catch (error) {
     displayCustomModalError(error.message);
