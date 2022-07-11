@@ -300,7 +300,8 @@ function save() {
       value[setting.id] = setting.value;
     });
   });
-  connection.trigger('updateActivity', payload);
+  console.log('payload', payload);
+  // connection.trigger('updateActivity', payload);
 }
 
 function next() {
