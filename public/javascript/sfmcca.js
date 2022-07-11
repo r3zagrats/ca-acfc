@@ -743,6 +743,7 @@ const getCustomContent = async () => {
 
 const getDEInfo = async (key) => {
   try {
+    console.log('key:', key);
     const response = await superagent.post('/api/sfmc/getdeinfo').send({ key });
     console.log('deinfo', key, response.body);
     return response.body;

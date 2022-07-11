@@ -302,7 +302,7 @@ const SFMCApi = {
       } else res.status(500).send({ status: 'Key Required', message: 'error' });
     } catch (error) {
       console.log('error:', error);
-      res.status(500).send({
+      res.status(500).json({
         status: 'Journey Invalid',
         message: error,
       });
