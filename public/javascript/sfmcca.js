@@ -744,8 +744,8 @@ const getCustomContent = async () => {
 const getDEInfo = async (key) => {
   try {
     const response = await superagent.post('/api/sfmc/getdeinfo').send({ key });
-    console.log(response.body, response.text);
-    return JSON.parse(response.text);
+    console.log('deinfo', key, response.body);
+    return response.body;
   } catch (error) {
     displayCustomModalError('Please choose ENTRY EVENT and SAVE Journey before Continue');
     connection.trigger('destroy');

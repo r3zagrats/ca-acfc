@@ -250,8 +250,9 @@ const SFMCApi = {
    *  @returns {Promise<void>}
    */
   getDEInfo: async (req, res) => {
+    console.log('key', req.body.key);
     try {
-      if (req.body.key !== '' || req.body.key != null) {
+      if (req.body.key) {
         const data = await fuelRestUtils.getJourney(req.body.key);
         const props = ['Name', 'CustomerKey', 'ObjectID'];
         fuelSDKClient
