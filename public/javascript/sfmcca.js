@@ -33,7 +33,7 @@ let currentStep = steps[0].key;
 const requestedInteractionHandler = async (settings) => {
   console.log('setting', settings)
   if (settings.triggers[0]) {
-    storedEventDefinitionKey = settings.triggers[0].metaData.storedEventDefinitionKey;
+    storedEventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
   } else {
     displayCustomModalError('Please choose ENTRY EVENT and SAVE Journey before Continue');
     connection.trigger('destroy');
