@@ -9,6 +9,7 @@ const ZaloApi = {
         )
         .set('Authorization', `Bearer ${process.env.ACFC_ZNS_TOKEN}`);
       console.log('response:', response.text);
+      console.log('response:', response.body);
       res.status(200).send(response.text);
     } catch (error) {
       res.status(500).send(error.message);
