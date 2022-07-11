@@ -36,11 +36,11 @@ const SFMCCAController = {
     // for (const [key, value] of Object.entries(data.inArguments[0])) {
     //     Content = Content.replaceAll(`%%${key}%%`, value);
     // }
-    Content = JSON.parse(Content);
-    console.log('\nContent', Content);
     try {
       switch (data.inArguments[0].Channels) {
         case 'Zalo Message': {
+          Content = JSON.parse(Content);
+          console.log('\nContent', Content);
           // Query OA Info
           const tmpAccessToken = await refreshZaloToken(data.inArguments[0].Senders);
           console.log('\ntmpAccessToken: ', tmpAccessToken);
@@ -122,6 +122,8 @@ const SFMCCAController = {
           break;
         }
         case 'Zalo Notification Service': {
+          Content = JSON.parse(Content);
+          console.log('\nContent', Content);
           const znsPayload = {
             username: process.env.ACFC_ZNS_USERNAME,
             mobile: data.inArguments[0].DEFields,
