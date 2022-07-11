@@ -17,6 +17,13 @@ const IsExpiredToken = (timestamp) => {
   return false;
 };
 
+const transformContent = (input) => {
+  Object.keys(input).forEach((key) => {
+    input.ContentValue = input.ContentValue.replaceAll(`%%${key}%%`, input[key]);
+  });
+  return input.ContentValue;
+};
+
 const SFMCCAController = {
   /**
    * The Journey Builder calls this method for each contact processed by the journey.
@@ -25,39 +32,36 @@ const SFMCCAController = {
    * @returns {Promise<void>}
    */
   execute: async (req, res) => {
-    const data = JWT(req.body);
-    console.log('\ndata.inArguments: ', data.inArguments[0]);
+    const { inArguments : receivedData } = JWT(req.body);
+    console.log('\nReceived Data:', receivedData[0]);
 
-    let Content = data.inArguments[0].ContentValue;
-    // Handle Content
-    Object.keys(data.inArguments[0]).forEach((key) => {
-      Content = Content.replaceAll(`%%${key}%%`, data.inArguments[0][key]);
-    });
-    // for (const [key, value] of Object.entries(data.inArguments[0])) {
-    //     Content = Content.replaceAll(`%%${key}%%`, value);
-    // }
+    console.log('\nReceived transformedContent:', receivedData[0].ContentValue)
+    // Transform transformedContent
+    let transformedContent = transformContent(receivedData[0]);
+
+    console.log('\nTransformed transformedContent', transformedContent);
     try {
-      switch (data.inArguments[0].Channels) {
+      switch (receivedData[0].Channels) {
         case 'Zalo Message': {
-          Content = JSON.parse(Content);
-          console.log('\nContent', Content);
+          transformedContent = JSON.parse(transformedContent);
+          console.log('\nContent', transformedContent);
           // Query OA Info
-          const tmpAccessToken = await refreshZaloToken(data.inArguments[0].Senders);
+          const tmpAccessToken = await refreshZaloToken(receivedData[0].Senders);
           console.log('\ntmpAccessToken: ', tmpAccessToken);
-          if (Content.type === 'AttachedFile') {
+          if (transformedContent.type === 'AttachedFile') {
             // Check if file exists
             await redisClient.connect();
-            let fileInfo = await redisClient.get(Content.value.name);
+            let fileInfo = await redisClient.get(transformedContent.value.name);
             let tmpToken = '';
             if (fileInfo === null || IsExpiredToken(fileInfo.expires_in) === true) {
               console.log('\nfileInfo: ', fileInfo);
-              const result = await asyncGet(Content.value.url, Content.value.name);
+              const result = await asyncGet(transformedContent.value.url, transformedContent.value.name);
               console.log('\nresult: ', result);
-              const file = fs.createReadStream(`./public/data/${Content.value.name}`);
+              const file = fs.createReadStream(`./public/data/${transformedContent.value.name}`);
               const response = await superagent
                 .post(
                   `${process.env.ZALO_UPLOAD_URL}${
-                    Content.value.extension === 'gif' ? 'gif' : 'file'
+                    transformedContent.value.extension === 'gif' ? 'gif' : 'file'
                   }`
                 )
                 .set('access_token', tmpAccessToken)
@@ -70,7 +74,7 @@ const SFMCCAController = {
                 throw response.body.message;
               }
               await redisClient.set(
-                Content.value.name,
+                transformedContent.value.name,
                 JSON.stringify({
                   token: tmpToken,
                   expires_in: Date.now() + 604800000,
@@ -82,20 +86,20 @@ const SFMCCAController = {
               tmpToken = fileInfo.token;
             }
             console.log('\ntmpToken:', tmpToken);
-            if (Content.value.extension === 'gif') {
-              Content.payloadData.message.attachment.payload.elements[0].attachment_id = tmpToken;
+            if (transformedContent.value.extension === 'gif') {
+              transformedContent.payloadData.message.attachment.payload.elements[0].attachment_id = tmpToken;
             } else {
-              Content.payloadData.message.attachment.payload.token = tmpToken;
+              transformedContent.payloadData.message.attachment.payload.token = tmpToken;
             }
             await redisClient.quit();
           }
-          Content.payloadData.recipient.user_id = data.inArguments[0].DEFields;
-          const zmContent = Content.payloadData;
+          transformedContent.payloadData.recipient.user_id = receivedData[0].DEFields;
+          const zmContent = transformedContent.payloadData;
           console.log('\nzmContent:', JSON.stringify(zmContent));
           // Send Message
           const response = await superagent
             .post('https://openapi.zalo.me/v2.0/oa/message')
-            .set('Content-Type', 'application/json')
+            .set('transformedContent-Type', 'application/json')
             .set('access_token', tmpAccessToken)
             .send(JSON.stringify(zmContent));
           const znsSendLog = response.body;
@@ -105,7 +109,7 @@ const SFMCCAController = {
             JSON.stringify({
               items: [
                 {
-                  OAId: data.inArguments[0].Senders,
+                  OAId: receivedData[0].Senders,
                   ZaloId: znsSendLog.error === 0 ? znsSendLog.data.user_id : '',
                   MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
                   UTCTime: new Date().toUTCString(),
@@ -122,24 +126,24 @@ const SFMCCAController = {
           break;
         }
         case 'Zalo Notification Service': {
-          Content = JSON.parse(Content);
-          console.log('\nContent', Content);
+          transformedContent = JSON.parse(transformedContent);
+          console.log('\nContent', transformedContent);
           const znsPayload = {
             username: process.env.ACFC_ZNS_USERNAME,
-            mobile: data.inArguments[0].DEFields,
+            mobile: receivedData[0].DEFields,
             bid: Date.now(),
             zns: {
-              oa_id: data.inArguments[0].Senders,
-              template_id: Content.template_id,
+              oa_id: receivedData[0].Senders,
+              template_id: transformedContent.template_id,
               template_data: {
-                ...Content.template_data,
+                ...transformedContent.template_data,
               },
             },
           };
           console.log('znsPayload:', znsPayload);
           const response = await superagent
             .post('https://cloud.vietguys.biz:4438/api/zalo/v1/send')
-            .set('Content-Type', 'application/json')
+            .set('transformedContent-Type', 'application/json')
             .set('Authorization', `Bearer ${process.env.ACFC_ZNS_TOKEN}`)
             .send(JSON.stringify(znsPayload));
           const znsSendLog = response.body;
@@ -149,7 +153,7 @@ const SFMCCAController = {
             JSON.stringify({
               items: [
                 {
-                  OAId: data.inArguments[0].Senders,
+                  OAId: receivedData[0].Senders,
                   MsgId: znsSendLog.resultCode === 0 ? znsSendLog.transaction_id : '',
                   UTCTime: new Date().toUTCString(),
                   Timestamp: new Date().getTime(),
@@ -166,10 +170,10 @@ const SFMCCAController = {
         }
         case 'Web Push Notification': {
           // console.log('\nWebpush method');
-          // let FirebaseToken = data.inArguments[0].FirebaseToken;
+          // let FirebaseToken = receivedData[0].FirebaseToken;
           // if (FirebaseToken !== '') {
           //   var payload = {
-          //     notification: JSON.parse(Content),
+          //     notification: JSON.parse(transformedContent),
           //   };
           //   admin
           //     .messaging()
@@ -190,12 +194,12 @@ const SFMCCAController = {
         case 'SMS': {
           let result = await superagent
             .post('https://cloudsms.vietguys.biz:4438/api/index.php')
-            .field('from', Content.from)
+            .field('from', receivedData[0].Senders)
             .field('u', process.env.SMS_USER)
             .field('pwd', process.env.SMS_PWD)
-            .field('phone', data.inArguments[0].DEFields)
-            .field('sms', Content.sms)
-            .field('bid', Content.bid)
+            .field('phone', receivedData[0].DEFields)
+            .field('sms', transformedContent)
+            .field('bid', Date.now())
             .field('json', '1');
           result = JSON.parse(result.text);
           console.log('result', result);
@@ -203,9 +207,9 @@ const SFMCCAController = {
             JSON.stringify({
               items: [
                 {
-                  Sender: Content.from,
-                  Receiver: data.inArguments[0].DEFields,
-                  Content: Content.sms,
+                  Sender: transformedContent.from,
+                  Receiver: receivedData[0].DEFields,
+                  transformedContent: transformedContent.sms,
                   MsgId: result.msgid,
                   Status: result.error === 0 ? 'success' : 'error',
                   ErrorCode: result.error,
