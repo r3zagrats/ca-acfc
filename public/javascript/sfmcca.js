@@ -368,7 +368,7 @@ const showStep = async (step, stepIndex) => {
           tmpZaloOAList = ZaloOAList.data;
           $('#Senders')
             .empty()
-            .append(`<option value=''>--Select one of the following storedSender--</option>`);
+            .append(`<option value=''>--Select one of the following senders--</option>`);
           $.each(tmpZaloOAList, (index, ZaloOA) => {
             $('#Senders').append(`<option value=${ZaloOA.OAId}>${ZaloOA.OAName}</option>`);
           });
@@ -383,7 +383,7 @@ const showStep = async (step, stepIndex) => {
           console.log('SMSSenders list', tmpSMSSenderList);
           $('#Senders')
             .empty()
-            .append(`<option value=''>--Select one of the following storedSender--</option>`);
+            .append(`<option value=''>--Select one of the following senders--</option>`);
           $.each(tmpSMSSenderList, (index, SMSSenders) => {
             $('#Senders').append(
               `<option value=${SMSSenders.senderName}>${SMSSenders.senderName}</option>`

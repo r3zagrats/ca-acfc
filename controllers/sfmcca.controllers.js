@@ -99,7 +99,7 @@ const SFMCCAController = {
           // Send Message
           const response = await superagent
             .post('https://openapi.zalo.me/v2.0/oa/message')
-            .set('transformedContent-Type', 'application/json')
+            .set('Content-Type', 'application/json')
             .set('access_token', tmpAccessToken)
             .send(JSON.stringify(zmContent));
           const znsSendLog = response.body;
@@ -141,12 +141,11 @@ const SFMCCAController = {
             },
           };
           console.log('znsPayload:', znsPayload);
-          const response = await superagent
+          const { body: znsSendLog } = await superagent
             .post('https://cloud.vietguys.biz:4438/api/zalo/v1/send')
-            .set('transformedContent-Type', 'application/json')
+            .set('Content-Type', 'application/json')
             .set('Authorization', `Bearer ${process.env.ACFC_ZNS_TOKEN}`)
             .send(JSON.stringify(znsPayload));
-          const znsSendLog = response.body;
           console.log('\nznsSendLog:', znsSendLog);
           //   if (znsSendLog.error !== 0) throw znsSendLog.message;
           const insertDEResponse = await FuelRestUtils.insertDEZaloOASendLog(
