@@ -85,7 +85,6 @@ const onRender = () => {
   });
 
   $('#MNOOptions').on('change', () => {
-    console.log(tmpSMSTemplateList[$('#MNOOptions').val()]);
     $('#TemplateOptions')
       .empty()
       .append(`<option value=''>--Select one of the following templates--</option>`);
@@ -301,7 +300,7 @@ function save() {
     });
   });
   console.log('payload', payload);
-  // connection.trigger('updateActivity', payload);
+  connection.trigger('updateActivity', payload);
 }
 
 function next() {
