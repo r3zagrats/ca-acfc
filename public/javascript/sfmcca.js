@@ -353,7 +353,7 @@ const showStep = async (step, stepIndex) => {
           tmpZaloOAList = ZaloOAList.data;
           $('#Senders')
             .empty()
-            .append(`<option value=''>--Select one of the following storedSender--</option>`);
+            .append(`<option value=''>--Select one of the following senders--</option>`);
           $.each(tmpZaloOAList, (index, ZaloOA) => {
             $('#Senders').append(`<option value=${ZaloOA.OAId}>${ZaloOA.OAName}</option>`);
           });
@@ -482,8 +482,7 @@ const showStep = async (step, stepIndex) => {
           try {
             $('#SMSContentContainer').hide();
             $('#ZaloContentContainer').show();
-            let customContent = await loading(getZNSTemplates, $('#Senders').val());
-            customContent = JSON.parse(customContent);
+            let customContent = await loadingContent(getZNSTemplates, $('#Senders').val());
             console.log('customContent:', customContent);
             if (customContent.resultCode === 0) {
               tmpContents = customContent.data;
@@ -756,7 +755,6 @@ const getDEInfo = async (key) => {
 const getZNSTemplates = async (OAId) => {
   try {
     const response = await superagent.post('/api/zalo/getznstemplates').send({ OAId });
-    console.log(response.body);
     return response.body;
   } catch (error) {
     displayCustomModalError(error.message);
