@@ -673,12 +673,10 @@ const checkContent = async (type) => {
           break;
         }
         case 'Zalo Notification Service': {
-          let response = await loadingContent(
-            getZNSTemplateDetail({
-              TemplateId: $('#ContentOptions').val(),
-              OAId: $('#Senders').val(),
-            })
-          );
+          let response = await loadingContent(getZNSTemplateDetail, {
+            TemplateId: $('#ContentOptions').val(),
+            OAId: $('#Senders').val(),
+          });
           console.log('repsonse detail', response);
           $('#ca-frame').show();
           $('#ca-frame').attr('src', response.data.previewUrl);
