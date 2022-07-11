@@ -102,7 +102,6 @@ const onRender = () => {
     if ($('#Senders').val() && $('#Channels').val() === 'Zalo Notification Service') {
       try {
         let customContent = await loadingContent(getZNSTemplates, $('#Senders').val());
-        customContent = JSON.parse(customContent);
         console.log('customContent:', customContent);
         if (customContent.resultCode != 0) throw customContent.resultDesc;
         connection.trigger('updateButton', {
@@ -745,9 +744,7 @@ const getCustomContent = async () => {
 
 const getDEInfo = async (key) => {
   try {
-    console.log('key:', key);
     const response = await superagent.post('/api/sfmc/getdeinfo').send({ key });
-    console.log('deinfo', key, response.body);
     return response.body;
   } catch (error) {
     displayCustomModalError('Please choose ENTRY EVENT and SAVE Journey before Continue');
