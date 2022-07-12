@@ -8,7 +8,6 @@ const ZaloApi = {
           `https://cloud.vietguys.biz:4438/api/zalo/v1/template/all?offset=0&limit=100&username=${process.env.ACFC_ZNS_USERNAME}&oa_id=${req.body.OAId}`
         )
         .set('Authorization', `Bearer ${process.env.ACFC_ZNS_TOKEN}`);
-      console.log('response:', response.body);
       res.status(200).send(response.body);
     } catch (error) {
       res.status(500).send(error.message);
@@ -22,7 +21,6 @@ const ZaloApi = {
           `https://cloud.vietguys.biz:4438/api/zalo/v1/template/info?template_id=${req.body.TemplateId}&username=${process.env.ACFC_ZNS_USERNAME}&oa_id=${req.body.OAId}`
         )
         .set('Authorization', `Bearer ${process.env.ACFC_ZNS_TOKEN}`);
-      console.log('response:', response.body);
       res.status(200).send(response.body);
     } catch (error) {
       res.status(500).send(error.message);

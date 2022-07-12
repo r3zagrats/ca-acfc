@@ -31,7 +31,7 @@ const Router = (app) => {
   app.use('/api/smssenders', SMSSendersRouter);
 
   // Zalo webhooks
-  app.post('/webhooks/zalo', ZaloWebhook);
+  app.post('/webhook/zalo', ZaloWebhook);
 
   app.use('/sfmcca/config.json', MainRouter.config);
   app.get('/login', MainRouter.login);

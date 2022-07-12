@@ -4,13 +4,13 @@ const fuelRestUtils = require('../../services/fuel-rest/index');
 const refreshZaloToken = require('../../services/zalo/refreshZaloToken');
 
 const ZaloWebhook = async (req, res) => {
-  const userTrackingInfo = req.body;
+  const { req: userTrackingInfo } = req;
   console.log('userTrackingInfo: ', userTrackingInfo);
   switch (userTrackingInfo.event_name) {
     case 'user_received_message': {
       console.log('User received message');
       try {
-        const data = await fuelRestUtils.insertDEZaloUserActionsTracking(
+        await fuelRestUtils.insertDEZaloUserActionsTracking(
           JSON.stringify({
             items: [
               {
@@ -25,11 +25,10 @@ const ZaloWebhook = async (req, res) => {
             ],
           })
         );
-        res.status(200).send(data.body);
+        res.status(200);
       } catch (error) {
-        console.log(error);
-        res.status(500).send({
-          status: error,
+        res.status(500).json({
+          error,
         });
       }
       break;
@@ -62,7 +61,7 @@ const ZaloWebhook = async (req, res) => {
           );
         }
         await Promise.all(results);
-        res.status(200).send({ status: 'ok' });
+        res.status(200);
       } catch (error) {
         console.log(error);
         res.status(500).send({
@@ -76,13 +75,11 @@ const ZaloWebhook = async (req, res) => {
       try {
         const tmpAccessToken = await refreshZaloToken(userTrackingInfo.oa_id);
         console.log('\ntmpAccessToken: ', tmpAccessToken);
-        let response = await superagent
+        const { body: userInfo } = await superagent
           .get(
             `https://openapi.zalo.me/v2.0/oa/getprofile?data={"user_id":"${userTrackingInfo.follower.id}"}`
           )
           .set('access_token', tmpAccessToken);
-        response = JSON.parse(response.text);
-        console.log('response', response);
         const insertData = fuelRestUtils.insertDEZaloUserActionsTracking(
           JSON.stringify({
             items: [
@@ -101,7 +98,7 @@ const ZaloWebhook = async (req, res) => {
           JSON.stringify({
             items: [
               {
-                Name: response.error === 0 ? response.data.display_name : '',
+                Name: userInfo.error === 0 ? userInfo.data.display_name : '',
                 ZaloId: userTrackingInfo.follower.id,
                 OAId: userTrackingInfo.oa_id,
                 Status: userTrackingInfo.event_name,
@@ -114,8 +111,8 @@ const ZaloWebhook = async (req, res) => {
         res.status(200).send(data.body);
       } catch (error) {
         console.log(error);
-        res.status(500).send({
-          status: error,
+        res.status(500).json({
+          error,
         });
       }
       break;
@@ -125,13 +122,11 @@ const ZaloWebhook = async (req, res) => {
       try {
         const tmpAccessToken = await refreshZaloToken(userTrackingInfo.oa_id);
         console.log('\ntmpAccessToken: ', tmpAccessToken);
-        let response = await superagent
+        const { body: userInfo } = await superagent
           .get(
             `https://openapi.zalo.me/v2.0/oa/getprofile?data={"user_id":"${userTrackingInfo.follower.id}"}`
           )
           .set('access_token', tmpAccessToken);
-        response = JSON.parse(response.text);
-        console.log('response', response);
         const insertData = fuelRestUtils.insertDEZaloUserActionsTracking(
           JSON.stringify({
             items: [
@@ -150,7 +145,7 @@ const ZaloWebhook = async (req, res) => {
           JSON.stringify({
             items: [
               {
-                Name: response.error === 0 ? response.data.display_name : '',
+                Name: userInfo.error === 0 ? userInfo.data.display_name : '',
                 ZaloId: userTrackingInfo.follower.id,
                 OAId: userTrackingInfo.oa_id,
                 Status: userTrackingInfo.event_name,
@@ -159,12 +154,11 @@ const ZaloWebhook = async (req, res) => {
             ],
           })
         );
-        const data = await Promise.all([insertData, upsertData]);
-        res.status(200).send(data.body);
+        await Promise.all([insertData, upsertData]);
+        res.status(200);
       } catch (error) {
-        console.log(error);
-        res.status(500).send({
-          status: error,
+        res.status(500).json({
+          error,
         });
       }
       break;
@@ -172,7 +166,7 @@ const ZaloWebhook = async (req, res) => {
     case 'user_send_text': {
       console.log('User send text message');
       try {
-        const data = await fuelRestUtils.insertDEZaloUserActionsTracking(
+        await fuelRestUtils.insertDEZaloUserActionsTracking(
           JSON.stringify({
             items: [
               {
@@ -247,12 +241,11 @@ const ZaloWebhook = async (req, res) => {
         };
         console.log('\nznsContent:', JSON.stringify(znsContent));
         // Send Message
-        const response = await superagent
+        const { body: znsSendLog } = await superagent
           .post('https://openapi.zalo.me/v2.0/oa/message')
           .set('Content-Type', 'application/json')
           .set('access_token', tmpAccessToken)
           .send(JSON.stringify(znsContent));
-        const znsSendLog = response.body;
         console.log('\nznsSendLog:', znsSendLog);
         if (znsSendLog.error !== 0) throw znsSendLog.message;
         await fuelRestUtils.insertDEZaloOASendLog(
@@ -271,17 +264,16 @@ const ZaloWebhook = async (req, res) => {
             ],
           })
         );
-        res.status(200).send(data.body);
+        res.status(200);
       } catch (error) {
-        console.log(error);
-        res.status(500).send({
-          status: error,
+        res.status(500).json({
+          error,
         });
       }
       break;
     }
     default: {
-      res.status(200).send({ status: 'ok' });
+      res.status(200);
     }
   }
 };

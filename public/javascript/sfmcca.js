@@ -172,7 +172,6 @@ const onRender = () => {
       case 'Zalo Notification Service': {
         try {
           let customContent = await loadingContent(getZNSTemplates, $('#Senders').val());
-          customContent = JSON.parse(customContent);
           console.log('customContent:', customContent);
           if (customContent.resultCode === 0) {
             tmpContents = customContent.data;
