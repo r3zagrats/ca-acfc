@@ -416,7 +416,7 @@ const showStep = async (step, stepIndex) => {
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
       console.log('storedEventDefinitionKey', storedEventDefinitionKey);
       const deInfo = await loadingContent(getDEInfo, storedEventDefinitionKey);
-      $('.js_de_lst').append(`<p>${deInfo.dataExtension.Name}</p>`);
+      $('.js_de_lst').empty().append(`<p>${deInfo.dataExtension.Name}</p>`);
       $('#DEFields')
         .empty()
         .append(`<option value="">--Select one of the following fields--</option>`);
