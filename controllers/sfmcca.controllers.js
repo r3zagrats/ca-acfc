@@ -19,6 +19,7 @@ const IsExpiredToken = (timestamp) => {
 
 const transformContent = (input) => {
   Object.keys(input).forEach((key) => {
+    // eslint-disable-next-line no-param-reassign
     input.ContentValue = input.ContentValue.replaceAll(`%%${key}%%`, input[key]);
   });
   return input.ContentValue;
@@ -32,10 +33,10 @@ const SFMCCAController = {
    * @returns {Promise<void>}
    */
   execute: async (req, res) => {
-    const { inArguments : receivedData } = JWT(req.body);
+    const { inArguments: receivedData } = JWT(req.body);
     console.log('\nReceived Data:', receivedData[0]);
 
-    console.log('\nReceived transformedContent:', receivedData[0].ContentValue)
+    console.log('\nReceived transformedContent:', receivedData[0].ContentValue);
     // Transform transformedContent
     let transformedContent = transformContent(receivedData[0]);
 
@@ -55,7 +56,10 @@ const SFMCCAController = {
             let tmpToken = '';
             if (fileInfo === null || IsExpiredToken(fileInfo.expires_in) === true) {
               console.log('\nfileInfo: ', fileInfo);
-              const result = await asyncGet(transformedContent.value.url, transformedContent.value.name);
+              const result = await asyncGet(
+                transformedContent.value.url,
+                transformedContent.value.name
+              );
               console.log('\nresult: ', result);
               const file = fs.createReadStream(`./public/data/${transformedContent.value.name}`);
               const response = await superagent
@@ -87,7 +91,8 @@ const SFMCCAController = {
             }
             console.log('\ntmpToken:', tmpToken);
             if (transformedContent.value.extension === 'gif') {
-              transformedContent.payloadData.message.attachment.payload.elements[0].attachment_id = tmpToken;
+              transformedContent.payloadData.message.attachment.payload.elements[0].attachment_id =
+                tmpToken;
             } else {
               transformedContent.payloadData.message.attachment.payload.token = tmpToken;
             }
@@ -164,6 +169,12 @@ const SFMCCAController = {
             })
           );
           console.log(insertDEResponse.body);
+          const response = await FuelRestUtils.upsertDEOAFollowers(
+            JSON.stringify({
+              items: [{ phone: receivedData[0].DEFields, Seen: 'true' }],
+            })
+          );
+          console.log(response.body);
           res.status(200).send({ Status: 'Successfull' });
           break;
         }

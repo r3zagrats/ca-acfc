@@ -1,9 +1,10 @@
-const obj = '{"name":"foo","age":"bar"}';
-const str = 'hello world';
+const FuelRestUtils = require('./services/fuel-rest/index');
 
-try {
-  console.log(JSON.parse(str));
-  // console.log(JSON.parse(JSON.stringify(obj)));
-} catch (error) {
-  console.log('error');
-}
+(async () => {
+  const res = await FuelRestUtils.upsertDEOAFollowers(
+    JSON.stringify({
+      items: [{ ZaloId: '123', Seen: 'true' }],
+    })
+  );
+  console.log(res.body);
+})();

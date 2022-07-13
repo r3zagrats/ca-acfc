@@ -31,6 +31,15 @@ const FuelRestUtils = {
       body: data,
     }),
 
+  insertDEOAFollowers: async (data) =>
+    fuelRestClient.post({
+      uri: `data/v1/async/dataextensions/key:${process.env.DE_OA_FOLLOWERS}/rows`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: data,
+    }),
+
   /**
    * Insert DE
    * @param externalKey
