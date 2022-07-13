@@ -25,7 +25,7 @@ const ZaloWebhook = async (req, res) => {
             ],
           })
         );
-        res.status(200);
+        res.status(200).send('OK');
       } catch (error) {
         res.status(500).json({
           error,
@@ -61,7 +61,7 @@ const ZaloWebhook = async (req, res) => {
           );
         }
         await Promise.all(results);
-        res.status(200);
+        res.status(200).send('OK');
       } catch (error) {
         console.log(error);
         res.status(500).send({
@@ -107,8 +107,8 @@ const ZaloWebhook = async (req, res) => {
             ],
           })
         );
-        const data = await Promise.all([insertData, upsertData]);
-        res.status(200).send(data.body);
+        await Promise.all([insertData, upsertData]);
+        res.status(200).send('OK');
       } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -155,7 +155,7 @@ const ZaloWebhook = async (req, res) => {
           })
         );
         await Promise.all([insertData, upsertData]);
-        res.status(200);
+        res.status(200).send('OK');
       } catch (error) {
         res.status(500).json({
           error,
@@ -264,7 +264,7 @@ const ZaloWebhook = async (req, res) => {
             ],
           })
         );
-        res.status(200);
+        res.status(200).send('OK');
       } catch (error) {
         res.status(500).json({
           error,
@@ -273,7 +273,7 @@ const ZaloWebhook = async (req, res) => {
       break;
     }
     default: {
-      res.status(200);
+      res.status(200).send('OK');
     }
   }
 };
