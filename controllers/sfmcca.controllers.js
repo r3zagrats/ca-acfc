@@ -33,6 +33,7 @@ const SFMCCAController = {
    * @returns {Promise<void>}
    */
   execute: async (req, res) => {
+    console.log('req body', req.body);
     const { inArguments: receivedData } = JWT(req.body);
     console.log('\nReceived Data:', receivedData[0]);
 
