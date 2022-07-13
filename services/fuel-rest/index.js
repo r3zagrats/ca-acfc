@@ -40,6 +40,15 @@ const FuelRestUtils = {
       body: data,
     }),
 
+  upsertDEDatHang: async (data) =>
+    fuelRestClient.put({
+      uri: `data/v1/async/dataextensions/key:${process.env.DE_ZNS_DAT_HANG}/rows`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: data,
+    }),
+
   /**
    * Insert DE
    * @param externalKey

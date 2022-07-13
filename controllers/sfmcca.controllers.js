@@ -169,7 +169,7 @@ const SFMCCAController = {
             })
           );
           console.log(insertDEResponse.body);
-          const response = await FuelRestUtils.upsertDEOAFollowers(
+          const response = await FuelRestUtils.upsertDEDatHang(
             JSON.stringify({
               items: [{ phone: receivedData[0].DEFields, Seen: 'true' }],
             })
