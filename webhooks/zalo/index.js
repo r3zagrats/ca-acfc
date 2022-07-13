@@ -4,7 +4,7 @@ const fuelRestUtils = require('../../services/fuel-rest/index');
 const refreshZaloToken = require('../../services/zalo/refreshZaloToken');
 
 const ZaloWebhook = async (req, res) => {
-  const { req: userTrackingInfo } = req;
+  const { body: userTrackingInfo } = req;
   console.log('userTrackingInfo: ', userTrackingInfo);
   switch (userTrackingInfo.event_name) {
     case 'user_received_message': {
