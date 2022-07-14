@@ -102,7 +102,7 @@ const onRender = () => {
   $('#Senders').on('change', async (e) => {
     if ($('#Senders').val() && $('#Channels').val() === 'Zalo Notification Service') {
       try {
-        let customContent = await loadingContent(getZNSTemplates, $('#Senders').val());
+        let { body: customContent } = await loadingContent(getZNSTemplates, $('#Senders').val());
         console.log('customContent:', customContent);
         if (customContent.resultCode != 0) throw customContent.resultDesc;
         connection.trigger('updateButton', {
@@ -156,7 +156,7 @@ const onRender = () => {
     switch ($('#Channels').val()) {
       case 'Zalo Message': {
         try {
-          const customContent = await loadingContent(getCustomContent());
+          const { body: customContent } = await loadingContent(getCustomContent);
           tmpContents = customContent.items;
           $('#ContentOptions')
             .empty()
@@ -172,7 +172,7 @@ const onRender = () => {
       }
       case 'Zalo Notification Service': {
         try {
-          let customContent = await loadingContent(getZNSTemplates, $('#Senders').val());
+          let { body: customContent } = await loadingContent(getZNSTemplates, $('#Senders').val());
           console.log('customContent:', customContent);
           if (customContent.resultCode === 0) {
             tmpContents = customContent.data;
@@ -348,7 +348,7 @@ const showStep = async (step, stepIndex) => {
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
       switch ($('#Channels').val()) {
         case 'Zalo Message': {
-          const ZaloOAList = await loadingContent(getAllZaloOA);
+          const { body: ZaloOAList } = await loadingContent(getAllZaloOA);
           console.log('ZaloOAList', ZaloOAList);
           tmpZaloOAList = ZaloOAList.data;
           $('#Senders')
@@ -363,7 +363,7 @@ const showStep = async (step, stepIndex) => {
           break;
         }
         case 'Zalo Notification Service': {
-          const ZaloOAList = await loadingContent(getAllZaloOA);
+          const { body: ZaloOAList } = await loadingContent(getAllZaloOA);
           console.log('ZaloOAList', ZaloOAList);
           tmpZaloOAList = ZaloOAList.data;
           $('#Senders')
@@ -416,7 +416,7 @@ const showStep = async (step, stepIndex) => {
       $('#titleDynamic').empty().append('Data Extension');
       $('#iconDynamic').attr('xlink:href', '/icons/standard-sprite/svg/symbols.svg#contact_list');
       console.log('storedEventDefinitionKey', storedEventDefinitionKey);
-      const deInfo = await loadingContent(getDEInfo, storedEventDefinitionKey);
+      const { body: deInfo } = await loadingContent(getDEInfo, storedEventDefinitionKey);
       $('.js_de_lst').empty().append(`<p>${deInfo.dataExtension.Name}</p>`);
       $('#DEFields')
         .empty()
@@ -464,7 +464,7 @@ const showStep = async (step, stepIndex) => {
           try {
             $('#SMSContentContainer').hide();
             $('#ZaloContentContainer').show();
-            const customContent = await loadingContent(getCustomContent);
+            const { body: customContent } = await loadingContent(getCustomContent);
             tmpContents = customContent.items;
             $('#ContentOptions')
               .empty()
@@ -482,7 +482,10 @@ const showStep = async (step, stepIndex) => {
           try {
             $('#SMSContentContainer').hide();
             $('#ZaloContentContainer').show();
-            let customContent = await loadingContent(getZNSTemplates, $('#Senders').val());
+            let { body: customContent } = await loadingContent(
+              getZNSTemplates,
+              $('#Senders').val()
+            );
             console.log('customContent:', customContent);
             if (customContent.resultCode === 0) {
               tmpContents = customContent.data;
@@ -672,19 +675,19 @@ const checkContent = async (type) => {
           break;
         }
         case 'Zalo Notification Service': {
-          let response = await loadingContent(getZNSTemplateDetail, {
+          let { body: templateDetail } = await loadingContent(getZNSTemplateDetail, {
             TemplateId: $('#ContentOptions').val(),
             OAId: $('#Senders').val(),
           });
-          console.log('repsonse detail', response);
+          console.log('repsonse detail', templateDetail);
           $('#ca-frame').show();
-          $('#ca-frame').attr('src', response.data.previewUrl);
+          $('#ca-frame').attr('src', templateDetail.data.previewUrl);
           storedContentValue = {
             phone: '',
-            template_id: response.data.templateId,
+            template_id: templateDetail.data.templateId,
             template_data: {},
           };
-          response.data.listParams.map((param) => {
+          templateDetail.data.listParams.map((param) => {
             if (!storedDEFields.includes(param.name)) {
               hasError = true;
               if (!errorKeyList.includes(`%%${param.name}%%`)) {
@@ -703,7 +706,7 @@ const checkContent = async (type) => {
               enabled: false,
             });
           } else {
-            $.each(response.data.listParams, (index, param) => {
+            $.each(templateDetail.data.listParams, (index, param) => {
               storedContentValue.template_data[param.name] = `%%${param.name}%%`;
             });
             console.log('Content value', storedContentValue);
@@ -730,8 +733,7 @@ const checkContent = async (type) => {
 
 const getCustomContent = async () => {
   try {
-    const response = await superagent.get('/api/sfmc/getcustomcontent');
-    return response.body;
+    return await superagent.get('/api/sfmc/getcustomcontent');
   } catch (error) {
     displayCustomModalError(error.message);
     throw new Error(error.message);
@@ -740,8 +742,7 @@ const getCustomContent = async () => {
 
 const getDEInfo = async (key) => {
   try {
-    const response = await superagent.post('/api/sfmc/getdeinfo').send({ key });
-    return response.body;
+    return await superagent.post('/api/sfmc/getdeinfo').send({ key });
   } catch (error) {
     displayCustomModalError('Please choose ENTRY EVENT and SAVE Journey before Continue');
     connection.trigger('destroy');
@@ -751,8 +752,7 @@ const getDEInfo = async (key) => {
 
 const getZNSTemplates = async (OAId) => {
   try {
-    const response = await superagent.post('/api/zalo/getznstemplates').send({ OAId });
-    return response.body;
+    return await superagent.post('/api/zalo/getznstemplates').send({ OAId });
   } catch (error) {
     displayCustomModalError(error.message);
     throw new Error(error.message);
@@ -761,10 +761,7 @@ const getZNSTemplates = async (OAId) => {
 
 const getZNSTemplateDetail = async ({ TemplateId, OAId }) => {
   try {
-    const response = await superagent
-      .post('/api/zalo/getznstemplatedetail')
-      .send({ TemplateId, OAId });
-    return response.body;
+    return await superagent.post('/api/zalo/getznstemplatedetail').send({ TemplateId, OAId });
   } catch (error) {
     displayCustomModalError(error.message);
     throw new Error(error.message);
@@ -782,8 +779,7 @@ const getAllSMSSenders = async () => {
 
 const getAllZaloOA = async () => {
   try {
-    const response = await superagent.get('/api/zalooa');
-    return response.body;
+    return await superagent.get('/api/zalooa');
   } catch (error) {
     displayCustomModalError(error.message);
     throw new Error(error.message);
