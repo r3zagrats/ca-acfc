@@ -815,11 +815,12 @@ const loadingContent = async (asyncFn, param) => {
   $('.ca-modal__loading').show();
   $('.ca-modal__validateResult.success').hide();
   $('.ca-modal__validateResult.failed').hide();
+  let result;
   if (param) {
-    $('.ca-modal').hide();
-    return await asyncFn(param);
+    result = await asyncFn(param);
   } else {
-    $('.ca-modal').hide();
-    return await asyncFn();
+    result = await asyncFn();
   }
+  $('.ca-modal').hide();
+  return result;
 };
