@@ -37,15 +37,12 @@ block content
         #ZaloContentContainer
           .slds-form-element
             .slds-form-element__control
-              label.slds-form-element__label.slds-p-top_medium(for='ContentOptions')
+              label.slds-form-element__label(for='ContentOptions')
                 abbr.slds-required(title='required') *
                 | Content
               .slds-select_container
                 select#ContentOptions.slds-select.js-activity-setting(name='ContentOptions')
             .slds-form-element__control
-              label.slds-form-element__label.slds-p-top_medium(for='Text')
-                abbr.slds-required(title='required')
-                | Content 
               button#refreshButton(type="button") Refresh
             br
             .slds-form-element__control
