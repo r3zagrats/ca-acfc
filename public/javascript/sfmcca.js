@@ -814,19 +814,16 @@ const displayCustomInputError = (message, selector, event) => {
     $(`#ca-form-${selector}-element-text-error`).remove();
   });
 };
-
 const loadingContent = async (asyncFn, param) => {
   $('.ca-modal').show();
   $('.ca-modal__loading').show();
   $('.ca-modal__validateResult.success').hide();
   $('.ca-modal__validateResult.failed').hide();
-  let result;
-  console.log('param', param);
   if (param) {
-    result = await asyncFn(param);
+    $('.ca-modal').hide();
+    return await asyncFn(param);
   } else {
-    result = await asyncFn();
+    $('.ca-modal').hide();
+    return await asyncFn();
   }
-  $('.ca-modal').hide();
-  return result;
 };
