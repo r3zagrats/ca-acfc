@@ -111,12 +111,13 @@ const SFMCCAController = {
           const znsSendLog = response.body;
           console.log('\nznsSendLog:', znsSendLog);
           // if (znsSendLog.error !== 0) throw znsSendLog.message;
-          const insertDEResponse = await FuelRestUtils.insertDEZaloOASendLog(
+          const insertDEResponse = await FuelRestUtils.insertDEZaloSendLog(
             JSON.stringify({
               items: [
                 {
                   OAId: receivedData[0].Senders,
                   ZaloId: znsSendLog.error === 0 ? znsSendLog.data.user_id : '',
+                  JourneyId: req.body.journeyId,
                   MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
                   UTCTime: new Date().toUTCString(),
                   Timestamp: new Date().getTime(),
@@ -154,7 +155,7 @@ const SFMCCAController = {
             .send(JSON.stringify(znsPayload));
           console.log('\nznsSendLog:', znsSendLog);
           //   if (znsSendLog.error !== 0) throw znsSendLog.message;
-          const insertDEResponse = await FuelRestUtils.insertDEZaloOASendLog(
+          const insertDEResponse = await FuelRestUtils.insertDEZaloSendLog(
             JSON.stringify({
               items: [
                 {

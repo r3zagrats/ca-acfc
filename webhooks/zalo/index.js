@@ -248,7 +248,7 @@ const ZaloWebhook = async (req, res) => {
           .send(JSON.stringify(znsContent));
         console.log('\nznsSendLog:', znsSendLog);
         if (znsSendLog.error !== 0) throw znsSendLog.message;
-        await fuelRestUtils.insertDEZaloOASendLog(
+        await fuelRestUtils.insertDEZaloSendLog(
           JSON.stringify({
             items: [
               {

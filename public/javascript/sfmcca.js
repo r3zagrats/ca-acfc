@@ -31,7 +31,7 @@ let steps = [
 let currentStep = steps[0].key;
 
 const requestedInteractionHandler = async (settings) => {
-  console.log('settings',settings )
+  console.log('settings', settings);
   if (settings.triggers[0]) {
     storedEventDefinitionKey = settings.triggers[0].metaData.eventDefinitionKey;
   } else {
@@ -421,13 +421,15 @@ const showStep = async (step, stepIndex) => {
       $('#DEFields')
         .empty()
         .append(`<option value="">--Select one of the following fields--</option>`);
-      $.each(deInfo.deCol, (index, field) => {
-        storedDEFields.push(field.Name);
-        $('#DEFields').append(
-          `<option value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</option>`
-        );
-        $(`#${field.Name}`).val(`{{Event.${storedEventDefinitionKey}.${field.Name}}}`);
-      });
+      if (storedDEFields.length == 0) {
+        $.each(deInfo.deCol, (index, field) => {
+          if (!storedDEFields.includes(field.Name)) storedDEFields.push(field.Name);
+          $('#DEFields').append(
+            `<option value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</option>`
+          );
+          $(`#${field.Name}`).val(`{{Event.${storedEventDefinitionKey}.${field.Name}}}`);
+        });
+      }
       if (storedDEKey && storedChannel === $('#Channels').val()) {
         $('#DEFields').val(storedDEKey);
       } else $('#DEFields').val('');
@@ -508,7 +510,6 @@ const showStep = async (step, stepIndex) => {
           $('#ZaloContentContainer').hide();
           $('#SMSContentContainer').show();
           $('#ContentOptions').empty();
-          $('#ca-form-SMSDEKeys-element').empty();
           $.each(storedDEFields, (index, field) => {
             $('#ca-form-SMSDEKeys-element').append(`<div>${field}</div>`);
           });
