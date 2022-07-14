@@ -421,15 +421,13 @@ const showStep = async (step, stepIndex) => {
       $('#DEFields')
         .empty()
         .append(`<option value="">--Select one of the following fields--</option>`);
-      if (storedDEFields.length == 0) {
-        $.each(deInfo.deCol, (index, field) => {
-          if (!storedDEFields.includes(field.Name)) storedDEFields.push(field.Name);
-          $('#DEFields').append(
-            `<option value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</option>`
-          );
-          $(`#${field.Name}`).val(`{{Event.${storedEventDefinitionKey}.${field.Name}}}`);
-        });
-      }
+      $.each(deInfo.deCol, (index, field) => {
+        if (!storedDEFields.includes(field.Name)) storedDEFields.push(field.Name);
+        $('#DEFields').append(
+          `<option value=${field.CustomerKey} id=${field.Name} class="js-activity-setting">${field.Name}</option>`
+        );
+        $(`#${field.Name}`).val(`{{Event.${storedEventDefinitionKey}.${field.Name}}}`);
+      });
       if (storedDEKey && storedChannel === $('#Channels').val()) {
         $('#DEFields').val(storedDEKey);
       } else $('#DEFields').val('');
