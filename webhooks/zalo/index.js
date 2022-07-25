@@ -228,42 +228,42 @@ const ZaloWebhook = async (req, res) => {
         } catch (error) {
           // return;
         }
-        const tmpAccessToken = await refreshZaloToken(userTrackingInfo.recipient.id);
-        console.log('\ntmpAccessToken: ', tmpAccessToken);
+        // const tmpAccessToken = await refreshZaloToken(userTrackingInfo.recipient.id);
+        // console.log('\ntmpAccessToken: ', tmpAccessToken);
 
-        const znsContent = {
-          recipient: {
-            user_id: userTrackingInfo.sender.id,
-          },
-          message: {
-            text: 'Cảm ơn bạn đã nhắn tin cho White Space JSC, yêu cầu của bạn đang được quản trị viên xử lý',
-          },
-        };
-        console.log('\nznsContent:', JSON.stringify(znsContent));
-        // Send Message
-        const { body: znsSendLog } = await superagent
-          .post('https://openapi.zalo.me/v2.0/oa/message')
-          .set('Content-Type', 'application/json')
-          .set('access_token', tmpAccessToken)
-          .send(JSON.stringify(znsContent));
-        console.log('\nznsSendLog:', znsSendLog);
-        if (znsSendLog.error !== 0) throw znsSendLog.message;
-        await fuelRestUtils.insertDEZaloSendLog(
-          JSON.stringify({
-            items: [
-              {
-                OAId: userTrackingInfo.recipient.id,
-                ZaloId: znsSendLog.error === 0 ? znsSendLog.data.user_id : '',
-                MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
-                UTCTime: new Date().toUTCString(),
-                Timestamp: new Date().getTime(),
-                StatusCode: znsSendLog.error,
-                ErrorMessage: znsSendLog.message,
-                Message: JSON.stringify(znsContent.message),
-              },
-            ],
-          })
-        );
+        // const znsContent = {
+        //   recipient: {
+        //     user_id: userTrackingInfo.sender.id,
+        //   },
+        //   message: {
+        //     text: 'Cảm ơn bạn đã nhắn tin cho White Space JSC, yêu cầu của bạn đang được quản trị viên xử lý',
+        //   },
+        // };
+        // console.log('\nznsContent:', JSON.stringify(znsContent));
+        // // Send Message
+        // const { body: znsSendLog } = await superagent
+        //   .post('https://openapi.zalo.me/v2.0/oa/message')
+        //   .set('Content-Type', 'application/json')
+        //   .set('access_token', tmpAccessToken)
+        //   .send(JSON.stringify(znsContent));
+        // console.log('\nznsSendLog:', znsSendLog);
+        // if (znsSendLog.error !== 0) throw znsSendLog.message;
+        // await fuelRestUtils.insertDEZaloSendLog(
+        //   JSON.stringify({
+        //     items: [
+        //       {
+        //         OAId: userTrackingInfo.recipient.id,
+        //         ZaloId: znsSendLog.error === 0 ? znsSendLog.data.user_id : '',
+        //         MsgId: znsSendLog.error === 0 ? znsSendLog.data.message_id : '',
+        //         UTCTime: new Date().toUTCString(),
+        //         Timestamp: new Date().getTime(),
+        //         StatusCode: znsSendLog.error,
+        //         ErrorMessage: znsSendLog.message,
+        //         Message: JSON.stringify(znsContent.message),
+        //       },
+        //     ],
+        //   })
+        // );
         res.status(200).send('OK');
       } catch (error) {
         res.status(500).json({

@@ -49,17 +49,19 @@ block content
               #DisplayContent
           iframe#ca-frame(src="" width="100%" )
         #SMSContentContainer
-          #ca-form-SMSContent-element.slds-form-element
+          #ca-form-SMSMNO-element.slds-form-element
             label.slds-form-element__label.ca-label(for='SMSMNO')
               abbr.slds-required(title='required') * 
               | MNO:
             .slds-form-element__control
               select#MNOOptions.slds-select.js-activity-setting(name='MNOOptions')
+          #ca-form-SMSTemplate-element.slds-form-element
             label.slds-form-element__label.ca-label(for='SMSTemplate')
               abbr.slds-required(title='required') * 
               | Template:
             .slds-form-element__control
               select#TemplateOptions.slds-select.js-activity-setting(name='TemplateOptions')
+          #ca-form-SMSMessage-element.slds-form-element
             label.slds-form-element__label.ca-label(for='SMSMessage')
               abbr.slds-required(title='required') * 
               | Message:

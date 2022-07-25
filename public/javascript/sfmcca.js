@@ -604,10 +604,7 @@ const checkContent = async (type) => {
     } else {
       $('#ContentValue').val($('#SMSMessage').val());
       console.log($('#ContentValue').val());
-      $('.ca-modal').show();
-      $('.ca-modal__loading').hide();
-      $('.ca-modal__validateResult.success').show();
-      $('.ca-modal__validateResult.failed').hide();
+      displayModalSuccess();
       connection.trigger('updateButton', {
         button: 'next',
         enabled: true,
@@ -784,6 +781,13 @@ const getAllZaloOA = async () => {
     displayCustomModalError(error.message);
     throw new Error(error.message);
   }
+};
+
+const displayModalSuccess = () => {
+  $('.ca-modal').show();
+  $('.ca-modal__loading').hide();
+  $('.ca-modal__validateResult.success').show();
+  $('.ca-modal__validateResult.failed').hide();
 };
 
 const displayCustomModalError = (message) => {
